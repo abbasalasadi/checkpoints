@@ -1,4 +1,4 @@
-# <project> — Decisions
+# Checkpoints — Decisions
 
 ## Profile (interviewed <date>)
 ```
@@ -25,7 +25,11 @@ Documents not applicable: <list, one reason each>
 ## Stack
 | Concern | Choice | Reason |
 |---|---|---|
-| <backend> | <choice> | <reason> |
+| Backend | Node 20 + TypeScript + Express | Override of the Python default: reuses the three working reference backends |
+| Frontend | React 18 + Vite SPA, Monaco, xterm.js | Reuses the reference frontends |
+| Database | SQLite (WAL), one file `var/db/app.db` | Single light instance; same as references |
+| Runners | Docker per run via the Docker socket | Same as references; grading parity |
+| Deployment | systemd unit + nginx on the deploy VM | Override of the Docker Compose default: the backend must drive the host Docker daemon, and the references already run this way |
 
 ## Threat model
 <assets, actors, trust boundaries, top threats and their controls — sized to V1>
@@ -33,6 +37,15 @@ Documents not applicable: <list, one reason each>
 ## Log
 | Id | Date | Decision | Owner's words (verbatim, when theirs) | Reason |
 |---|---|---|---|---|
-| D1 | <date> | <decision> | "<quote>" | <reason> |
+| D1 | 2026-11-03 | `.env.vm` is git-ignored and backed up to PrivateBox with the project's other secrets; only `.env.example` is tracked | "You are right. .env.vm should be .gitignore and it should be consider in make push to my privatebox as one of the secrets." | Design doc wrongly marked it tracked |
+| D2 | 2026-11-03 | Ports are reserved by the manager (`[PORTS] checkpoints-1`), not reused from the legacy testers | "send a message to the manager ask it to reserve a port for you." | Old and new must run side by side until cutover |
+| D3 | 2026-11-03 | Cloud Run backend and the production migration/cutover are approved | "The three projects are already running and i know their costs. Already approved" | Owner decision |
+| D4 | 2026-11-03 | Every exercise gets a short hint, written by us (derived from reference solutions where useful) | "you need to create simple hind for each exercise ... you can put your own simple line hint" | Spec left hint content undefined |
+| D5 | 2026-11-03 | `attempts` gains `files_json` and `output` columns (output capped at 1 MB) | "i agree with your recommendations" | History detail view needs them |
+| D6 | 2026-11-03 | Session tokens stored as SHA-256 hashes; raw token only in the cookie | same | A leaked DB must not yield live sessions |
+| D7 | 2026-11-03 | Autosave debounce 900 ms; mock-exam practice drafts set aside on the server, not in browser storage | same | Resolves the spec conflicts; server copy survives device change |
+| D8 | 2026-11-03 | Format-on-save runs through the runner queue as a `format` job with its own cooldown | same | Keeps the 2-container ceiling intact |
+| D9 | 2026-11-03 | Accepted risk: the backend has Docker socket access (root-equivalent on the VM); mitigated by the socket never being reachable from requests, fixed images, and the hardened container flags | same | Required to run sandboxes locally |
+| D10 | 2026-11-03 | Versions: V1 merge (parity, migration, redirects, deploy) · V2 student features · V3 exam and extras · then redesign | same | Ship the merge first |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.

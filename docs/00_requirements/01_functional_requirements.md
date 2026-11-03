@@ -76,7 +76,7 @@ This document defines the functional capabilities and user interactions of the u
 ### 4.3 Draft Auto-Save
 * **FR-EDIT-6:** As the student types, code changes shall be automatically persisted:
   * Instantly saved to browser local state / IndexedDB.
-  * Debounced (e.g. after 1.5 seconds of inactivity) and synchronized to the backend database.
+  * Debounced (after 900 ms of inactivity — decisions D7) and synchronized to the backend database.
 
 ---
 

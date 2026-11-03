@@ -42,9 +42,9 @@ checkpoints/
 │   ├── db/                   # SQLite database (app.db, app.db-wal, app.db-shm)
 │   ├── logs/                 # Service logs (backend.log, frontend.log)
 │   └── run/                  # Process PID files
-├── .env                      # Local development configuration (tracked defaults)
+├── .env                      # Local development configuration (git-ignored)
 ├── .env.example              # Documented configuration template
-├── .env.vm                   # Target production VM configuration (tracked)
+├── .env.vm                   # Production VM configuration (git-ignored; backed up to PrivateBox — decisions D1)
 ├── Makefile                  # Root developer CLI & automation orchestrator
 ├── package.json              # Root npm workspaces manifest
 └── README.md                 # Public documentation and quick links

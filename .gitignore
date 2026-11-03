@@ -1,0 +1,13 @@
+# Secrets — never committed; .env.example lists the names
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# Runtime and build output
+var/*
+!var/.gitkeep
+node_modules/
+dist/

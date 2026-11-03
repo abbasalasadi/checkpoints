@@ -13,7 +13,7 @@ This document specifies the production infrastructure, port allocations, Nginx r
 ### 1.1 Port Allocation
 * **`API_PORT = 8133`:** Binds to `127.0.0.1:8133` on the host, serving the Express API and `/ws/output` WebSocket upgrades behind Nginx.
 * **`WEB_PORT = 5192`:** Reserved for local development Vite server. In production, Nginx serves the pre-built `web/dist` SPA directly from disk.
-* *Note on Port 8135:* Port 8135 is reserved for `chess` in `/home/abbas/Documents/0.My_Strategy/ports_used.md`. Consolidating onto **8133** reclaims the `go-checkpoints` allocation and cleanly retires ports 8128, 8130, and 8133.
+* *Ports:* reserved by the manager (decisions D2) and recorded in `docs/decisions.md`; the legacy ports stay in use until cutover.
 
 ---
 

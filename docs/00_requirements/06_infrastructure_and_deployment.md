@@ -18,7 +18,7 @@ Previously, the three standalone projects occupied multiple ports:
 * `rust-checkpoints`: API `8128`, Vite `5190`, Docker `8129`
 
 > [!WARNING] Port Collision Avoidance
-> According to `/home/abbas/Documents/0.My_Strategy/ports_used.md`, port **8135** is already reserved for the `chess` project. To prevent collisions, `checkpoints` will consolidate onto **8133** (the canonical Go checkpoints port, which retires and replaces 8128, 8130, and 8133) or optionally use **8157** (the next available port in the free pool).
+> Ports are reserved by the manager (decisions D2). The legacy ports below stay in use until cutover, so the unified platform uses its own reserved ports, recorded in `docs/decisions.md`.
 
 The unified platform consolidates these down to **one production API port** and **one local development port**:
 
