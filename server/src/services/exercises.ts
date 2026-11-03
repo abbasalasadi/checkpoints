@@ -283,3 +283,32 @@ export function materialiseRustFiles(ex: Exercise, files: Record<string, string>
   for (const f of ex.editorFiles) out.push({ path: `${ex.slug}/${f}`, content: work[f] ?? '' });
   return out;
 }
+
+// ── Runner input (shared by the run routes and tools/parity.ts) ──────────────
+
+/** What the runner receives for each language, given the student's working files. */
+export function filesForRunner(ex: Exercise, files: Record<string, string>, mode: 'run' | 'test'): Record<string, string> {
+  if (ex.language === 'rust') {
+    return Object.fromEntries(materialiseRustFiles(ex, files).map((f) => [f.path, f.content]));
+  }
+  if (ex.language === 'go') {
+    // Submit sends only the graded files. Run sends both, but a function
+    // exercise's demo is `package main` and cannot share a directory with the
+    // graded package, so it goes in ./demo (Go reference behaviour).
+    if (mode === 'test') return Object.fromEntries(Object.entries(files).filter(([k]) => ex.expectedFiles.includes(k)));
+    const pkg = ex.meta.studentPackage;
+    return Object.fromEntries(
+      Object.entries(files).map(([k, v]) => [k === 'main.go' && pkg !== 'main' ? 'demo/main.go' : k, v]),
+    );
+  }
+  return files;
+}
+
+/** Exercise facts the Go and JS runner entrypoints need. */
+export function runnerExerciseMeta(ex: Exercise): { expectedFiles: string[]; editorFiles: string[]; allowedFunctions?: string[] } {
+  return {
+    expectedFiles: ex.expectedFiles,
+    editorFiles: ex.editorFiles,
+    allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? (ex.meta.allowedFunctions as string[]) : undefined,
+  };
+}

@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help secrets-push secrets-pull setup run stop dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
+.PHONY: help parity secrets-push secrets-pull setup run stop dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -35,6 +35,9 @@ dev: ## LOCAL: API and Vite in the foreground with reload
 
 test: ## VM (via project_manager make send/run): server and web test suites
 	@npm test
+
+parity: ## VM (via project_manager make send/run): runner parity, solution passes / starter fails (LANG=go|js|rust ONLY=a,b)
+	@npx tsx tools/parity.ts $(if $(LANG),--lang $(LANG)) $(if $(ONLY),--only $(ONLY)) $(if $(CONCURRENCY),--concurrency $(CONCURRENCY))
 
 build: ## VM (via project_manager make send/run): build server (dist + migrations) and web (dist)
 	@npm run build

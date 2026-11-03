@@ -29,10 +29,11 @@ import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn
 import {
   getExercise,
   listExercises,
-  materialiseRustFiles,
+  filesForRunner,
   pickEditorFiles,
   placementsFor,
   publicView,
+  runnerExerciseMeta,
   workingFiles,
   type Exercise,
 } from '../services/exercises.js';
@@ -448,24 +449,6 @@ function runError(res: ServerResponse, err: unknown, mode: runs.RunMode): boolea
   return false;
 }
 
-/** What the runner receives for each language. */
-function filesForRunner(ex: Exercise, files: Record<string, string>, mode: runs.RunMode): Record<string, string> {
-  if (ex.language === 'rust') {
-    return Object.fromEntries(materialiseRustFiles(ex, files).map((f) => [f.path, f.content]));
-  }
-  if (ex.language === 'go') {
-    // Submit sends only the graded files. Run sends both, but a function
-    // exercise's demo is `package main` and cannot share a directory with the
-    // graded package, so it goes in ./demo (Go reference behaviour).
-    if (mode === 'test') return Object.fromEntries(Object.entries(files).filter(([k]) => ex.expectedFiles.includes(k)));
-    const pkg = ex.meta.studentPackage;
-    return Object.fromEntries(
-      Object.entries(files).map(([k, v]) => [k === 'main.go' && pkg !== 'main' ? 'demo/main.go' : k, v]),
-    );
-  }
-  return files;
-}
-
 async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mode: runs.RunMode): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
@@ -514,11 +497,7 @@ async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mod
       files: filesForRunner(ex, files, mode),
       args,
       mode,
-      exercise: {
-        expectedFiles: ex.expectedFiles,
-        editorFiles: ex.editorFiles,
-        allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? (ex.meta.allowedFunctions as string[]) : undefined,
-      },
+      exercise: runnerExerciseMeta(ex),
     });
   } catch (err) {
     if (runError(res, err, mode)) return;
