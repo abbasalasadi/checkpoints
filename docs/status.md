@@ -23,6 +23,6 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 1. **Leaked secrets in the reference repos:** `/home/abbas/Documents/js-checkpoints`, `/home/abbas/Documents/go-checkpoints` and `/home/abbas/Documents/rust` have `.env` and `.env.vm` tracked in git (Go's STATUS.md says the only secret there is `SESSION_SIGNING_KEY`, which the new app does not use). Rotate every key in them, then remove them from git and its history (about 20 minutes). Not touched by this project.
 
 ## Effort and cost
-- checkpoints-c1 (manager approved 2026-11-03): sonnet, medium effort, V1 self-audit — 1 sub-agent, 1 pass + 1 re-check. Fixes go back to haiku, low.
+- checkpoints-c1 (approved, unused: sonnet and haiku overrides fail with API 404). checkpoints-c2 (manager approved 2026-11-03): default model, low effort, V1 self-audit — 1 sub-agent, 1 pass + 1 re-check.
 - <agent class> at <effort> (<reason if above medium>) — wall time, cost, outcome
 - Budget (paid resources only): spent <x> of <limit>
