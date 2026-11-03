@@ -1,0 +1,1570 @@
+{
+  "schema": 1,
+  "language": "js",
+  "meta": {
+    "description": "Canonical content for the JS checkpoint tester: one directory per exercise, holding the subject, the official test, and a generated starter.",
+    "levelModel": "level belongs to the placement, not the exercise",
+    "subjects": {
+      "repo": "01-edu/public",
+      "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f"
+    },
+    "tests": {
+      "image": "ghcr.io/01-edu/module-js",
+      "archive": "runner/image/tests"
+    },
+    "placementSource": {
+      "file": "content/sources/reboot-campus-tree.json",
+      "root": "/bahrain/bh-module/piscine-js",
+      "campus": "bahrain",
+      "note": "the platform's own content tree — authoritative for level, order, XP and category"
+    },
+    "checkpoints": [
+      {
+        "checkpoint": "1",
+        "name": "checkpoint 01-js",
+        "id": 101904,
+        "durationMinutes": 180,
+        "expectedXp": 64450,
+        "difficulty": 30,
+        "exercises": 10,
+        "required": 10,
+        "optional": 0,
+        "levels": 5
+      },
+      {
+        "checkpoint": "2",
+        "name": "checkpoint 02-js",
+        "id": 101916,
+        "durationMinutes": 180,
+        "expectedXp": 73300,
+        "difficulty": 30,
+        "exercises": 14,
+        "required": 14,
+        "optional": 0,
+        "levels": 5
+      },
+      {
+        "checkpoint": "3",
+        "name": "checkpoint 03-js",
+        "id": 101932,
+        "durationMinutes": 180,
+        "expectedXp": 35150,
+        "difficulty": 22,
+        "exercises": 20,
+        "required": 17,
+        "optional": 3,
+        "levels": 5
+      },
+      {
+        "checkpoint": "final",
+        "name": "checkpoint final-js",
+        "id": 101954,
+        "durationMinutes": 360,
+        "expectedXp": 150,
+        "difficulty": 12,
+        "exercises": 29,
+        "required": 13,
+        "optional": 16,
+        "levels": 7
+      }
+    ],
+    "counts": {
+      "exercises": 29,
+      "placed": 29,
+      "bonus": 0,
+      "placements": 73
+    }
+  },
+  "exercises": [
+    {
+      "slug": "js-array-chunk-reversal",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-array-chunk-reversal",
+      "title": "Array Reverse Chunks",
+      "status": "placed",
+      "platformId": 101990,
+      "expectedFiles": [
+        "array-chunk-reversal.js"
+      ],
+      "editorFiles": [
+        "array-chunk-reversal.js",
+        "main.js"
+      ],
+      "entry": [
+        "reverseChunks"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [
+        "js-array-chunck-reversal"
+      ],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-deep-clone",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-deep-clone",
+      "title": "Deep Clone",
+      "status": "placed",
+      "platformId": 102000,
+      "expectedFiles": [
+        "deep-clone.js"
+      ],
+      "editorFiles": [
+        "deep-clone.js",
+        "main.js"
+      ],
+      "entry": [
+        "deepClone"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "deepEqual"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-deep-equal",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-deep-equal",
+      "title": "Deep Equal",
+      "status": "placed",
+      "platformId": 102001,
+      "expectedFiles": [
+        "deep-equal.js"
+      ],
+      "editorFiles": [
+        "deep-equal.js",
+        "main.js"
+      ],
+      "entry": [
+        "deepEqual"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "throwsError"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-deep-find",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-deep-find",
+      "title": "Deep Find",
+      "status": "placed",
+      "platformId": 102002,
+      "expectedFiles": [
+        "deep-find.js"
+      ],
+      "editorFiles": [
+        "deep-find.js",
+        "main.js"
+      ],
+      "entry": [
+        "deepFind"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "throwsError"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-deep-freeze",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-deep-freeze",
+      "title": "Deep Freeze",
+      "status": "placed",
+      "platformId": 102003,
+      "expectedFiles": [
+        "deep-freeze.js"
+      ],
+      "editorFiles": [
+        "deep-freeze.js",
+        "main.js"
+      ],
+      "entry": [
+        "deepFreeze"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "isDeepFrozen",
+        "throwsError"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-divisor-finder",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-divisor-finder",
+      "title": "divisorFinder",
+      "status": "placed",
+      "platformId": 101986,
+      "expectedFiles": [
+        "divisor-finder.js"
+      ],
+      "editorFiles": [
+        "divisor-finder.js",
+        "main.js"
+      ],
+      "entry": [
+        "divisors"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-election-mix",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-election-mix",
+      "title": "Election Mix",
+      "status": "placed",
+      "platformId": 101937,
+      "expectedFiles": [
+        "election-mix.js"
+      ],
+      "editorFiles": [
+        "election-mix.js",
+        "main.js"
+      ],
+      "entry": [
+        "createCurriedFilterAndMap"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-even-sum",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-even-sum",
+      "title": "evenSum",
+      "status": "placed",
+      "platformId": 101985,
+      "expectedFiles": [
+        "even-sum.js"
+      ],
+      "editorFiles": [
+        "even-sum.js",
+        "main.js"
+      ],
+      "entry": [
+        "evenSum"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-exam-grader",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-exam-grader",
+      "title": "Exam Grader",
+      "status": "placed",
+      "platformId": 101975,
+      "expectedFiles": [
+        "exam-grader.js"
+      ],
+      "editorFiles": [
+        "exam-grader.js",
+        "main.js"
+      ],
+      "entry": [
+        "examGrader"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "sleep"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-factorial",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-factorial",
+      "title": "factorial",
+      "status": "placed",
+      "platformId": 101905,
+      "expectedFiles": [
+        "factorial.js"
+      ],
+      "editorFiles": [
+        "factorial.js",
+        "main.js"
+      ],
+      "entry": [
+        "factorial"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-fibonacci",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-fibonacci",
+      "title": "fibonacci",
+      "status": "placed",
+      "platformId": 101906,
+      "expectedFiles": [
+        "fibonacci.js"
+      ],
+      "editorFiles": [
+        "fibonacci.js",
+        "main.js"
+      ],
+      "entry": [
+        "fibonacci"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-final-attempt",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-final-attempt",
+      "title": "Final Attempt",
+      "status": "placed",
+      "platformId": 101974,
+      "expectedFiles": [
+        "final-attempt.js"
+      ],
+      "editorFiles": [
+        "final-attempt.js",
+        "main.js"
+      ],
+      "entry": [
+        "FinalAttempt"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-flat-object",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-flat-object",
+      "title": "Flat Object",
+      "status": "placed",
+      "platformId": 101949,
+      "expectedFiles": [
+        "flat-object.js"
+      ],
+      "editorFiles": [
+        "flat-object.js",
+        "main.js"
+      ],
+      "entry": [
+        "flattenAndMap"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-flatten-object",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-flatten-object",
+      "title": "Flatten Object",
+      "status": "placed",
+      "platformId": 101979,
+      "expectedFiles": [
+        "flatten-object.js"
+      ],
+      "editorFiles": [
+        "flatten-object.js",
+        "main.js"
+      ],
+      "entry": [
+        "flattenObject"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-grid-word-finder",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-grid-word-finder",
+      "title": "Grid Words Finder",
+      "status": "placed",
+      "platformId": 101994,
+      "expectedFiles": [
+        "grid-word-finder.js"
+      ],
+      "editorFiles": [
+        "grid-word-finder.js",
+        "main.js"
+      ],
+      "entry": [
+        "gridWordsFinder"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "grid"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-grid-word-finder2",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-grid-word-finder2",
+      "title": "Grid Words Finder 2",
+      "status": "placed",
+      "platformId": 101997,
+      "expectedFiles": [
+        "grid-word-finder2.js"
+      ],
+      "editorFiles": [
+        "grid-word-finder2.js",
+        "main.js"
+      ],
+      "entry": [
+        "gridWordFinder2"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "grid",
+        "grid2"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-insertion-sort-analyzer",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-insertion-sort-analyzer",
+      "title": "Insertion Sort Analyzer",
+      "status": "placed",
+      "platformId": 101993,
+      "expectedFiles": [
+        "insertion-sort-analyzer.js"
+      ],
+      "editorFiles": [
+        "insertion-sort-analyzer.js",
+        "main.js"
+      ],
+      "entry": [
+        "insertionSortAnalyzer"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "ascending",
+        "descending"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-nested-array-reverser",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-nested-array-reverser",
+      "title": "Nested Array Reverser",
+      "status": "placed",
+      "platformId": 101991,
+      "expectedFiles": [
+        "nested-array-reverser.js"
+      ],
+      "editorFiles": [
+        "nested-array-reverser.js",
+        "main.js"
+      ],
+      "entry": [
+        "nestedArrayReverser"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "handwritten",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-object-lab",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-object-lab",
+      "title": "Object Lab",
+      "status": "placed",
+      "platformId": 101936,
+      "expectedFiles": [
+        "object-lab.js"
+      ],
+      "editorFiles": [
+        "object-lab.js",
+        "main.js"
+      ],
+      "entry": [
+        "mergeAndTransform"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-palindromic-chains",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-palindromic-chains",
+      "title": "Palindromic Chains",
+      "status": "placed",
+      "platformId": 101988,
+      "expectedFiles": [
+        "palindromic-chains.js"
+      ],
+      "editorFiles": [
+        "palindromic-chains.js",
+        "main.js"
+      ],
+      "entry": [
+        "palindromicChain"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-perfect-num",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-perfect-num",
+      "title": "PerfectNum",
+      "status": "placed",
+      "platformId": 101987,
+      "expectedFiles": [
+        "perfect-num.js"
+      ],
+      "editorFiles": [
+        "perfect-num.js",
+        "main.js"
+      ],
+      "entry": [
+        "isPerfectNum"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-pipeline",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-pipeline",
+      "title": "Pipeline",
+      "status": "placed",
+      "platformId": 101999,
+      "expectedFiles": [
+        "pipeline.js"
+      ],
+      "editorFiles": [
+        "pipeline.js",
+        "main.js"
+      ],
+      "entry": [
+        "pipeline"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-sentence-pyramid",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-sentence-pyramid",
+      "title": "sentencePyramid",
+      "status": "placed",
+      "platformId": 101989,
+      "expectedFiles": [
+        "sentence-pyramid.js"
+      ],
+      "editorFiles": [
+        "sentence-pyramid.js",
+        "main.js"
+      ],
+      "entry": [
+        "sentencePyramid"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-sleep-breaker",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-sleep-breaker",
+      "title": "Sleep Breaker",
+      "status": "placed",
+      "platformId": 101973,
+      "expectedFiles": [
+        "sleep-breaker.js"
+      ],
+      "editorFiles": [
+        "sleep-breaker.js",
+        "main.js"
+      ],
+      "entry": [
+        "sleepBreaker"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-snakepath-validator",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-snakepath-validator",
+      "title": "Snake Path Validator",
+      "status": "placed",
+      "platformId": 101998,
+      "expectedFiles": [
+        "snakepath-validator.js"
+      ],
+      "editorFiles": [
+        "snakepath-validator.js",
+        "main.js"
+      ],
+      "entry": [
+        "isSnakePath"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": true,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-swappable-object",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-swappable-object",
+      "title": "Swappable Object",
+      "status": "placed",
+      "platformId": 101980,
+      "expectedFiles": [
+        "swappable-object.js"
+      ],
+      "editorFiles": [
+        "swappable-object.js",
+        "main.js"
+      ],
+      "entry": [
+        "swappableObject"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "throwsError"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-transform-keys",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-transform-keys",
+      "title": "Transform Keys",
+      "status": "placed",
+      "platformId": 101982,
+      "expectedFiles": [
+        "js-transform-keys.js"
+      ],
+      "editorFiles": [
+        "js-transform-keys.js",
+        "main.js"
+      ],
+      "entry": [
+        "transformKeys"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "throwsError",
+        "toSnakeCase"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-trap-object",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-trap-object",
+      "title": "Trap Object",
+      "status": "placed",
+      "platformId": 101981,
+      "expectedFiles": [
+        "trap-object.js"
+      ],
+      "editorFiles": [
+        "trap-object.js",
+        "main.js"
+      ],
+      "entry": [
+        "trapObject"
+      ],
+      "reservedNames": [
+        "tests",
+        "t",
+        "throwsError",
+        "createLogger"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    },
+    {
+      "slug": "js-zoo-race",
+      "language": "js",
+      "kind": "func",
+      "argv": false,
+      "dir": "exercises/js-zoo-race",
+      "title": "Zoo Race",
+      "status": "placed",
+      "platformId": 101976,
+      "expectedFiles": [
+        "zoo-race.js"
+      ],
+      "editorFiles": [
+        "zoo-race.js",
+        "main.js"
+      ],
+      "entry": [
+        "animal",
+        "zooRace"
+      ],
+      "reservedNames": [
+        "tests",
+        "t"
+      ],
+      "aliases": [],
+      "randomizedSubject": false,
+      "starterFrom": "readme",
+      "hasSolution": true
+    }
+  ],
+  "placements": [
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "1",
+      "level": 1,
+      "order": 0,
+      "index": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "1",
+      "level": 1,
+      "order": 1,
+      "index": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "1",
+      "level": 1,
+      "order": 2,
+      "index": 2,
+      "baseXp": 4600,
+      "category": "required"
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "1",
+      "level": 2,
+      "order": 3,
+      "index": 3,
+      "baseXp": 9200,
+      "category": "required"
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "1",
+      "level": 2,
+      "order": 4,
+      "index": 4,
+      "baseXp": 9200,
+      "category": "required"
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "1",
+      "level": 3,
+      "order": 5,
+      "index": 5,
+      "baseXp": 13800,
+      "category": "required"
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "1",
+      "level": 3,
+      "order": 6,
+      "index": 6,
+      "baseXp": 13800,
+      "category": "required"
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "1",
+      "level": 4,
+      "order": 7,
+      "index": 7,
+      "baseXp": 18400,
+      "category": "required"
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "1",
+      "level": 4,
+      "order": 8,
+      "index": 8,
+      "baseXp": 18400,
+      "category": "required"
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "1",
+      "level": 5,
+      "order": 9,
+      "index": 10,
+      "baseXp": 23000,
+      "category": "required"
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "2",
+      "level": 1,
+      "order": 0,
+      "index": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "2",
+      "level": 1,
+      "order": 1,
+      "index": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "2",
+      "level": 1,
+      "order": 2,
+      "index": 2,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "2",
+      "level": 1,
+      "order": 3,
+      "index": 3,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "2",
+      "level": 1,
+      "order": 4,
+      "index": 4,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "2",
+      "level": 2,
+      "order": 5,
+      "index": 5,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "2",
+      "level": 2,
+      "order": 6,
+      "index": 6,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "2",
+      "level": 2,
+      "order": 7,
+      "index": 7,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "2",
+      "level": 2,
+      "order": 8,
+      "index": 9,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "2",
+      "level": 3,
+      "order": 9,
+      "index": null,
+      "baseXp": 18300,
+      "category": "required"
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "2",
+      "level": 4,
+      "order": 10,
+      "index": null,
+      "baseXp": 24400,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "2",
+      "level": 5,
+      "order": 11,
+      "index": null,
+      "baseXp": 30500,
+      "category": "required"
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "2",
+      "level": 5,
+      "order": 12,
+      "index": null,
+      "baseXp": 30500,
+      "category": "required"
+    },
+    {
+      "exercise": "js-pipeline",
+      "checkpoint": "2",
+      "level": 5,
+      "order": 13,
+      "index": null,
+      "baseXp": 30500,
+      "category": "required"
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "3",
+      "level": 1,
+      "order": 0,
+      "index": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "3",
+      "level": 1,
+      "order": 1,
+      "index": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "3",
+      "level": 1,
+      "order": 2,
+      "index": 2,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "3",
+      "level": 1,
+      "order": 3,
+      "index": 3,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "3",
+      "level": 1,
+      "order": 4,
+      "index": 4,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "3",
+      "level": 2,
+      "order": 5,
+      "index": 5,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "3",
+      "level": 2,
+      "order": 6,
+      "index": 6,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "3",
+      "level": 2,
+      "order": 7,
+      "index": 7,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "3",
+      "level": 2,
+      "order": 8,
+      "index": 8,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "3",
+      "level": 2,
+      "order": 9,
+      "index": 9,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "3",
+      "level": 3,
+      "order": 10,
+      "index": 11,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "3",
+      "level": 3,
+      "order": 11,
+      "index": 12,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "3",
+      "level": 3,
+      "order": 12,
+      "index": 13,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-object-lab",
+      "checkpoint": "3",
+      "level": 4,
+      "order": 13,
+      "index": 14,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-election-mix",
+      "checkpoint": "3",
+      "level": 4,
+      "order": 14,
+      "index": 15,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-flat-object",
+      "checkpoint": "3",
+      "level": 4,
+      "order": 15,
+      "index": 16,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-deep-clone",
+      "checkpoint": "3",
+      "level": 5,
+      "order": 16,
+      "index": null,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "exercise": "js-deep-equal",
+      "checkpoint": "3",
+      "level": 5,
+      "order": 17,
+      "index": null,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "exercise": "js-deep-find",
+      "checkpoint": "3",
+      "level": 5,
+      "order": 18,
+      "index": null,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "exercise": "js-deep-freeze",
+      "checkpoint": "3",
+      "level": 5,
+      "order": 19,
+      "index": null,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "final",
+      "level": 1,
+      "order": 0,
+      "index": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "final",
+      "level": 1,
+      "order": 1,
+      "index": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "final",
+      "level": 1,
+      "order": 2,
+      "index": 2,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "final",
+      "level": 1,
+      "order": 3,
+      "index": 3,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "final",
+      "level": 1,
+      "order": 4,
+      "index": 4,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "final",
+      "level": 2,
+      "order": 5,
+      "index": 5,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "final",
+      "level": 2,
+      "order": 6,
+      "index": 6,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "final",
+      "level": 2,
+      "order": 7,
+      "index": 7,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "final",
+      "level": 2,
+      "order": 8,
+      "index": 8,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "final",
+      "level": 2,
+      "order": 9,
+      "index": 9,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "final",
+      "level": 3,
+      "order": 10,
+      "index": 11,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "final",
+      "level": 3,
+      "order": 11,
+      "index": 12,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "final",
+      "level": 3,
+      "order": 12,
+      "index": 13,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "exercise": "js-object-lab",
+      "checkpoint": "final",
+      "level": 4,
+      "order": 13,
+      "index": 14,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-election-mix",
+      "checkpoint": "final",
+      "level": 4,
+      "order": 14,
+      "index": 15,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-flat-object",
+      "checkpoint": "final",
+      "level": 4,
+      "order": 15,
+      "index": 16,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-pipeline",
+      "checkpoint": "final",
+      "level": 4,
+      "order": 16,
+      "index": 17,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-sleep-breaker",
+      "checkpoint": "final",
+      "level": 5,
+      "order": 17,
+      "index": 18,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-final-attempt",
+      "checkpoint": "final",
+      "level": 5,
+      "order": 18,
+      "index": 19,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-exam-grader",
+      "checkpoint": "final",
+      "level": 5,
+      "order": 19,
+      "index": 20,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-zoo-race",
+      "checkpoint": "final",
+      "level": 5,
+      "order": 20,
+      "index": 21,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-deep-clone",
+      "checkpoint": "final",
+      "level": 6,
+      "order": 21,
+      "index": 22,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-deep-equal",
+      "checkpoint": "final",
+      "level": 6,
+      "order": 22,
+      "index": 23,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-deep-find",
+      "checkpoint": "final",
+      "level": 6,
+      "order": 23,
+      "index": 24,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-deep-freeze",
+      "checkpoint": "final",
+      "level": 6,
+      "order": 24,
+      "index": 25,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-flatten-object",
+      "checkpoint": "final",
+      "level": 7,
+      "order": 25,
+      "index": 26,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-swappable-object",
+      "checkpoint": "final",
+      "level": 7,
+      "order": 26,
+      "index": 27,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-transform-keys",
+      "checkpoint": "final",
+      "level": 7,
+      "order": 27,
+      "index": 28,
+      "baseXp": 100,
+      "category": "optional"
+    },
+    {
+      "exercise": "js-trap-object",
+      "checkpoint": "final",
+      "level": 7,
+      "order": 28,
+      "index": 29,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

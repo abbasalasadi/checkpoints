@@ -1,0 +1,68 @@
+{
+  "slug": "js-deep-find",
+  "title": "Deep Find",
+  "status": "placed",
+  "language": "js",
+  "platformId": 102002,
+  "expectedFiles": [
+    "deep-find.js"
+  ],
+  "editorFiles": [
+    "deep-find.js",
+    "main.js"
+  ],
+  "entry": [
+    "deepFind"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "throwsError"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-deep-find/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-deep-find/README.md",
+    "sha256": "e48daf307cc2b6032c104690c62940413d417416a55791edb9022230bc7a013a"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-deep-find_test.js",
+    "exerciseArg": "js-deep-find",
+    "mode": "function",
+    "sha256": "390b0bb53fe17bcaecdf7301c1339c680830baf35a78d71b48f67c8e5d51ba89"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "order": 18,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 6,
+      "index": 24,
+      "order": 23,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

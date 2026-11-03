@@ -26,7 +26,7 @@ import { starterFromReadme } from './lib/rust-source.js';
 
 const ROOT = process.cwd();
 const INDEX = join(ROOT, 'var', 'index.json');
-const OUT = join(ROOT, 'content');
+const OUT = join(ROOT, 'content', 'rust');
 if (!existsSync(INDEX)) {
   console.error('  var/index.json not found — run `make content-inventory` first');
   process.exit(1);

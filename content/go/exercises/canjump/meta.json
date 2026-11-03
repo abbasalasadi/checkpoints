@@ -1,0 +1,121 @@
+{
+  "slug": "canjump",
+  "title": "Can Jump",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 101167,
+  "expectedFiles": [
+    "canjump.go"
+  ],
+  "editorFiles": [
+    "canjump.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "CanJump"
+  ],
+  "allowedFunctions": [
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/canjump/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/canjump/README.md",
+    "sha256": "72c10f1bbbe107a183114f7740cfa07020493f27d1bed959ab63c5909ec48e82"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/canjump_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [],
+    "usesSolutions": false,
+    "sha256": "08d5b361b92667636fc9b3b3d504d9f827a04d420dc58e3fcba0be745cd2e38f"
+  },
+  "solution": {
+    "path": "/test-go/solutions/canjump.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "d9ffbaa36bdd83e5953704ff5f31705e544904a9b2fae0933a1250302793ee41"
+  },
+  "starterFrom": "authored",
+  "mainFrom": "readme",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 10,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 42,
+      "order": 37,
+      "baseXp": 17000,
+      "difficulty": 10,
+      "category": "optional",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101167,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": 42,
+      "order": 41,
+      "baseXp": 29000,
+      "difficulty": 10,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101192,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": 45,
+      "order": 42,
+      "baseXp": 41000,
+      "difficulty": 10,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101220,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "slug": "rpncalc",
+  "title": "rpncalc",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 100986,
+  "expectedFiles": [
+    "rpncalc/main.go"
+  ],
+  "editorFiles": [
+    "rpncalc/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "strconv.Atoi",
+    "os.*",
+    "fmt.*",
+    "strings.Split",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/rpncalc/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/rpncalc/README.md",
+    "sha256": "a9a3bd9918e7498bd908988ba65db59bea7700636e41f6511d50d2ea10ed6909"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/rpncalc_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "dfe99710a5f3880709dfe56e148b67f752f942ae0dbebd016cb4b851063a3225"
+  },
+  "solution": {
+    "path": "/test-go/solutions/rpncalc/main.go",
+    "package": "main",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "667872f08516657363fd1eb3a9e582defd6b8591c2322f84b46e80b294e2a252"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 18,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 9,
+      "index": 58,
+      "order": 55,
+      "baseXp": 73800,
+      "difficulty": 18,
+      "category": "optional",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100986,
+      "allowedFunctions": [
+        "strconv.Atoi",
+        "os.*",
+        "fmt.*",
+        "strings.Split",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 9,
+      "index": 56,
+      "order": 54,
+      "baseXp": 450,
+      "difficulty": 18,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101290,
+      "allowedFunctions": [
+        "strconv.Atoi",
+        "os.*",
+        "fmt.*",
+        "strings.Split",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

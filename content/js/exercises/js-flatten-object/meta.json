@@ -1,0 +1,61 @@
+{
+  "slug": "js-flatten-object",
+  "title": "Flatten Object",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101979,
+  "expectedFiles": [
+    "flatten-object.js"
+  ],
+  "editorFiles": [
+    "flatten-object.js",
+    "main.js"
+  ],
+  "entry": [
+    "flattenObject"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-flatten-object/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-flatten-object/README.md",
+    "sha256": "b8279310af2311eeb8502489a379393525c79fd0f97a46b7870871583d9a77e5"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-flatten-object_test.js",
+    "exerciseArg": "js-flatten-object",
+    "mode": "function",
+    "sha256": "38c04d7883af9ba53f341d51fbff885ee44bb64d8102fe5a7ec92cf6cb553a7c"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 14
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 26,
+      "order": 25,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

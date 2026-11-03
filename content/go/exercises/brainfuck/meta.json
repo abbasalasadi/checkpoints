@@ -1,0 +1,113 @@
+{
+  "slug": "brainfuck",
+  "title": "brainfuck",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 100948,
+  "expectedFiles": [
+    "brainfuck/main.go"
+  ],
+  "editorFiles": [
+    "brainfuck/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "os.*",
+    "github.com/01-edu/z01.PrintRune",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/brainfuck/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/brainfuck/README.md",
+    "sha256": "12412a06c2ad2c4903438dac4007e018601d7e416ac8c49d1b0ee7dd374d32a8"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/brainfuck_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "ba68b3e2085faf837e6aefe6f18b1e578ed9df38df28689dd6bc70a046712b7f"
+  },
+  "solution": {
+    "path": "tools/authored/brainfuck/solution.go",
+    "replaces": "/test-go/solutions/brainfuck/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "cf270bc1855dd04062290105d9f9e7d23dd38b39fea6274b75ebc76e247fb017"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 20,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "retest",
+      "level": 10,
+      "index": 10,
+      "order": 9,
+      "baseXp": 103000,
+      "difficulty": 20,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100948,
+      "allowedFunctions": [
+        "os.*",
+        "github.com/01-edu/z01.PrintRune",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 10,
+      "index": 59,
+      "order": 57,
+      "baseXp": 500,
+      "difficulty": 20,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101292,
+      "allowedFunctions": [
+        "os.*",
+        "github.com/01-edu/z01.PrintRune",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

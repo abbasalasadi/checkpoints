@@ -1,0 +1,62 @@
+{
+  "slug": "js-zoo-race",
+  "title": "Zoo Race",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101976,
+  "expectedFiles": [
+    "zoo-race.js"
+  ],
+  "editorFiles": [
+    "zoo-race.js",
+    "main.js"
+  ],
+  "entry": [
+    "animal",
+    "zooRace"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-zoo-race/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-zoo-race/README.md",
+    "sha256": "dd0a721620479de2e7dd7d8d97fc2ad8fc376489fec401372b0e3ee19901d067"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-zoo-race_test.js",
+    "exerciseArg": "js-zoo-race",
+    "mode": "function",
+    "sha256": "88c5400bd6d5b492ca62691554f35ee62077b1bd575ca49e45bf5e8e1afd5005"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 5,
+      "index": 21,
+      "order": 20,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

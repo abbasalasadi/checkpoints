@@ -18,7 +18,7 @@ import { config } from '../server/src/config/index.js';
 import { CooldownError, Runner } from '../server/src/services/runner.js';
 
 const ROOT = process.cwd();
-const CONTENT = join(ROOT, 'content');
+const CONTENT = join(ROOT, 'content', 'rust');
 const IMAGE = config.runner.image;
 
 interface Meta {

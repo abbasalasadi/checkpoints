@@ -1,0 +1,131 @@
+{
+  "slug": "rostring",
+  "title": "rostring",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 100940,
+  "expectedFiles": [
+    "rostring/main.go"
+  ],
+  "editorFiles": [
+    "rostring/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "os.Args",
+    "github.com/01-edu/z01.PrintRune",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/rostring/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/rostring/README.md",
+    "sha256": "a709a17b644fd775e61b85dec79e9aa45cac954c6151bc18365c5d5fd5dacf0d"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/rostring_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "chars",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "27a9e710fb9a9827a12349dafe42b4d5e507b3aef54e10bce90be0fda407a480"
+  },
+  "solution": {
+    "path": "tools/authored/rostring/solution.go",
+    "replaces": "/test-go/solutions/rostring/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "6ada8fe6da3e1ed22327b2f9027ebc463ba34011ed350a3f0977b2bedfdb27e2"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 14,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 7,
+      "index": 49,
+      "order": 48,
+      "baseXp": 40600,
+      "difficulty": 14,
+      "category": "optional",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 100940,
+      "allowedFunctions": [
+        "os.Args",
+        "github.com/01-edu/z01.PrintRune",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 7,
+      "index": 52,
+      "order": 49,
+      "baseXp": 57400,
+      "difficulty": 14,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100979,
+      "allowedFunctions": [
+        "os.Args",
+        "github.com/01-edu/z01.PrintRune",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 50,
+      "order": 48,
+      "baseXp": 350,
+      "difficulty": 14,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 100279,
+      "allowedFunctions": [
+        "os.Args",
+        "github.com/01-edu/z01.PrintRune",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

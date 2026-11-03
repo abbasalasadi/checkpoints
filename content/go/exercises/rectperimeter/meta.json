@@ -1,0 +1,141 @@
+{
+  "slug": "rectperimeter",
+  "title": "rectperimeter",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 101131,
+  "expectedFiles": [
+    "rectperimeter.go"
+  ],
+  "editorFiles": [
+    "rectperimeter.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "RectPerimeter"
+  ],
+  "allowedFunctions": [],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/rectperimeter/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/rectperimeter/README.md",
+    "sha256": "c8791a605c654fb0f1b25e42b80224a7904e7564a786224d28a54a94a5e45dc0"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/rectperimeter_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "331bddf48a298314131c950ca0b31bd25aab2a007ddd1ff5f27748be3a8f0a4e"
+  },
+  "solution": {
+    "path": "/test-go/solutions/rectperimeter.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "d2eb51013ba85f6e46d1f7eeaf6b03dc0f785009e8b979309d965fd2ce904857"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme+piscine-qualified",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 4,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 6800,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101131,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 11600,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101171,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 16400,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101198,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "retest",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "baseXp": 20600,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101171,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 100,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101255,
+      "allowedFunctions": []
+    }
+  ]
+}

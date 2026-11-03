@@ -1,0 +1,83 @@
+{
+  "slug": "js-palindromic-chains",
+  "title": "Palindromic Chains",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101988,
+  "expectedFiles": [
+    "palindromic-chains.js"
+  ],
+  "editorFiles": [
+    "palindromic-chains.js",
+    "main.js"
+  ],
+  "entry": [
+    "palindromicChain"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-palindromic-chains/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-palindromic-chains/README.md",
+    "sha256": "de04142793421dd5c00592ceef72aff4bb09b3fc5d66660e84e4718337c0beef"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-palindromic-chains_test.js",
+    "exerciseArg": "js-palindromic-chains",
+    "mode": "function",
+    "sha256": "b73908c4b9ffbd23db44275938dc39aeac80f194bf39523875a2b90477349077"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 6
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 5,
+      "order": 5,
+      "baseXp": 13800,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 6,
+      "order": 6,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 6,
+      "order": 6,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 6,
+      "order": 6,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

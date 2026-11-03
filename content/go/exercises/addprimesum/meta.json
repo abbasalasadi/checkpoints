@@ -1,0 +1,149 @@
+{
+  "slug": "addprimesum",
+  "title": "addprimesum",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 101165,
+  "expectedFiles": [
+    "addprimesum/main.go"
+  ],
+  "editorFiles": [
+    "addprimesum/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "github.com/01-edu/z01.PrintRune",
+    "os.*",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": true,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/addprimesum/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/addprimesum/README.md",
+    "sha256": "7b2291a56985e4399333ea146664d5da029783e7df9e57052fd14893e6df3063"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/addprimesum_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "is",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "b49d776c8c82a9ffd13e46297210eb8d5138fa7a85e733bf2b50286f1c4722b5"
+  },
+  "solution": {
+    "path": "tools/authored/addprimesum/solution.go",
+    "replaces": "/test-go/solutions/addprimesum/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "0e5ae2211cb7f9c2cfe45561a910a7c906532946c1eea27dc65be2842abf9af9"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 10,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 40,
+      "order": 35,
+      "baseXp": 17000,
+      "difficulty": 10,
+      "category": "optional",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101165,
+      "allowedFunctions": [
+        "github.com/01-edu/z01.PrintRune",
+        "os.*",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": 40,
+      "order": 39,
+      "baseXp": 29000,
+      "difficulty": 10,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101191,
+      "allowedFunctions": [
+        "github.com/01-edu/z01.PrintRune",
+        "os.*",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": 43,
+      "order": 40,
+      "baseXp": 41000,
+      "difficulty": 10,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101219,
+      "allowedFunctions": [
+        "github.com/01-edu/z01.PrintRune",
+        "os.*",
+        "--allow-builtin",
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 5,
+      "index": 41,
+      "order": 40,
+      "baseXp": 250,
+      "difficulty": 10,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100286,
+      "allowedFunctions": [
+        "github.com/01-edu/z01.PrintRune",
+        "os.*",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

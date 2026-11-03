@@ -1,0 +1,155 @@
+{
+  "slug": "findprevprime",
+  "title": "findprevprime",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 101146,
+  "expectedFiles": [
+    "findprevprime.go"
+  ],
+  "editorFiles": [
+    "findprevprime.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "FindPrevPrime"
+  ],
+  "allowedFunctions": [
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/findprevprime/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/findprevprime/README.md",
+    "sha256": "ca45d6659b4e6acd2bb130e9b5f3dc5d1cba5ca9316cac4b38af91d983fdbf22"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/findprevprime_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "random"
+    ],
+    "usesSolutions": true,
+    "sha256": "93d02b8c8603844bf9ea60b9939008139557d684c7eecb27a50e85e03c4f1408"
+  },
+  "solution": {
+    "path": "tools/authored/findprevprime/solution.go",
+    "replaces": "/test-go/solutions/findprevprime.go",
+    "package": "piscine",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "d427613fc3ad40bcb16137ed57fb9bc64a303bc0b98db464463070800d3757d9"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme+piscine-qualified",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 8,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 21,
+      "order": 20,
+      "baseXp": 13600,
+      "difficulty": 8,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101146,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 21,
+      "order": 20,
+      "baseXp": 23200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100927,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 21,
+      "order": 21,
+      "baseXp": 32800,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100966,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "retest",
+      "level": 4,
+      "index": 4,
+      "order": 3,
+      "baseXp": 41200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100927,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 21,
+      "order": 21,
+      "baseXp": 200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100308,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

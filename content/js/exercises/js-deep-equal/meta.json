@@ -1,0 +1,68 @@
+{
+  "slug": "js-deep-equal",
+  "title": "Deep Equal",
+  "status": "placed",
+  "language": "js",
+  "platformId": 102001,
+  "expectedFiles": [
+    "deep-equal.js"
+  ],
+  "editorFiles": [
+    "deep-equal.js",
+    "main.js"
+  ],
+  "entry": [
+    "deepEqual"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "throwsError"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-deep-equal/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-deep-equal/README.md",
+    "sha256": "a33c9b601910a5ec323f88d3a51a00cff5096dc4c69380e97ad13ecd994b069d"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-deep-equal_test.js",
+    "exerciseArg": "js-deep-equal",
+    "mode": "function",
+    "sha256": "4854245939d95419a2fec57577a523cb9599c07dcf9ce82134284ce0a0a6e05c"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "order": 17,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 6,
+      "index": 23,
+      "order": 22,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

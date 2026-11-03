@@ -1,0 +1,83 @@
+{
+  "slug": "js-sentence-pyramid",
+  "title": "sentencePyramid",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101989,
+  "expectedFiles": [
+    "sentence-pyramid.js"
+  ],
+  "editorFiles": [
+    "sentence-pyramid.js",
+    "main.js"
+  ],
+  "entry": [
+    "sentencePyramid"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-sentence-pyramid/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-sentence-pyramid/README.md",
+    "sha256": "11552f3208194fda7d045e254447869ef29b31e4a7df464fc4377a40c22c1f38"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-sentence-pyramid_test.js",
+    "exerciseArg": "js-sentence-pyramid",
+    "mode": "function",
+    "sha256": "2ed9925f38b5e6d4ad906b3bd8839387c103aa81853dad1cfc47d3bc677b371f"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 6
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 6,
+      "order": 6,
+      "baseXp": 13800,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 7,
+      "order": 7,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 7,
+      "order": 7,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 7,
+      "order": 7,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

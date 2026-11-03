@@ -1,0 +1,128 @@
+{
+  "slug": "fishandchips",
+  "title": "fishandchips",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 100892,
+  "expectedFiles": [
+    "fishandchips.go"
+  ],
+  "editorFiles": [
+    "fishandchips.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "FishAndChips"
+  ],
+  "allowedFunctions": [],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/fishandchips/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/fishandchips/README.md",
+    "sha256": "72934828ae4fed6a0a6bfc3f87967685b979dc9e4d957b237419a2c570f11012"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/fishandchips_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "b7310c1e8aaa8c99b197bdc98bed48d69aea752e5a884756c9dbb3b3fa85fc3f"
+  },
+  "solution": {
+    "path": "/test-go/solutions/fishandchips.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "3c8957895fad9859920ac91115a1d15d412d5b4e3ad09033551bbb3e2c7629d2"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 6,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 13,
+      "order": 13,
+      "baseXp": 10200,
+      "difficulty": 6,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100892,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "2",
+      "level": 3,
+      "index": 13,
+      "order": 13,
+      "baseXp": 17400,
+      "difficulty": 6,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100914,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "3",
+      "level": 3,
+      "index": 13,
+      "order": 13,
+      "baseXp": 24600,
+      "difficulty": 6,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100955,
+      "allowedFunctions": []
+    },
+    {
+      "checkpoint": "final",
+      "level": 3,
+      "index": 13,
+      "order": 13,
+      "baseXp": 150,
+      "difficulty": 6,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101263,
+      "allowedFunctions": []
+    }
+  ]
+}

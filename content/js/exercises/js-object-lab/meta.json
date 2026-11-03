@@ -1,0 +1,69 @@
+{
+  "slug": "js-object-lab",
+  "title": "Object Lab",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101936,
+  "expectedFiles": [
+    "object-lab.js"
+  ],
+  "editorFiles": [
+    "object-lab.js",
+    "main.js"
+  ],
+  "entry": [
+    "mergeAndTransform"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-object-lab/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-object-lab/README.md",
+    "sha256": "fc738bdcf7d9eafae203f575264d79d93d78688cafc2986d3be9d1573c506ae9"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-object-lab_test.js",
+    "exerciseArg": "js-object-lab",
+    "mode": "function",
+    "sha256": "01f4919547601bfa4d88ef02120eec88f04c4bba1585bf04288e36dc3b333ae3"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 8
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 14,
+      "order": 13,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 14,
+      "order": 13,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

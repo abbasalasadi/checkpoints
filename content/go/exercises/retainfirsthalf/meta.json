@@ -1,0 +1,143 @@
+{
+  "slug": "retainfirsthalf",
+  "title": "retainfirsthalf",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 101137,
+  "expectedFiles": [
+    "retainfirsthalf.go"
+  ],
+  "editorFiles": [
+    "retainfirsthalf.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "RetainFirstHalf"
+  ],
+  "allowedFunctions": [
+    "--allow-builtin",
+    "strings.String"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/retainfirsthalf/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/retainfirsthalf/README.md",
+    "sha256": "c055d8be5f32da81fc8b6dc2b0a8598a5d8da1c9fc86cf79f456ecf48dc0e0e4"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/retainfirsthalf_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "6236f8a7f94c9aa09fe79c039ec9028a213a0bb6136ac24c0d34c916a74829d7"
+  },
+  "solution": {
+    "path": "/test-go/solutions/retainfirsthalf.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "79ca049515d7f570e9b220ec90a7d2d5b0b4ccebee39a744d37bd5f3c968ce05"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 4,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 11,
+      "order": 11,
+      "baseXp": 6800,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101137,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.String"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 11,
+      "order": 11,
+      "baseXp": 11600,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101174,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.String"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 11,
+      "order": 11,
+      "baseXp": 16400,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101201,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.String"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 11,
+      "order": 11,
+      "baseXp": 100,
+      "difficulty": 4,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101261,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.String"
+      ]
+    }
+  ]
+}

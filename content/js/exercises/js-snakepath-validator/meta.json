@@ -1,0 +1,75 @@
+{
+  "slug": "js-snakepath-validator",
+  "title": "Snake Path Validator",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101998,
+  "expectedFiles": [
+    "snakepath-validator.js"
+  ],
+  "editorFiles": [
+    "snakepath-validator.js",
+    "main.js"
+  ],
+  "entry": [
+    "isSnakePath"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-snakepath-validator/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-snakepath-validator/README.md",
+    "sha256": "ee344f753d29a3ca4f4c618cf591db9b44cbfdc3528a11984793cb7492ce46a6"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-snakepath-validator_test.js",
+    "exerciseArg": "js-snakepath-validator",
+    "mode": "function",
+    "sha256": "6c5328c9849d24f329f73c8d97e7d2e6780f1601ed4ad15ce4380983686c24c8"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": null,
+      "order": 12,
+      "baseXp": 30500,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 3,
+      "index": 12,
+      "order": 11,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 3,
+      "index": 12,
+      "order": 11,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

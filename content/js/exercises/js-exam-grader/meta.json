@@ -1,0 +1,62 @@
+{
+  "slug": "js-exam-grader",
+  "title": "Exam Grader",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101975,
+  "expectedFiles": [
+    "exam-grader.js"
+  ],
+  "editorFiles": [
+    "exam-grader.js",
+    "main.js"
+  ],
+  "entry": [
+    "examGrader"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "sleep"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-exam-grader/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-exam-grader/README.md",
+    "sha256": "24a9fac45d1f64fd0c472c5e45b1c5138a368859547c36410c3f83d8a1fb420a"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-exam-grader_test.js",
+    "exerciseArg": "js-exam-grader",
+    "mode": "function",
+    "sha256": "f85d5b71edcf572ab3c66425a38dcea10cfa01aa2ae46253fadcd93560746e17"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 5,
+      "index": 20,
+      "order": 19,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

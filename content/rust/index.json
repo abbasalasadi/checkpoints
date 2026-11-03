@@ -1,20 +1,27 @@
 {
+  "schema": 1,
+  "language": "rust",
+  "meta": {},
   "exercises": [
     {
       "slug": "blood_types_s",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/blood_types_s",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "brackets_matching",
+      "language": "rust",
       "kind": "bin",
+      "argv": true,
+      "dir": "exercises/brackets_matching",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": true,
       "testShape": "lib",
       "deps": [
         {
@@ -25,343 +32,419 @@
     },
     {
       "slug": "brain_fuck",
+      "language": "rust",
       "kind": "bin",
+      "argv": true,
+      "dir": "exercises/brain_fuck",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": true,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "car_rental",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/car_rental",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "check_user_name",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/check_user_name",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "count_factorial_steps",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/count_factorial_steps",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "counting_words",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/counting_words",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "display_table",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/display_table",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "dress_code",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/dress_code",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "drop_the_blog",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/drop_the_blog",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "filter_table",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/filter_table",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "flat_tree",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/flat_tree",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "format_me",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/format_me",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "get_document_id",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/get_document_id",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "insertion_sort",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/insertion_sort",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "inv_pyramid",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/inv_pyramid",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "lucas_number",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/lucas_number",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "lunch_queue",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/lunch_queue",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "matrix_determinant",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/matrix_determinant",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "matrix_display",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/matrix_display",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "matrix_multiplication",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/matrix_multiplication",
       "edition": "2024",
       "testEdition": "2021",
-      "argv": false,
       "testShape": "main",
       "deps": []
     },
     {
       "slug": "min_and_max",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/min_and_max",
       "edition": "2024",
       "testEdition": "2021",
-      "argv": false,
       "testShape": "main",
       "deps": []
     },
     {
       "slug": "modify_letter",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/modify_letter",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "moving_targets",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/moving_targets",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "negative_spelling",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/negative_spelling",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "nextprime",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/nextprime",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "office_worker",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/office_worker",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "order_books",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/order_books",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "organize_garage",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/organize_garage",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "own_and_return",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/own_and_return",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "partial_sums",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/partial_sums",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "previousprime",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/previousprime",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "prime_checker",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/prime_checker",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "profanity_filter",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/profanity_filter",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "queens",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/queens",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "reverse_it",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/reverse_it",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "rot21",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/rot21",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "rpn",
+      "language": "rust",
       "kind": "bin",
+      "argv": true,
+      "dir": "exercises/rpn",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": true,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "scytale_decoder",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/scytale_decoder",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     },
     {
       "slug": "smallest",
+      "language": "rust",
       "kind": "lib",
+      "argv": false,
+      "dir": "exercises/smallest",
       "edition": "2024",
       "testEdition": "2024",
-      "argv": false,
       "testShape": "lib",
       "deps": []
     }
@@ -370,387 +453,464 @@
     {
       "exercise": "matrix_multiplication",
       "checkpoint": "1",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "min_and_max",
       "checkpoint": "1",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "modify_letter",
       "checkpoint": "1",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "1",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "smallest",
       "checkpoint": "1",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "counting_words",
       "checkpoint": "1",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "1",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "1",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "insertion_sort",
       "checkpoint": "1",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "rpn",
       "checkpoint": "1",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "nextprime",
       "checkpoint": "2",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "previousprime",
       "checkpoint": "2",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "2",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "count_factorial_steps",
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "lucas_number",
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "matrix_determinant",
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "own_and_return",
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "check_user_name",
       "checkpoint": "2",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "dress_code",
       "checkpoint": "2",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "get_document_id",
       "checkpoint": "2",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "order_books",
       "checkpoint": "2",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "prime_checker",
       "checkpoint": "2",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "rot21",
       "checkpoint": "2",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "queens",
       "checkpoint": "2",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "2",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "counting_words",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "nextprime",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "previousprime",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "check_user_name",
       "checkpoint": "3",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "dress_code",
       "checkpoint": "3",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "get_document_id",
       "checkpoint": "3",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "negative_spelling",
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "queens",
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "rpn",
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "matrix_display",
       "checkpoint": "3",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "office_worker",
       "checkpoint": "3",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "organize_garage",
       "checkpoint": "3",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "blood_types_s",
       "checkpoint": "3",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "format_me",
       "checkpoint": "3",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "moving_targets",
       "checkpoint": "3",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "car_rental",
       "checkpoint": "3",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "drop_the_blog",
       "checkpoint": "3",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "lunch_queue",
       "checkpoint": "3",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "count_factorial_steps",
       "checkpoint": "final",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "matrix_multiplication",
       "checkpoint": "final",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "min_and_max",
       "checkpoint": "final",
-      "level": 1
+      "level": 1,
+      "order": null
     },
     {
       "exercise": "counting_words",
       "checkpoint": "final",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "modify_letter",
       "checkpoint": "final",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "final",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "smallest",
       "checkpoint": "final",
-      "level": 2
+      "level": 2,
+      "order": null
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "nextprime",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "previousprime",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "prime_checker",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "profanity_filter",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "final",
-      "level": 3
+      "level": 3,
+      "order": null
     },
     {
       "exercise": "insertion_sort",
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "matrix_determinant",
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "order_books",
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "rot21",
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "rpn",
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "order": null
     },
     {
       "exercise": "blood_types_s",
       "checkpoint": "final",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "office_worker",
       "checkpoint": "final",
-      "level": 5
+      "level": 5,
+      "order": null
     },
     {
       "exercise": "lunch_queue",
       "checkpoint": "final",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "matrix_display",
       "checkpoint": "final",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "queens",
       "checkpoint": "final",
-      "level": 6
+      "level": 6,
+      "order": null
     },
     {
       "exercise": "display_table",
       "checkpoint": "final",
-      "level": 7
+      "level": 7,
+      "order": null
     },
     {
       "exercise": "drop_the_blog",
       "checkpoint": "final",
-      "level": 7
+      "level": 7,
+      "order": null
     },
     {
       "exercise": "filter_table",
       "checkpoint": "final",
-      "level": 7
+      "level": 7,
+      "order": null
     },
     {
       "exercise": "flat_tree",
       "checkpoint": "final",
-      "level": 8
+      "level": 8,
+      "order": null
     },
     {
       "exercise": "brackets_matching",
       "checkpoint": "final",
-      "level": 9
+      "level": 9,
+      "order": null
     },
     {
       "exercise": "brain_fuck",
       "checkpoint": "final",
-      "level": 9
+      "level": 9,
+      "order": null
     }
   ]
 }

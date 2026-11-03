@@ -1,0 +1,76 @@
+{
+  "slug": "js-grid-word-finder",
+  "title": "Grid Words Finder",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101994,
+  "expectedFiles": [
+    "grid-word-finder.js"
+  ],
+  "editorFiles": [
+    "grid-word-finder.js",
+    "main.js"
+  ],
+  "entry": [
+    "gridWordsFinder"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "grid"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-grid-word-finder/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-grid-word-finder/README.md",
+    "sha256": "4c53c391fa7a8a471b77dfa33c86df9f036caca55293d84e8660f6b65e67df7a"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-grid-word-finder_test.js",
+    "exerciseArg": "js-grid-word-finder",
+    "mode": "function",
+    "sha256": "cc440caae954eff6409339d2b7ecbc91c03162da7794a3a36dab420972c5cfbf"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 6
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 3,
+      "index": null,
+      "order": 9,
+      "baseXp": 18300,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 8,
+      "order": 8,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 8,
+      "order": 8,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "slug": "js-nested-array-reverser",
+  "title": "Nested Array Reverser",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101991,
+  "expectedFiles": [
+    "nested-array-reverser.js"
+  ],
+  "editorFiles": [
+    "nested-array-reverser.js",
+    "main.js"
+  ],
+  "entry": [
+    "nestedArrayReverser"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-nested-array-reverser/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-nested-array-reverser/README.md",
+    "sha256": "fc28b17df1bcd9a065438fb8ff1785643ce6cda9e583bca13617312b01545a5f"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-nested-array-reverser_test.js",
+    "exerciseArg": "js-nested-array-reverser",
+    "mode": "function",
+    "sha256": "b6cb987f0bc20ffe5abb44920c8ea9f373e70b52eb714eff7b5b429ed9aab06f"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 8
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 8,
+      "order": 8,
+      "baseXp": 18400,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 9,
+      "order": 8,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 9,
+      "order": 9,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 9,
+      "order": 9,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "slug": "js-perfect-num",
+  "title": "PerfectNum",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101987,
+  "expectedFiles": [
+    "perfect-num.js"
+  ],
+  "editorFiles": [
+    "perfect-num.js",
+    "main.js"
+  ],
+  "entry": [
+    "isPerfectNum"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-perfect-num/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-perfect-num/README.md",
+    "sha256": "517cabf7efcba5639ff7fd015e806e2a0f22de400245b1094558f3aabf14eee4"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-perfect-num_test.js",
+    "exerciseArg": "js-perfect-num",
+    "mode": "function",
+    "sha256": "7810d4ae8882b00405eb9067b8cc2a552640f00a348fa36bc24e0aa460d4ce3b"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 4
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 4,
+      "order": 4,
+      "baseXp": 9200,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 3,
+      "order": 3,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 3,
+      "order": 3,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 1,
+      "index": 3,
+      "order": 3,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

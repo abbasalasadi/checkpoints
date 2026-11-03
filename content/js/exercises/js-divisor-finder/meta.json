@@ -1,0 +1,83 @@
+{
+  "slug": "js-divisor-finder",
+  "title": "divisorFinder",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101986,
+  "expectedFiles": [
+    "divisor-finder.js"
+  ],
+  "editorFiles": [
+    "divisor-finder.js",
+    "main.js"
+  ],
+  "entry": [
+    "divisors"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-divisor-finder/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-divisor-finder/README.md",
+    "sha256": "b3eb7d7ac3260ff30cbdf83e15d8acf4162b1ebdb003e9b4c858212b4fa0855a"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-divisor-finder_test.js",
+    "exerciseArg": "js-divisor-finder",
+    "mode": "function",
+    "sha256": "beebb5624f314631c4e28fe8b98b191d9d7117cc22ffc458ebf7d25c517e2f91"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 4
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 3,
+      "order": 3,
+      "baseXp": 9200,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 4,
+      "order": 4,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 4,
+      "order": 4,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 1,
+      "index": 4,
+      "order": 4,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

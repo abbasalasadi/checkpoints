@@ -1,0 +1,97 @@
+{
+  "slug": "grouping",
+  "title": "grouping",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 101291,
+  "expectedFiles": [
+    "grouping/main.go"
+  ],
+  "editorFiles": [
+    "grouping/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "fmt.Printf",
+    "os.Args",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/grouping/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/grouping/README.md",
+    "sha256": "c9569fec9b2ad18e18ddc54eb39c24a6d63759de012cb5cf93758a819bfdbba8"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/grouping_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "chars",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "93f4796dc68b984314240e062d25893ef23338926d52af2cd64d84a06e9e6b8a"
+  },
+  "solution": {
+    "path": "tools/authored/grouping/solution.go",
+    "replaces": "/test-go/solutions/grouping/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "005f3477274b763570a42ea258968d249a6078800878f2ddfedbd4d1f13f04e8"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 20,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 10,
+      "index": 58,
+      "order": 56,
+      "baseXp": 500,
+      "difficulty": 20,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101291,
+      "allowedFunctions": [
+        "fmt.Printf",
+        "os.Args",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

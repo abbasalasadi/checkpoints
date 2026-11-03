@@ -1,0 +1,63 @@
+{
+  "slug": "js-trap-object",
+  "title": "Trap Object",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101981,
+  "expectedFiles": [
+    "trap-object.js"
+  ],
+  "editorFiles": [
+    "trap-object.js",
+    "main.js"
+  ],
+  "entry": [
+    "trapObject"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "throwsError",
+    "createLogger"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-trap-object/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-trap-object/README.md",
+    "sha256": "bb3890a9a113453213e5c6a268b048006515ee3314474b239103776c64f571af"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-trap-object_test.js",
+    "exerciseArg": "js-trap-object",
+    "mode": "function",
+    "sha256": "08d78e836fc792c892bb56bb43e9dc9be9cc0ffb22ea8c2f28b0aa4bd137088b"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 14
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 29,
+      "order": 28,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

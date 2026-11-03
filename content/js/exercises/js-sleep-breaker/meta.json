@@ -1,0 +1,61 @@
+{
+  "slug": "js-sleep-breaker",
+  "title": "Sleep Breaker",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101973,
+  "expectedFiles": [
+    "sleep-breaker.js"
+  ],
+  "editorFiles": [
+    "sleep-breaker.js",
+    "main.js"
+  ],
+  "entry": [
+    "sleepBreaker"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-sleep-breaker/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-sleep-breaker/README.md",
+    "sha256": "13010c9d61642cfc5086b77da93015a3b89c0f7e30875f85d581ee24f60d97f5"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-sleep-breaker_test.js",
+    "exerciseArg": "js-sleep-breaker",
+    "mode": "function",
+    "sha256": "5fba587ae33fa5edce8b94c353ce50c6c2a3243a83c1ee89ed515b73664d3df8"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 5,
+      "index": 18,
+      "order": 17,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

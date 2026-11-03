@@ -1,0 +1,193 @@
+{
+  "image": "ghcr.io/01-edu/module-go",
+  "manifestDigest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+  "configDigest": "sha256:2a8689fb036a278de7e0d9be43d628ef3eeae7b981fc5e632018dcd0c15b58d2",
+  "note": "Pulled by digest — see tools/fetch-upstream.sh. The exam nodes name ghcr.io/01-edu/test-go, which is a stale go1.18 build; this is the image in service.",
+  "config": {
+    "architecture": "amd64",
+    "config": {
+      "Env": [
+        "PATH=/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "GOLANG_VERSION=1.25.12",
+        "GOTOOLCHAIN=local",
+        "GOPATH=/go",
+        "GIT_TERMINAL_PROMPT=0"
+      ],
+      "Entrypoint": [
+        "/usr/local/bin/entrypoint.sh"
+      ],
+      "WorkingDir": "/test-go"
+    },
+    "created": "2026-07-23T10:27:29.842335868+01:00",
+    "history": [
+      {
+        "created": "2026-06-16T00:01:29.967161902Z",
+        "created_by": "ADD alpine-minirootfs-3.24.1-x86_64.tar.gz / # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-06-16T00:01:29.967161902Z",
+        "created_by": "CMD [\"/bin/sh\"]",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-07T22:11:53.836255645Z",
+        "created_by": "RUN /bin/sh -c apk add --no-cache ca-certificates # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-07T22:12:00.698012213Z",
+        "created_by": "ENV GOLANG_VERSION=1.25.12",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-07T22:12:00.698012213Z",
+        "created_by": "ENV GOTOOLCHAIN=local",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-07T22:12:00.698012213Z",
+        "created_by": "ENV GOPATH=/go",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-07T22:12:00.698012213Z",
+        "created_by": "ENV PATH=/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-07T22:12:00.698012213Z",
+        "created_by": "COPY /target/ / # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-07T22:12:02.779924844Z",
+        "created_by": "RUN /bin/sh -c mkdir -p \"$GOPATH/src\" \"$GOPATH/bin\" && chmod -R 1777 \"$GOPATH\" # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-07T22:12:02.804939623Z",
+        "created_by": "WORKDIR /go",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:32.230390571+01:00",
+        "created_by": "ENV GIT_TERMINAL_PROMPT=0",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      },
+      {
+        "created": "2026-07-23T10:06:32.230390571+01:00",
+        "created_by": "RUN /bin/sh -c go env && go list std > /dev/null # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:33.111532494+01:00",
+        "created_by": "RUN /bin/sh -c apk add --no-cache git ca-certificates # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:39.116160218+01:00",
+        "created_by": "RUN /bin/sh -c go install mvdan.cc/gofumpt@latest # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:41.619900147+01:00",
+        "created_by": "RUN /bin/sh -c GOSUMDB=off go install github.com/01-edu/rc@latest # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:41.637463973+01:00",
+        "created_by": "WORKDIR /piscine-go",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.046568007+01:00",
+        "created_by": "RUN /bin/sh -c go mod init piscine-go &&     go get github.com/01-edu/z01@v0.1.0 # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.061807217+01:00",
+        "created_by": "WORKDIR /test-go",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.072704487+01:00",
+        "created_by": "COPY go.mod go.sum ./ # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.461929399+01:00",
+        "created_by": "RUN /bin/sh -c go mod download # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.473077725+01:00",
+        "created_by": "COPY lib lib # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.493088467+01:00",
+        "created_by": "COPY solutions solutions # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:44.509438209+01:00",
+        "created_by": "COPY tests tests # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:45.616424342+01:00",
+        "created_by": "RUN /bin/sh -c go install $(grep -rl 'challenge.Program' ./tests | rev | cut -d/ -f2- | rev) # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:06:46.015920737+01:00",
+        "created_by": "RUN /bin/sh -c rm -rf /piscine-go # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:27:29.842335868+01:00",
+        "created_by": "COPY entrypoint.sh /usr/local/bin # buildkit",
+        "comment": "buildkit.dockerfile.v0"
+      },
+      {
+        "created": "2026-07-23T10:27:29.842335868+01:00",
+        "created_by": "ENTRYPOINT [\"/usr/local/bin/entrypoint.sh\"]",
+        "comment": "buildkit.dockerfile.v0",
+        "empty_layer": true
+      }
+    ],
+    "os": "linux",
+    "rootfs": {
+      "type": "layers",
+      "diff_ids": [
+        "sha256:34884abbe92863fce933ed7c39c0e045631af0ed86d5cc0dfbdf9fdca426ce3c",
+        "sha256:49c5f4bd4150345d6bdfa7c7e677d73fe03cc742598901e5ac40959d9a3072f2",
+        "sha256:c11523315a2840edc8c35a91f1f9f475a1da16bed3de0eae0f03a674873b475a",
+        "sha256:c91b45a2b070045f87ad6b195cdef95f77cef782df535b0bf4d91d0606548325",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:f4a0fdec5a3ab34a7c82f18c86b614eb83de1a7d3a26e3893da3a07fed259c23",
+        "sha256:56a8384eb8868e639e13591fa55d34f3bc7178c4909cdaab9d1edaa2a3d813d7",
+        "sha256:4040be14c275697583fbadbc70adfd90fc59529d97a4ae1c1dc2334859649731",
+        "sha256:44ff56eabb160a43006c41807d497ca35e354f1e3ef2b72edff88df69894003c",
+        "sha256:c30861ab69a04c77ba23be2c6df13a4bd410ec8b19bde2286534d68916707f7f",
+        "sha256:cdb725fa56ed95d616921cef5060fa2098805418d9e98ec1a453171c064e59d2",
+        "sha256:c06d937047a62f62b9a5bd6caed0a4b8e4feb0df9d247b5b8e8593cd32a9a698",
+        "sha256:a4b48dc96635fdb1a79f0f2f6834188b12eacc25c1bb5660a45e96da58841f55",
+        "sha256:ff39457a6c4f6637837a4469466a4012a775dd5171bc6c47f8b1d8bfcb9f8ccd",
+        "sha256:fabf1a57268b374867a6e0c4bf970731ca8ef4bfcb7b522e96a53c3c873285b1",
+        "sha256:23e61abe23a8b0334e4329150108c7c8308879500f45fc633013bb060754886c",
+        "sha256:100b01909973c1ffe8109964afc0107f603d8e76821888a048182517d5183324",
+        "sha256:a8669d7fb0d1bb7ec9aa329df6861953665e94124b4bc85cd589eaec64d39b41",
+        "sha256:eec832bdec6b057558dd7948da2ad6de4b887e6f5ff8fcd577afec92ca2ac5a0",
+        "sha256:8341cb1ed4ae8703d40bf7deecca8a13eeb3905380e7907b7c707813fa5b7058"
+      ]
+    }
+  }
+}

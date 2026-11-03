@@ -1,0 +1,83 @@
+{
+  "slug": "js-even-sum",
+  "title": "evenSum",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101985,
+  "expectedFiles": [
+    "even-sum.js"
+  ],
+  "editorFiles": [
+    "even-sum.js",
+    "main.js"
+  ],
+  "entry": [
+    "evenSum"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-even-sum/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-even-sum/README.md",
+    "sha256": "c6716e8727f9b6e38d1c9e5fa53e9ed1da723f2eb7697d80e33b8f1cfd80fed6"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-even-sum_test.js",
+    "exerciseArg": "js-even-sum",
+    "mode": "function",
+    "sha256": "f8bb4c40e033331bdf3cafb32e51f4724354ed86f33a19890e01df2ab7dd33bb"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 2
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "baseXp": 4600,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

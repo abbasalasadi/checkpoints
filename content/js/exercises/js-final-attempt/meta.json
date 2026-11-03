@@ -1,0 +1,61 @@
+{
+  "slug": "js-final-attempt",
+  "title": "Final Attempt",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101974,
+  "expectedFiles": [
+    "final-attempt.js"
+  ],
+  "editorFiles": [
+    "final-attempt.js",
+    "main.js"
+  ],
+  "entry": [
+    "FinalAttempt"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-final-attempt/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-final-attempt/README.md",
+    "sha256": "5f18434703508db094190efb0d2135ab7d96c70574bc186288cfe249039b9598"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-final-attempt_test.js",
+    "exerciseArg": "js-final-attempt",
+    "mode": "function",
+    "sha256": "f2fe9a5987bb30152ba889ec1c9009916334c1f0094e0f58c988a0a936c6d5d1"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 5,
+      "index": 19,
+      "order": 18,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

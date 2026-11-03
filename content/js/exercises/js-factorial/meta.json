@@ -1,0 +1,85 @@
+{
+  "slug": "js-factorial",
+  "title": "factorial",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101905,
+  "expectedFiles": [
+    "factorial.js"
+  ],
+  "editorFiles": [
+    "factorial.js",
+    "main.js"
+  ],
+  "entry": [
+    "factorial"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-factorial/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-factorial/README.md",
+    "sha256": "6dcb7bd01e238417a546c4edf573af847bc60203de2f04e49bbd66182d7c28f2"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-factorial_test.js",
+    "exerciseArg": "js-factorial",
+    "mode": "function",
+    "sha256": "134ba981d6be8a4c3e56b20ebd5e4afc768d8baa4d62496bc3d7000ac9361d54"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 2
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

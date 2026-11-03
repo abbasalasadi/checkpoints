@@ -1,0 +1,62 @@
+{
+  "slug": "js-swappable-object",
+  "title": "Swappable Object",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101980,
+  "expectedFiles": [
+    "swappable-object.js"
+  ],
+  "editorFiles": [
+    "swappable-object.js",
+    "main.js"
+  ],
+  "entry": [
+    "swappableObject"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "throwsError"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-swappable-object/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-swappable-object/README.md",
+    "sha256": "7a841d6a2043f6b2f8720476f4ef78c382d8ff0cfb276cb3bdf8a0171c225e17"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-swappable-object_test.js",
+    "exerciseArg": "js-swappable-object",
+    "mode": "function",
+    "sha256": "f3e93dbdd5b7d627557fe2dcd2c20a597b4262b29969323c6baf72deacce1096"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 14
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 27,
+      "order": 26,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

@@ -1,0 +1,883 @@
+{
+  "meta": {
+    "source": "live Reboot GraphQL (https://learn.reboot01.com/api/graphql-engine/v1/graphql)",
+    "fetchedAt": "2026-07-29",
+    "piscine": {
+      "name": "Piscine JS",
+      "id": 100569,
+      "campus": "bahrain"
+    },
+    "levelField": "object_child.attrs.group (level within the checkpoint)",
+    "checkpoints": [
+      {
+        "checkpoint": "1",
+        "name": "checkpoint 01-js",
+        "id": 101904,
+        "type": "exam",
+        "exercises": 10,
+        "levels": 5
+      },
+      {
+        "checkpoint": "2",
+        "name": "checkpoint 02-js",
+        "id": 101916,
+        "type": "exam",
+        "exercises": 14,
+        "levels": 5
+      },
+      {
+        "checkpoint": "3",
+        "name": "checkpoint 03-js",
+        "id": 101932,
+        "type": "exam",
+        "exercises": 20,
+        "levels": 5
+      },
+      {
+        "checkpoint": "final",
+        "name": "checkpoint final-js",
+        "id": 101954,
+        "type": "exam",
+        "exercises": 29,
+        "levels": 7
+      }
+    ]
+  },
+  "exercises": [
+    {
+      "slug": "js-array-chunk-reversal",
+      "id": 101990,
+      "language": "js",
+      "expectedFiles": [
+        "array-chunk-reversal.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-array-chunk-reversal/README.md",
+      "randomizedSubject": true,
+      "aliases": [
+        "js-array-chunck-reversal"
+      ]
+    },
+    {
+      "slug": "js-deep-clone",
+      "id": 102000,
+      "language": "js",
+      "expectedFiles": [
+        "deep-clone.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-deep-clone/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-deep-equal",
+      "id": 102001,
+      "language": "js",
+      "expectedFiles": [
+        "deep-equal.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-deep-equal/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-deep-find",
+      "id": 102002,
+      "language": "js",
+      "expectedFiles": [
+        "deep-find.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-deep-find/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-deep-freeze",
+      "id": 102003,
+      "language": "js",
+      "expectedFiles": [
+        "deep-freeze.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-deep-freeze/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-divisor-finder",
+      "id": 101986,
+      "language": "js",
+      "expectedFiles": [
+        "divisor-finder.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-divisor-finder/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-election-mix",
+      "id": 101937,
+      "language": "js",
+      "expectedFiles": [
+        "election-mix.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-election-mix/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-even-sum",
+      "id": 101985,
+      "language": "js",
+      "expectedFiles": [
+        "even-sum.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-even-sum/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-exam-grader",
+      "id": 101975,
+      "language": "js",
+      "expectedFiles": [
+        "exam-grader.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-exam-grader/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-factorial",
+      "id": 101905,
+      "language": "js",
+      "expectedFiles": [
+        "factorial.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-factorial/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-fibonacci",
+      "id": 101906,
+      "language": "js",
+      "expectedFiles": [
+        "fibonacci.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-fibonacci/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-final-attempt",
+      "id": 101974,
+      "language": "js",
+      "expectedFiles": [
+        "final-attempt.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-final-attempt/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-flat-object",
+      "id": 101949,
+      "language": "js",
+      "expectedFiles": [
+        "flat-object.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-flat-object/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-flatten-object",
+      "id": 101979,
+      "language": "js",
+      "expectedFiles": [
+        "flatten-object.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-flatten-object/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-grid-word-finder",
+      "id": 101994,
+      "language": "js",
+      "expectedFiles": [
+        "grid-word-finder.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-grid-word-finder/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-grid-word-finder2",
+      "id": 101997,
+      "language": "js",
+      "expectedFiles": [
+        "grid-word-finder2.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-grid-word-finder2/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-insertion-sort-analyzer",
+      "id": 101993,
+      "language": "js",
+      "expectedFiles": [
+        "insertion-sort-analyzer.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-insertion-sort-analyzer/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-nested-array-reverser",
+      "id": 101991,
+      "language": "js",
+      "expectedFiles": [
+        "nested-array-reverser.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-nested-array-reverser/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-object-lab",
+      "id": 101936,
+      "language": "js",
+      "expectedFiles": [
+        "object-lab.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-object-lab/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-palindromic-chains",
+      "id": 101988,
+      "language": "js",
+      "expectedFiles": [
+        "palindromic-chains.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-palindromic-chains/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-perfect-num",
+      "id": 101987,
+      "language": "js",
+      "expectedFiles": [
+        "perfect-num.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-perfect-num/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-pipeline",
+      "id": 101999,
+      "language": "js",
+      "expectedFiles": [
+        "pipeline.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-pipeline/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-sentence-pyramid",
+      "id": 101989,
+      "language": "js",
+      "expectedFiles": [
+        "sentence-pyramid.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-sentence-pyramid/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-sleep-breaker",
+      "id": 101973,
+      "language": "js",
+      "expectedFiles": [
+        "sleep-breaker.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-sleep-breaker/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-snakepath-validator",
+      "id": 101998,
+      "language": "js",
+      "expectedFiles": [
+        "snakepath-validator.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-snakepath-validator/README.md",
+      "randomizedSubject": true
+    },
+    {
+      "slug": "js-swappable-object",
+      "id": 101980,
+      "language": "js",
+      "expectedFiles": [
+        "swappable-object.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-swappable-object/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-transform-keys",
+      "id": 101982,
+      "language": "js",
+      "expectedFiles": [
+        "js-transform-keys.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-transform-keys/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-trap-object",
+      "id": 101981,
+      "language": "js",
+      "expectedFiles": [
+        "trap-object.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-trap-object/README.md",
+      "randomizedSubject": false
+    },
+    {
+      "slug": "js-zoo-race",
+      "id": 101976,
+      "language": "js",
+      "expectedFiles": [
+        "zoo-race.js"
+      ],
+      "testImage": "ghcr.io/01-edu/module-js",
+      "subject": "/api/content/root/01-edu_module/content/js-zoo-race/README.md",
+      "randomizedSubject": false
+    }
+  ],
+  "placements": [
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 0,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 1,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 2,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "1",
+      "level": 2,
+      "index": 3,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "1",
+      "level": 2,
+      "index": 4,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "1",
+      "level": 3,
+      "index": 5,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "1",
+      "level": 3,
+      "index": 6,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "1",
+      "level": 4,
+      "index": 7,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "1",
+      "level": 4,
+      "index": 8,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "1",
+      "level": 5,
+      "index": 10,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 0,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 1,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 2,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 3,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 4,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 5,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 6,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 7,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 9,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "2",
+      "level": 3,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "2",
+      "level": 4,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "2",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-pipeline",
+      "checkpoint": "2",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "2",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 0,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 1,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 2,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 3,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 4,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 5,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 6,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 7,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 8,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 9,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 11,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 12,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 13,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-object-lab",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 14,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-election-mix",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 15,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-flat-object",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 16,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-deep-clone",
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-deep-equal",
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-deep-find",
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-deep-freeze",
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "baseXp": null
+    },
+    {
+      "exercise": "js-factorial",
+      "checkpoint": "final",
+      "level": 1,
+      "index": 0,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-fibonacci",
+      "checkpoint": "final",
+      "level": 1,
+      "index": 1,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-even-sum",
+      "checkpoint": "final",
+      "level": 1,
+      "index": 2,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-perfect-num",
+      "checkpoint": "final",
+      "level": 1,
+      "index": 3,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-divisor-finder",
+      "checkpoint": "final",
+      "level": 1,
+      "index": 4,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-array-chunk-reversal",
+      "checkpoint": "final",
+      "level": 2,
+      "index": 5,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-palindromic-chains",
+      "checkpoint": "final",
+      "level": 2,
+      "index": 6,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-sentence-pyramid",
+      "checkpoint": "final",
+      "level": 2,
+      "index": 7,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-grid-word-finder",
+      "checkpoint": "final",
+      "level": 2,
+      "index": 8,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-nested-array-reverser",
+      "checkpoint": "final",
+      "level": 2,
+      "index": 9,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-insertion-sort-analyzer",
+      "checkpoint": "final",
+      "level": 3,
+      "index": 11,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-snakepath-validator",
+      "checkpoint": "final",
+      "level": 3,
+      "index": 12,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-grid-word-finder2",
+      "checkpoint": "final",
+      "level": 3,
+      "index": 13,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-object-lab",
+      "checkpoint": "final",
+      "level": 4,
+      "index": 14,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-election-mix",
+      "checkpoint": "final",
+      "level": 4,
+      "index": 15,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-flat-object",
+      "checkpoint": "final",
+      "level": 4,
+      "index": 16,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-pipeline",
+      "checkpoint": "final",
+      "level": 4,
+      "index": 17,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-sleep-breaker",
+      "checkpoint": "final",
+      "level": 5,
+      "index": 18,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-final-attempt",
+      "checkpoint": "final",
+      "level": 5,
+      "index": 19,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-exam-grader",
+      "checkpoint": "final",
+      "level": 5,
+      "index": 20,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-zoo-race",
+      "checkpoint": "final",
+      "level": 5,
+      "index": 21,
+      "baseXp": 50
+    },
+    {
+      "exercise": "js-deep-clone",
+      "checkpoint": "final",
+      "level": 6,
+      "index": 22,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-deep-equal",
+      "checkpoint": "final",
+      "level": 6,
+      "index": 23,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-deep-find",
+      "checkpoint": "final",
+      "level": 6,
+      "index": 24,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-deep-freeze",
+      "checkpoint": "final",
+      "level": 6,
+      "index": 25,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-flatten-object",
+      "checkpoint": "final",
+      "level": 7,
+      "index": 26,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-swappable-object",
+      "checkpoint": "final",
+      "level": 7,
+      "index": 27,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-transform-keys",
+      "checkpoint": "final",
+      "level": 7,
+      "index": 28,
+      "baseXp": 100
+    },
+    {
+      "exercise": "js-trap-object",
+      "checkpoint": "final",
+      "level": 7,
+      "index": 29,
+      "baseXp": 100
+    }
+  ]
+}

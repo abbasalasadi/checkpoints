@@ -1,0 +1,85 @@
+{
+  "slug": "js-insertion-sort-analyzer",
+  "title": "Insertion Sort Analyzer",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101993,
+  "expectedFiles": [
+    "insertion-sort-analyzer.js"
+  ],
+  "editorFiles": [
+    "insertion-sort-analyzer.js",
+    "main.js"
+  ],
+  "entry": [
+    "insertionSortAnalyzer"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "ascending",
+    "descending"
+  ],
+  "aliases": [],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-insertion-sort-analyzer/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-insertion-sort-analyzer/README.md",
+    "sha256": "557089e48b076e284626efaeaead353689e15498e44907efc1107b7d8706b00a"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-insertion-sort-analyzer_test.js",
+    "exerciseArg": "js-insertion-sort-analyzer",
+    "mode": "function",
+    "sha256": "aac2cb41ff4bea041c47ed64c247cb447d74f0bdab2524f4136dbc32b0005823"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 10,
+      "order": 9,
+      "baseXp": 23000,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": null,
+      "order": 10,
+      "baseXp": 24400,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 3,
+      "index": 11,
+      "order": 10,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 3,
+      "index": 11,
+      "order": 10,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

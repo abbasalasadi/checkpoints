@@ -1,0 +1,85 @@
+{
+  "slug": "js-fibonacci",
+  "title": "fibonacci",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101906,
+  "expectedFiles": [
+    "fibonacci.js"
+  ],
+  "editorFiles": [
+    "fibonacci.js",
+    "main.js"
+  ],
+  "entry": [
+    "fibonacci"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-fibonacci/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-fibonacci/README.md",
+    "sha256": "6578d92c228cde2ff76e5dd31a8363841f560cf6f86ce17b157320f227b6d83b"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-fibonacci_test.js",
+    "exerciseArg": "js-fibonacci",
+    "mode": "function",
+    "sha256": "94c8f1a65d3a524a92f22ceac2f7c1e7eab848439887961b90ccdef52ea93ce0"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 2
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

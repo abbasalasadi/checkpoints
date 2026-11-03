@@ -1,0 +1,69 @@
+{
+  "slug": "js-flat-object",
+  "title": "Flat Object",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101949,
+  "expectedFiles": [
+    "flat-object.js"
+  ],
+  "editorFiles": [
+    "flat-object.js",
+    "main.js"
+  ],
+  "entry": [
+    "flattenAndMap"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-flat-object/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-flat-object/README.md",
+    "sha256": "8478fe1cb9c0504d65684a8d623c903297302e67c80c3e813ebd43d837ae4269"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-flat-object_test.js",
+    "exerciseArg": "js-flat-object",
+    "mode": "function",
+    "sha256": "01b78ce5fe95b026c17f5b494046ff0db1ff99686dbe9853e8c15cc3f6e5381a"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 8
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 16,
+      "order": 15,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 16,
+      "order": 15,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

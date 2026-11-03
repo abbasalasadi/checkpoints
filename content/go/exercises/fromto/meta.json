@@ -1,0 +1,138 @@
+{
+  "slug": "fromto",
+  "title": "fromto",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 100894,
+  "expectedFiles": [
+    "fromto.go"
+  ],
+  "editorFiles": [
+    "fromto.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "FromTo"
+  ],
+  "allowedFunctions": [
+    "strconv.Itoa"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/fromto/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/fromto/README.md",
+    "sha256": "501c4c7d63884a7346697944baa25a92812b4588bb51c27187440e81ffeddaed"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/fromto_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "83f065706292f3b164995331e5f6ba23be43fa2e0743d45817e98b63fcb030e3"
+  },
+  "solution": {
+    "path": "/test-go/solutions/fromto.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "2bba232f25c88fb482ef9a61ac85b961cf506cd8dc70b07668e0fcbdaa2e30ec"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme+import-repaired",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 8,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 27,
+      "order": 26,
+      "baseXp": 13600,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100894,
+      "allowedFunctions": [
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 27,
+      "order": 26,
+      "baseXp": 23200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100920,
+      "allowedFunctions": [
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 28,
+      "order": 27,
+      "baseXp": 32800,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101210,
+      "allowedFunctions": [
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 28,
+      "order": 27,
+      "baseXp": 200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101274,
+      "allowedFunctions": [
+        "strconv.Itoa"
+      ]
+    }
+  ]
+}

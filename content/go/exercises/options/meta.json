@@ -1,0 +1,114 @@
+{
+  "slug": "options",
+  "title": "options",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 100985,
+  "expectedFiles": [
+    "options/main.go"
+  ],
+  "editorFiles": [
+    "options/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "os.*",
+    "fmt.*",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/options/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/options/README.md",
+    "sha256": "993d8b11d652bc0c384db2dcf7306763900da7b8e82d7d78e43b6a886ab49ffa"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/options_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "chars",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "aad4a06314dc832ff7aba6884d8a36e99a4d80105ab5713728c927a5a0f4ee46"
+  },
+  "solution": {
+    "path": "tools/authored/options/solution.go",
+    "replaces": "/test-go/solutions/options/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "8ad08984345531697618cf8184598961b125718a782956759dcc02401adca8db"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 16,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 8,
+      "index": 54,
+      "order": 51,
+      "baseXp": 65600,
+      "difficulty": 16,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100985,
+      "allowedFunctions": [
+        "os.*",
+        "fmt.*",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 8,
+      "index": 52,
+      "order": 50,
+      "baseXp": 400,
+      "difficulty": 16,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100296,
+      "allowedFunctions": [
+        "os.*",
+        "fmt.*",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

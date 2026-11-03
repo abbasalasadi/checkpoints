@@ -1,0 +1,68 @@
+{
+  "slug": "js-deep-clone",
+  "title": "Deep Clone",
+  "status": "placed",
+  "language": "js",
+  "platformId": 102000,
+  "expectedFiles": [
+    "deep-clone.js"
+  ],
+  "editorFiles": [
+    "deep-clone.js",
+    "main.js"
+  ],
+  "entry": [
+    "deepClone"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "deepEqual"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-deep-clone/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-deep-clone/README.md",
+    "sha256": "f4d430419c783361da10875b9680d2435fbf706e983f243603ecbb64b268a24d"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-deep-clone_test.js",
+    "exerciseArg": "js-deep-clone",
+    "mode": "function",
+    "sha256": "0a356dda1223d9cbe34c00549aaf3718edc3a93d0956cd195e219fa5c4e55417"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 10
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": null,
+      "order": 16,
+      "baseXp": 35000,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 6,
+      "index": 22,
+      "order": 21,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

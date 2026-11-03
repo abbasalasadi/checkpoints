@@ -1,0 +1,131 @@
+{
+  "slug": "notdecimal",
+  "title": "notdecimal",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 100937,
+  "expectedFiles": [
+    "notdecimal.go"
+  ],
+  "editorFiles": [
+    "notdecimal.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "NotDecimal"
+  ],
+  "allowedFunctions": [
+    "--allow-builtin",
+    "math.Pow",
+    "strconv.Itoa"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/notdecimal/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/notdecimal/README.md",
+    "sha256": "8d4e8342d94ba7df528d5422f0e2d9df88dff4cc3e460d6ce8e22b1cca6fe148"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/notdecimal_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "dca688712bcee5d44369a1c069a1f2ff30bb3011c9d5dba69fba2ce57e1a20df"
+  },
+  "solution": {
+    "path": "/test-go/solutions/notdecimal.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "c623781eb2909aeccd87de91c0d8283884b076550bb71d8cc1ce35ec15ca2974"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme+piscine-qualified",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 12,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 6,
+      "index": 43,
+      "order": 42,
+      "baseXp": 34800,
+      "difficulty": 12,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 100937,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "math.Pow",
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 6,
+      "index": 46,
+      "order": 43,
+      "baseXp": 49200,
+      "difficulty": 12,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100976,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "math.Pow",
+        "strconv.Itoa"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 6,
+      "index": 44,
+      "order": 42,
+      "baseXp": 300,
+      "difficulty": 12,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101283,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "math.Pow",
+        "strconv.Itoa"
+      ]
+    }
+  ]
+}

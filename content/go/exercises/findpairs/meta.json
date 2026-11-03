@@ -1,0 +1,134 @@
+{
+  "slug": "findpairs",
+  "title": "Find Pairs",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 101194,
+  "expectedFiles": [
+    "findpairs/main.go"
+  ],
+  "editorFiles": [
+    "findpairs/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "--allow-builtin",
+    "fmt.*",
+    "os.Args",
+    "strconv.Atoi",
+    "strings.*"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/findpairs/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/findpairs/README.md",
+    "sha256": "52b9b797d7e70b8b9e20c430156a88507f8c2d5aed917034102b816a07e2fea9"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/findpairs_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [],
+    "usesSolutions": false,
+    "sha256": "35bc8b4a8872d2f3b02fa5b96f89b7298921b35047ed0ac2769b452f1082dc8b"
+  },
+  "solution": {
+    "path": "/test-go/solutions/findpairs/main.go",
+    "package": "main",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "da1d03adad19087ed49533fe08637b14cd002c1e143e1141a85e69e6d29eb896"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 14,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 7,
+      "index": 50,
+      "order": 49,
+      "baseXp": 40600,
+      "difficulty": 14,
+      "category": "optional",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101194,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "fmt.*",
+        "os.Args",
+        "strconv.Atoi",
+        "strings.*"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 7,
+      "index": 53,
+      "order": 50,
+      "baseXp": 57400,
+      "difficulty": 14,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101222,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "fmt.*",
+        "os.Args",
+        "strconv.Atoi",
+        "strings.*"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 51,
+      "order": 49,
+      "baseXp": 350,
+      "difficulty": 14,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 101288,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "fmt.*",
+        "os.Args",
+        "strconv.Atoi",
+        "strings.*"
+      ]
+    }
+  ]
+}

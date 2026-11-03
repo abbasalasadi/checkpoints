@@ -1,0 +1,63 @@
+{
+  "slug": "js-transform-keys",
+  "title": "Transform Keys",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101982,
+  "expectedFiles": [
+    "js-transform-keys.js"
+  ],
+  "editorFiles": [
+    "js-transform-keys.js",
+    "main.js"
+  ],
+  "entry": [
+    "transformKeys"
+  ],
+  "reservedNames": [
+    "tests",
+    "t",
+    "throwsError",
+    "toSnakeCase"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-transform-keys/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-transform-keys/README.md",
+    "sha256": "a479c5dbbad4937979739d07abb3cd619e3746f8c679ef8f2ce37ec1fb03a0ec"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-transform-keys_test.js",
+    "exerciseArg": "js-transform-keys",
+    "mode": "function",
+    "sha256": "456e9489a06a9cc808baa6f0e5b2980b5b86877c5a87e82bd28dc1bfb5cce117"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 14
+  },
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 7,
+      "index": 28,
+      "order": 27,
+      "baseXp": 100,
+      "category": "optional"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "slug": "js-election-mix",
+  "title": "Election Mix",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101937,
+  "expectedFiles": [
+    "election-mix.js"
+  ],
+  "editorFiles": [
+    "election-mix.js",
+    "main.js"
+  ],
+  "entry": [
+    "createCurriedFilterAndMap"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [],
+  "randomizedSubject": false,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-election-mix/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-election-mix/README.md",
+    "sha256": "be3c36dcb8e2462285101676356caab419f0235382ea43d30570a1f89ae826f7"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-election-mix_test.js",
+    "exerciseArg": "js-election-mix",
+    "mode": "function",
+    "sha256": "cc3a560590c7d60cab88cde4dea226f973ef1daf6eddf76fdb62e2d520c7ef2b"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [
+      "main.js"
+    ],
+    "difficulty": 8
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 15,
+      "order": 14,
+      "baseXp": 50,
+      "category": "optional"
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 15,
+      "order": 14,
+      "baseXp": 50,
+      "category": "optional"
+    }
+  ]
+}

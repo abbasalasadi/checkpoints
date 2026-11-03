@@ -25,7 +25,7 @@ import { promisify } from 'node:util'
 
 const exec = promisify(execFile)
 const ROOT = process.cwd()
-const CONTENT = path.join(ROOT, 'content')
+const CONTENT = path.join(ROOT, 'content', 'rust')
 
 const arg = (name, dflt) => {
   const i = process.argv.indexOf(`--${name}`)

@@ -1,0 +1,85 @@
+{
+  "slug": "js-array-chunk-reversal",
+  "title": "Array Reverse Chunks",
+  "status": "placed",
+  "language": "js",
+  "platformId": 101990,
+  "expectedFiles": [
+    "array-chunk-reversal.js"
+  ],
+  "editorFiles": [
+    "array-chunk-reversal.js",
+    "main.js"
+  ],
+  "entry": [
+    "reverseChunks"
+  ],
+  "reservedNames": [
+    "tests",
+    "t"
+  ],
+  "aliases": [
+    "js-array-chunck-reversal"
+  ],
+  "randomizedSubject": true,
+  "files": {
+    "subject": "README.md",
+    "test": "test.js",
+    "starter": "starter.js",
+    "main": "main.js",
+    "solution": "solution.js"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/js-array-chunk-reversal/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/api/content/root/01-edu_module/content/js-array-chunk-reversal/README.md",
+    "sha256": "1540cbaafe67c9e842ea944c264556ed698b33f6c40948a0dfee70c1ef319e80"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-js",
+    "path": "/app/tests/js-array-chunk-reversal_test.js",
+    "exerciseArg": "js-array-chunk-reversal",
+    "mode": "function",
+    "sha256": "959aad539852c25cb3a65e2c208a37bd56cde5e7ad46cbf696e51bea81b0162d"
+  },
+  "platform": {
+    "cooldownMs": 180000,
+    "providedFiles": [],
+    "difficulty": 8
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 7,
+      "order": 7,
+      "baseXp": 18400,
+      "category": "required"
+    },
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 50,
+      "category": "required"
+    },
+    {
+      "checkpoint": "final",
+      "level": 2,
+      "index": 5,
+      "order": 5,
+      "baseXp": 50,
+      "category": "required"
+    }
+  ]
+}

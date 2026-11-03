@@ -1,0 +1,113 @@
+{
+  "slug": "romannumbers",
+  "title": "romannumbers",
+  "status": "placed",
+  "language": "go",
+  "kind": "prog",
+  "platformId": 101223,
+  "expectedFiles": [
+    "romannumbers/main.go"
+  ],
+  "editorFiles": [
+    "romannumbers/main.go"
+  ],
+  "studentPackage": "main",
+  "argv": true,
+  "entry": [],
+  "allowedFunctions": [
+    "os.Args",
+    "fmt.Printf",
+    "--allow-builtin"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": null,
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/romannumbers/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/romannumbers/README.md",
+    "sha256": "4f3574035ad9a6140cbda00b9fec177ccb00bcab9f968fafd0fddc133213cc95"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/romannumbers_test/main.go",
+    "mode": "program",
+    "source": "upstream",
+    "harness": [
+      "challenge",
+      "random"
+    ],
+    "usesSolutions": false,
+    "sha256": "f36877a061c57cc3fefb25834122a4a721dcd12ccb0a11ff6eb03e6f640de153"
+  },
+  "solution": {
+    "path": "tools/authored/romannumbers/solution.go",
+    "replaces": "/test-go/solutions/romannumbers/main.go",
+    "package": "main",
+    "source": "adapted",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "492a711265d3b984ad791eeea4e06854fa13fa052f653cefcc95acb59e9d5767"
+  },
+  "starterFrom": "generated",
+  "mainFrom": null,
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 16,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 8,
+      "index": 55,
+      "order": 52,
+      "baseXp": 65600,
+      "difficulty": 16,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101223,
+      "allowedFunctions": [
+        "os.Args",
+        "fmt.Printf",
+        "--allow-builtin"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 8,
+      "index": 53,
+      "order": 51,
+      "baseXp": 400,
+      "difficulty": 16,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101289,
+      "allowedFunctions": [
+        "os.Args",
+        "fmt.Printf",
+        "--allow-builtin"
+      ]
+    }
+  ]
+}

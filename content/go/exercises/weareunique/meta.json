@@ -1,0 +1,143 @@
+{
+  "slug": "weareunique",
+  "title": "weareunique",
+  "status": "placed",
+  "language": "go",
+  "kind": "func",
+  "platformId": 101150,
+  "expectedFiles": [
+    "weareunique.go"
+  ],
+  "editorFiles": [
+    "weareunique.go",
+    "main.go"
+  ],
+  "studentPackage": "piscine",
+  "argv": false,
+  "entry": [
+    "WeAreUnique"
+  ],
+  "allowedFunctions": [
+    "--allow-builtin",
+    "strings.Contains"
+  ],
+  "allowedFunctionsVary": false,
+  "aliases": [],
+  "files": {
+    "subject": "README.md",
+    "test": "test.go",
+    "starter": "starter.go",
+    "main": "main.go",
+    "solution": "solution.go"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/weareunique/README.md",
+    "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
+    "platformPath": "/markdown/root/public/subjects/weareunique/README.md",
+    "sha256": "f807fdff7856f33c2f18921b11e27db46504d4ed4f4fe2f56ba489561e1f8c5f"
+  },
+  "test": {
+    "image": "ghcr.io/01-edu/module-go",
+    "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
+    "path": "/test-go/tests/weareunique_test/main.go",
+    "mode": "function",
+    "source": "upstream",
+    "harness": [
+      "challenge"
+    ],
+    "usesSolutions": true,
+    "sha256": "0293651415b125c600db4da785722c38f08a012782bc3c695f4032f7efdaa6f5"
+  },
+  "solution": {
+    "path": "/test-go/solutions/weareunique.go",
+    "package": "piscine",
+    "source": "upstream",
+    "harness": [],
+    "passesRc": true,
+    "rcFindings": [],
+    "gofumptClean": true,
+    "sha256": "ffe8a96f0ce9b2e10993bd0a1a7d9dbdd5a6cbfb9c058b215da6efd6e0e74e18"
+  },
+  "starterFrom": "readme",
+  "mainFrom": "readme+piscine-qualified",
+  "platform": {
+    "cooldownMs": 180000,
+    "difficulty": 8,
+    "codeEditor": true,
+    "testImage": "ghcr.io/01-edu/test-go",
+    "resolvedFields": [
+      "subject",
+      "testImage",
+      "cooldownMs",
+      "difficulty",
+      "baseXp"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 24,
+      "order": 23,
+      "baseXp": 13600,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101150,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.Contains"
+      ]
+    },
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 24,
+      "order": 23,
+      "baseXp": 23200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100923,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.Contains"
+      ]
+    },
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 25,
+      "order": 24,
+      "baseXp": 32800,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 100962,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.Contains"
+      ]
+    },
+    {
+      "checkpoint": "final",
+      "level": 4,
+      "index": 25,
+      "order": 24,
+      "baseXp": 200,
+      "difficulty": 8,
+      "category": "required",
+      "status": null,
+      "codeEditor": true,
+      "platformId": 101272,
+      "allowedFunctions": [
+        "--allow-builtin",
+        "strings.Contains"
+      ]
+    }
+  ]
+}
