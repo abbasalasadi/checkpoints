@@ -8,7 +8,7 @@ import { config } from '../config/index.js';
 import { logger } from '../logger.js';
 import { sessions, users, type User } from '../repositories/index.js';
 
-export const SESSION_COOKIE = 'rc_session';
+export const SESSION_COOKIE = 'cp_session';
 
 /** Every error in the API has this shape (docs/01-canonical.md). */
 export function sendError(res: ServerResponse, status: number, code: string, message: string): void {
@@ -51,16 +51,21 @@ export function parseCookies(header: string | undefined): Record<string, string>
   for (const part of (header ?? '').split(';')) {
     const idx = part.indexOf('=');
     if (idx === -1) continue;
-    out[part.slice(0, idx).trim()] = decodeURIComponent(part.slice(idx + 1).trim());
+    const raw = part.slice(idx + 1).trim();
+    try {
+      out[part.slice(0, idx).trim()] = decodeURIComponent(raw);
+    } catch {
+      // A malformed cookie value is ignored, not a 500.
+    }
   }
   return out;
 }
 
-export function setSessionCookie(res: ServerResponse, sessionId: string, ttlHours: number): void {
+export function setSessionCookie(res: ServerResponse, token: string, ttlHours: number): void {
   // httpOnly: this site renders student-authored program output, so anything
   // reachable from page scripts is at risk (docs/05-backend.md).
   const attrs = [
-    `${SESSION_COOKIE}=${sessionId}`,
+    `${SESSION_COOKIE}=${token}`,
     'HttpOnly',
     'SameSite=Lax',
     'Path=/',
@@ -76,7 +81,8 @@ export function clearSessionCookie(res: ServerResponse): void {
 
 export interface Caller {
   user: User;
-  sessionId: string;
+  /** SHA-256 of the cookie token — the raw token is never kept past this lookup. */
+  sessionHash: string;
 }
 
 /**
@@ -87,14 +93,14 @@ export interface Caller {
  */
 export function resolveCaller(req: IncomingMessage): Caller | null {
   const cookies = parseCookies(req.headers.cookie);
-  const sid = cookies[SESSION_COOKIE];
-  if (!sid) return null;
-  const session = sessions.findValid(sid);
+  const token = cookies[SESSION_COOKIE];
+  if (!token) return null;
+  const session = sessions.findValid(token);
   if (!session) return null;
   const user = users.byId(session.user_id);
   if (!user) return null;
-  sessions.touch(sid);
-  return { user, sessionId: sid };
+  sessions.touch(session.token_hash);
+  return { user, sessionHash: session.token_hash };
 }
 
 export function requireCaller(req: IncomingMessage, res: ServerResponse): Caller | null {

@@ -1,17 +1,40 @@
 /**
- * Exercise content, read from content/ at startup.
+ * Exercise content for every language, read from content/<lang>/ at startup.
  *
- * Cargo manifests are generated here rather than stored: all 195 originals
- * reduced to one template (docs/01-canonical.md).
+ * Each language keeps its reference's own file layout (docs/v1-contracts.md):
+ *   rust  meta.json + README.md + starter.rs + main.rs + test.rs; Cargo
+ *         manifests are generated here rather than stored.
+ *   go    meta.json (expectedFiles/editorFiles/files) + README.md + starter.go
+ *         [+ main.go] + test.go
+ *   js    same shape as go with .js files.
+ *
+ * The loader is tolerant: a missing language directory or index.json is logged
+ * and skipped (index.json absent -> exercises/<slug>/meta.json are scanned), so
+ * one language's content being incomplete never stops the other two serving.
+ * A broken exercise is skipped with a log line, not a crash.
+ *
+ * Every exercise is presented through one shape: a set of named editor files.
+ * Test and solution sources never leave this module except through
+ * materialiseFiles / testSource, which the runner uses server-side.
  */
 
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { fromRoot } from '../config/paths.js';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { config } from '../config/index.js';
+import { LANGUAGES, SLUG_PATTERN, SOURCE_EXT, type Language } from '../languages.js';
+import { logger } from '../logger.js';
 
-const CONTENT = fromRoot('content');
+export interface PlacementRef {
+  checkpoint: string;
+  level: number;
+  [extra: string]: unknown;
+}
 
-export interface Meta {
+export interface Placement extends PlacementRef {
+  exercise: string;
+}
+
+export interface RustMeta {
   slug: string;
   kind: 'lib' | 'bin';
   edition: string;
@@ -19,53 +42,218 @@ export interface Meta {
   argv: boolean;
   testShape: 'lib' | 'main';
   deps: { name: string; version: string }[];
-  placements: { checkpoint: string; level: number }[];
+  placements: PlacementRef[];
 }
 
-export interface Exercise extends Meta {
+export interface Exercise {
+  language: Language;
+  slug: string;
+  title: string;
+  /** rust: lib|bin; go: func|prog; js: func. */
+  kind: string;
+  argv: boolean;
   readme: string;
-  starter: string;
-  mainRs: string;
-  /** Never sent to the browser as editable content. */
-  test: string;
+  placements: PlacementRef[];
+  /** Files the platform grades. */
+  expectedFiles: string[];
+  /** Files the student edits, in display order. */
+  editorFiles: string[];
+  /** Starter content per editor file. */
+  starter: Record<string, string>;
+  /** Never sent to the browser. */
+  test: string | null;
+  /** The raw meta.json, for language-specific runner needs. */
+  meta: Record<string, unknown>;
 }
 
-export interface Placement {
-  exercise: string;
-  checkpoint: string;
-  level: number;
-}
-
-const index = JSON.parse(readFileSync(join(CONTENT, 'index.json'), 'utf8')) as {
-  exercises: { slug: string }[];
-  placements: Placement[];
+type IndexFile = {
+  exercises?: ({ slug: string; dir?: string } & Record<string, unknown>)[];
+  placements?: Placement[];
 };
 
-const cache = new Map<string, Exercise>();
+const catalogue = new Map<Language, Map<string, Exercise>>();
+const placementsByLang = new Map<Language, Placement[]>();
 
-for (const { slug } of index.exercises) {
-  const dir = join(CONTENT, 'exercises', slug);
-  const meta = JSON.parse(readFileSync(join(dir, 'meta.json'), 'utf8')) as Meta;
-  cache.set(slug, {
-    ...meta,
+function readIf(path: string): string | null {
+  return existsSync(path) ? readFileSync(path, 'utf8') : null;
+}
+
+function loadRust(dir: string, slug: string, meta: Record<string, unknown>): Exercise {
+  const m = meta as unknown as RustMeta;
+  const starter = readFileSync(join(dir, 'starter.rs'), 'utf8');
+  const mainRs = readIf(join(dir, 'main.rs')) ?? '';
+  const isLib = m.kind === 'lib';
+  return {
+    language: 'rust',
+    slug,
+    title: slug,
+    kind: m.kind,
+    argv: Boolean(m.argv),
     readme: readFileSync(join(dir, 'README.md'), 'utf8'),
-    starter: readFileSync(join(dir, 'starter.rs'), 'utf8'),
-    mainRs: readFileSync(join(dir, 'main.rs'), 'utf8'),
-    test: readFileSync(join(dir, 'test.rs'), 'utf8'),
-  });
+    placements: m.placements ?? [],
+    expectedFiles: isLib ? ['src/lib.rs'] : ['src/main.rs'],
+    editorFiles: isLib ? ['src/lib.rs', 'src/main.rs'] : ['src/main.rs'],
+    starter: isLib ? { 'src/lib.rs': starter, 'src/main.rs': mainRs } : { 'src/main.rs': starter },
+    test: readIf(join(dir, 'test.rs')),
+    meta,
+  };
 }
 
-export const placements: Placement[] = index.placements;
+function loadGeneric(language: Language, dir: string, slug: string, meta: Record<string, unknown>): Exercise {
+  const ext = SOURCE_EXT[language];
+  const files = (meta.files ?? {}) as { subject?: string; starter?: string; main?: string | null; test?: string };
+  const expectedFiles = Array.isArray(meta.expectedFiles) ? (meta.expectedFiles as string[]) : [`${slug}.${ext}`];
+  const editorFiles = Array.isArray(meta.editorFiles) ? (meta.editorFiles as string[]) : expectedFiles;
 
-export function listExercises(): { slug: string; kind: string; argv: boolean }[] {
-  return [...cache.values()].map((e) => ({ slug: e.slug, kind: e.kind, argv: e.argv }));
+  const starterSrc = readFileSync(join(dir, files.starter ?? `starter.${ext}`), 'utf8');
+  const mainSrc = files.main === null ? null : readIf(join(dir, files.main ?? `main.${ext}`));
+
+  const starter: Record<string, string> = {};
+  for (const f of editorFiles) {
+    if (f === expectedFiles[0]) starter[f] = starterSrc;
+    else if (basename(f) === `main.${ext}` && mainSrc !== null) starter[f] = mainSrc;
+    else starter[f] = '';
+  }
+
+  return {
+    language,
+    slug,
+    title: typeof meta.title === 'string' ? meta.title : slug,
+    kind: typeof meta.kind === 'string' ? meta.kind : 'func',
+    argv: Boolean(meta.argv),
+    readme: readFileSync(join(dir, files.subject ?? 'README.md'), 'utf8'),
+    placements: Array.isArray(meta.placements) ? (meta.placements as PlacementRef[]) : [],
+    expectedFiles,
+    editorFiles,
+    starter,
+    test: readIf(join(dir, files.test ?? `test.${ext}`)),
+    meta,
+  };
 }
 
-export function getExercise(slug: string): Exercise | undefined {
-  return cache.get(slug);
+/** (Re)load every language. Exported so tests can point CONTENT_DIR elsewhere. */
+export function loadContent(root = config.contentDir): void {
+  catalogue.clear();
+  placementsByLang.clear();
+
+  for (const language of LANGUAGES) {
+    const langDir = join(root, language);
+    const exercises = new Map<string, Exercise>();
+    catalogue.set(language, exercises);
+    placementsByLang.set(language, []);
+
+    if (!existsSync(langDir)) {
+      logger.warn('content.language_missing', { language, dir: langDir });
+      continue;
+    }
+
+    let index: IndexFile = {};
+    const indexPath = join(langDir, 'index.json');
+    if (existsSync(indexPath)) {
+      try {
+        index = JSON.parse(readFileSync(indexPath, 'utf8')) as IndexFile;
+      } catch (err) {
+        logger.error('content.index_unreadable', { language, error: String(err) });
+      }
+    } else {
+      logger.warn('content.index_missing', { language });
+    }
+
+    const exDir = join(langDir, 'exercises');
+    const entries =
+      index.exercises?.map((e) => ({ slug: e.slug, dir: e.dir ? join(langDir, e.dir) : join(exDir, e.slug) })) ??
+      (existsSync(exDir)
+        ? readdirSync(exDir, { withFileTypes: true })
+            .filter((d) => d.isDirectory())
+            .map((d) => ({ slug: d.name, dir: join(exDir, d.name) }))
+        : []);
+
+    for (const { slug, dir } of entries) {
+      if (!SLUG_PATTERN.test(slug)) {
+        logger.warn('content.bad_slug', { language, slug });
+        continue;
+      }
+      try {
+        const metaPath = join(dir, 'meta.json');
+        const meta = existsSync(metaPath)
+          ? (JSON.parse(readFileSync(metaPath, 'utf8')) as Record<string, unknown>)
+          : // Rust index.json carries meta inline.
+            ((index.exercises?.find((e) => e.slug === slug) ?? {}) as Record<string, unknown>);
+        const ex = language === 'rust' ? loadRust(dir, slug, meta) : loadGeneric(language, dir, slug, meta);
+        exercises.set(slug, ex);
+      } catch (err) {
+        logger.error('content.exercise_skipped', { language, slug, error: String(err) });
+      }
+    }
+
+    // Placements: index.json's list when present, otherwise rebuilt from meta.
+    const placements: Placement[] = index.placements
+      ? index.placements.filter((p) => exercises.has(p.exercise))
+      : [...exercises.values()].flatMap((e) => e.placements.map((p) => ({ ...p, exercise: e.slug })));
+    placementsByLang.set(language, placements);
+
+    logger.info('content.loaded', { language, exercises: exercises.size, placements: placements.length });
+  }
 }
 
-function manifest(name: string, edition: string, deps: Meta['deps'], pathDep?: string): string {
+loadContent();
+
+export function placementsFor(language: Language): Placement[] {
+  return placementsByLang.get(language) ?? [];
+}
+
+export function listExercises(language: Language): { slug: string; title: string; kind: string; argv: boolean; language: Language }[] {
+  return [...(catalogue.get(language)?.values() ?? [])].map((e) => ({
+    language: e.language,
+    slug: e.slug,
+    title: e.title,
+    kind: e.kind,
+    argv: e.argv,
+  }));
+}
+
+export function getExercise(language: Language, slug: string): Exercise | undefined {
+  return catalogue.get(language)?.get(slug);
+}
+
+/** The browser-safe view of an exercise: no test, no solution. */
+export function publicView(ex: Exercise) {
+  return {
+    language: ex.language,
+    slug: ex.slug,
+    title: ex.title,
+    kind: ex.kind,
+    argv: ex.argv,
+    readme: ex.readme,
+    placements: ex.placements,
+    expectedFiles: ex.expectedFiles,
+    editorFiles: ex.editorFiles,
+    allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? ex.meta.allowedFunctions : undefined,
+  };
+}
+
+/**
+ * Keep only editor files with string bodies under the size cap. Returns null if
+ * the body names a file the student may not write.
+ */
+export function pickEditorFiles(ex: Exercise, raw: unknown, maxBytes = 512 * 1024): Record<string, string> | null {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+    if (!ex.editorFiles.includes(k) || typeof v !== 'string' || Buffer.byteLength(v) > maxBytes) return null;
+    out[k] = v;
+  }
+  return out;
+}
+
+/** Starter overlaid with whatever the student has saved. */
+export function workingFiles(ex: Exercise, saved: Record<string, string> | null | undefined): Record<string, string> {
+  return { ...ex.starter, ...(saved ?? {}) };
+}
+
+// ── Rust materialisation (kept from the reference for the Rust runner) ───────
+
+function manifest(name: string, edition: string, deps: RustMeta['deps'], pathDep?: string): string {
   const lines = ['[package]', `name = "${name}"`, 'version = "0.1.0"', `edition = "${edition}"`, '', '[dependencies]'];
   if (pathDep) lines.push(`${pathDep} = { path = "../${pathDep}" }`);
   for (const d of deps) lines.push(`${d.name} = "${d.version}"`);
@@ -73,39 +261,21 @@ function manifest(name: string, edition: string, deps: Meta['deps'], pathDep?: s
 }
 
 /**
- * Files to write into the student's container for one exercise.
- *
- * The test crate is included on EVERY materialise, straight from content/. That
- * is what stops a student weakening the assertions: whatever they may have left
- * in the container is overwritten before the run.
- *
- * <slug>/ and <slug>_test/ must stay siblings — four test crates reference
- * ../<slug>/Cargo.toml by relative path.
+ * Files to write into a Rust container for one exercise. The test crate is
+ * included on EVERY materialise, straight from content/, so a student cannot
+ * weaken the assertions. <slug>/ and <slug>_test/ must stay siblings.
  */
-export function materialiseFiles(
-  ex: Exercise,
-  student: { libRs?: string | null; mainRs?: string | null },
-): { path: string; content: string }[] {
-  const files: { path: string; content: string }[] = [
-    { path: `${ex.slug}/Cargo.toml`, content: manifest(ex.slug, ex.edition, []) },
+export function materialiseRustFiles(ex: Exercise, files: Record<string, string>): { path: string; content: string }[] {
+  const m = ex.meta as unknown as RustMeta;
+  const work = workingFiles(ex, files);
+  const out: { path: string; content: string }[] = [
+    { path: `${ex.slug}/Cargo.toml`, content: manifest(ex.slug, m.edition, []) },
     {
       path: `${ex.slug}_test/Cargo.toml`,
-      // A bin-only exercise has no lib target, so a path dependency on it is
-      // invalid; its test drives the binary through `cargo run` instead.
-      content: manifest(`${ex.slug}_test`, ex.testEdition, ex.deps, ex.kind === 'lib' ? ex.slug : undefined),
+      content: manifest(`${ex.slug}_test`, m.testEdition, m.deps ?? [], m.kind === 'lib' ? ex.slug : undefined),
     },
-    {
-      path: `${ex.slug}_test/src/${ex.testShape === 'lib' ? 'lib.rs' : 'main.rs'}`,
-      content: ex.test,
-    },
+    { path: `${ex.slug}_test/src/${m.testShape === 'lib' ? 'lib.rs' : 'main.rs'}`, content: ex.test ?? '' },
   ];
-
-  if (ex.kind === 'lib') {
-    files.push({ path: `${ex.slug}/src/lib.rs`, content: student.libRs ?? ex.starter });
-    files.push({ path: `${ex.slug}/src/main.rs`, content: student.mainRs ?? ex.mainRs });
-  } else {
-    files.push({ path: `${ex.slug}/src/main.rs`, content: student.mainRs ?? student.libRs ?? ex.starter });
-  }
-
-  return files;
+  for (const f of ex.editorFiles) out.push({ path: `${ex.slug}/${f}`, content: work[f] ?? '' });
+  return out;
 }

@@ -6,8 +6,9 @@
  * student's row, because there is no function here that would let them.
  */
 
-import { randomBytes } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import { getDb } from '../db/index.js';
+import type { Language } from '../languages.js';
 
 const now = () => new Date().toISOString();
 
@@ -53,8 +54,13 @@ export const users = {
 
 // ── sessions ─────────────────────────────────────────────────────────────────
 
+/** The DB holds only SHA-256(token) (D6): a leaked database is not a set of live cookies. */
+export function hashToken(token: string): string {
+  return createHash('sha256').update(token, 'utf8').digest('hex');
+}
+
 export interface Session {
-  id: string;
+  token_hash: string;
   user_id: number;
   created_at: string;
   expires_at: string;
@@ -64,98 +70,118 @@ export interface Session {
 }
 
 export const sessions = {
-  create(userId: number, ttlHours: number, userAgent: string | null): Session {
+  /** Returns the raw token (for the cookie) — it is never stored. */
+  create(userId: number, ttlHours: number, userAgent: string | null): { token: string; session: Session } {
     const db = getDb();
-    // 256 bits. Deliberately not a JWT: a server-side row makes revocation
-    // immediate, which a stateless token cannot do.
-    const id = randomBytes(32).toString('base64url');
+    // 256 bits. Deliberately not a JWT: a server-side row makes revocation immediate.
+    const token = randomBytes(32).toString('base64url');
+    const hash = hashToken(token);
     const ts = now();
     const expires = new Date(Date.now() + ttlHours * 3600_000).toISOString();
     db.prepare(
-      `INSERT INTO sessions (id, user_id, created_at, expires_at, revoked_at, user_agent, last_seen_at)
+      `INSERT INTO sessions (token_hash, user_id, created_at, expires_at, revoked_at, user_agent, last_seen_at)
        VALUES (?, ?, ?, ?, NULL, ?, ?)`,
-    ).run(id, userId, ts, expires, userAgent, ts);
-    return db.prepare('SELECT * FROM sessions WHERE id = ?').get(id) as Session;
+    ).run(hash, userId, ts, expires, userAgent, ts);
+    const session = db.prepare('SELECT * FROM sessions WHERE token_hash = ?').get(hash) as Session;
+    return { token, session };
   },
 
-  /** Returns the session only if it exists, is unrevoked, and has not expired. */
-  findValid(id: string): Session | undefined {
-    const row = getDb().prepare('SELECT * FROM sessions WHERE id = ?').get(id) as Session | undefined;
+  /** By raw token. Only if it exists, is unrevoked, and has not expired. */
+  findValid(token: string): Session | undefined {
+    const row = getDb().prepare('SELECT * FROM sessions WHERE token_hash = ?').get(hashToken(token)) as
+      | Session
+      | undefined;
     if (!row) return undefined;
     if (row.revoked_at !== null) return undefined;
     if (new Date(row.expires_at).getTime() <= Date.now()) return undefined;
     return row;
   },
 
-  touch(id: string): void {
-    getDb().prepare('UPDATE sessions SET last_seen_at = ? WHERE id = ?').run(now(), id);
+  touch(tokenHash: string): void {
+    getDb().prepare('UPDATE sessions SET last_seen_at = ? WHERE token_hash = ?').run(now(), tokenHash);
   },
 
-  /** Revokes one session — not every session the student holds. */
-  revoke(id: string): void {
-    getDb().prepare('UPDATE sessions SET revoked_at = ? WHERE id = ? AND revoked_at IS NULL').run(now(), id);
+  /** Revokes one session (by hash) — not every session the student holds. */
+  revoke(tokenHash: string): void {
+    getDb()
+      .prepare('UPDATE sessions SET revoked_at = ? WHERE token_hash = ? AND revoked_at IS NULL')
+      .run(now(), tokenHash);
   },
 };
 
 // ── progress ─────────────────────────────────────────────────────────────────
 
-export interface Progress {
+type Files = Record<string, string>;
+
+interface ProgressRow {
   user_id: number;
+  language: Language;
   exercise_slug: string;
-  lib_rs: string | null;
-  main_rs: string | null;
+  files_json: string | null;
   status: 'in_progress' | 'passed';
   updated_at: string;
 }
 
+export interface Progress extends Omit<ProgressRow, 'files_json'> {
+  /** null = never saved, or reset: serve the starter. */
+  files: Files | null;
+}
+
+const parseFiles = (json: string | null): Files | null => (json === null ? null : (JSON.parse(json) as Files));
+const toProgress = (r: ProgressRow): Progress => {
+  const { files_json, ...rest } = r;
+  return { ...rest, files: parseFiles(files_json) };
+};
+
 export const progress = {
-  listForUser(userId: number): Progress[] {
-    return getDb().prepare('SELECT * FROM progress WHERE user_id = ?').all(userId) as Progress[];
+  listForUser(userId: number, language: Language): Progress[] {
+    return (
+      getDb().prepare('SELECT * FROM progress WHERE user_id = ? AND language = ?').all(userId, language) as ProgressRow[]
+    ).map(toProgress);
   },
 
   /** Scoped to the caller. There is no "get anyone's progress" function. */
-  get(userId: number, slug: string): Progress | undefined {
-    return getDb()
-      .prepare('SELECT * FROM progress WHERE user_id = ? AND exercise_slug = ?')
-      .get(userId, slug) as Progress | undefined;
+  get(userId: number, language: Language, slug: string): Progress | undefined {
+    const row = getDb()
+      .prepare('SELECT * FROM progress WHERE user_id = ? AND language = ? AND exercise_slug = ?')
+      .get(userId, language, slug) as ProgressRow | undefined;
+    return row ? toProgress(row) : undefined;
   },
 
-  /**
-   * Clear the saved code so the exercise serves its starter again.
-   *
-   * `status` is deliberately left alone: the student did pass it, and the
-   * confirmation offers to replace the *code*, not to erase the achievement.
-   */
-  clearCode(userId: number, slug: string): void {
+  /** Clear the saved code; `status` is left alone — the pass still counts. */
+  clearCode(userId: number, language: Language, slug: string): void {
     getDb()
       .prepare(
-        `UPDATE progress SET lib_rs = NULL, main_rs = NULL, updated_at = ?
-          WHERE user_id = ? AND exercise_slug = ?`,
+        `UPDATE progress SET files_json = NULL, updated_at = ?
+          WHERE user_id = ? AND language = ? AND exercise_slug = ?`,
       )
-      .run(now(), userId, slug);
+      .run(now(), userId, language, slug);
   },
 
   /**
-   * Explicit field allow-list: only lib_rs, main_rs and status are writable.
-   * user_id comes from the session, never the request body, so a client cannot
-   * write into someone else's row.
+   * Explicit allow-list: only files and status are writable. user_id comes from
+   * the session, never the request body. Saved files are merged over existing.
    */
-  save(userId: number, slug: string, fields: { libRs?: string | null; mainRs?: string | null; status?: 'in_progress' | 'passed' }): Progress {
-    const db = getDb();
-    const existing = progress.get(userId, slug);
-    const lib = fields.libRs !== undefined ? fields.libRs : (existing?.lib_rs ?? null);
-    const main = fields.mainRs !== undefined ? fields.mainRs : (existing?.main_rs ?? null);
+  save(userId: number, language: Language, slug: string, fields: { files?: Files | null; status?: 'in_progress' | 'passed' }): Progress {
+    const existing = progress.get(userId, language, slug);
+    const files =
+      fields.files === undefined
+        ? (existing?.files ?? null)
+        : fields.files === null
+          ? null
+          : { ...(existing?.files ?? {}), ...fields.files };
     const status = fields.status ?? existing?.status ?? 'in_progress';
 
-    db.prepare(
-      `INSERT INTO progress (user_id, exercise_slug, lib_rs, main_rs, status, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?)
-       ON CONFLICT(user_id, exercise_slug) DO UPDATE SET
-         lib_rs = excluded.lib_rs, main_rs = excluded.main_rs,
-         status = excluded.status, updated_at = excluded.updated_at`,
-    ).run(userId, slug, lib, main, status, now());
+    getDb()
+      .prepare(
+        `INSERT INTO progress (user_id, language, exercise_slug, files_json, status, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?)
+         ON CONFLICT(user_id, language, exercise_slug) DO UPDATE SET
+           files_json = excluded.files_json, status = excluded.status, updated_at = excluded.updated_at`,
+      )
+      .run(userId, language, slug, files === null ? null : JSON.stringify(files), status, now());
 
-    return progress.get(userId, slug)!;
+    return progress.get(userId, language, slug)!;
   },
 };
 
@@ -163,95 +189,140 @@ export const progress = {
 
 export type SnapshotKind = 'manual' | 'passing';
 
-export interface Snapshot {
+interface SnapshotRow {
   id: number;
   user_id: number;
+  language: Language;
   exercise_slug: string;
   kind: SnapshotKind;
-  lib_rs: string | null;
-  main_rs: string | null;
+  files_json: string;
   created_at: string;
 }
+
+export interface Snapshot extends Omit<SnapshotRow, 'files_json'> {
+  files: Files;
+}
+
+const toSnapshot = (r: SnapshotRow): Snapshot => {
+  const { files_json, ...rest } = r;
+  return { ...rest, files: JSON.parse(files_json) as Files };
+};
 
 /** How many manual saves to keep before the oldest is dropped. */
 const MANUAL_KEEP = 3;
 
 export const snapshots = {
-  /**
-   * Store a manual save. Several are kept, so pressing Save never destroys the
-   * previous one — which is what would otherwise force a confirmation dialog on
-   * an action that should feel cheap.
-   */
-  saveManual(userId: number, slug: string, libRs: string | null, mainRs: string | null): Snapshot {
+  saveManual(userId: number, language: Language, slug: string, files: Files): Snapshot {
     const db = getDb();
     const info = db
       .prepare(
-        `INSERT INTO snapshots (user_id, exercise_slug, kind, lib_rs, main_rs, created_at)
-         VALUES (?, ?, 'manual', ?, ?, ?)`,
+        `INSERT INTO snapshots (user_id, language, exercise_slug, kind, files_json, created_at)
+         VALUES (?, ?, ?, 'manual', ?, ?)`,
       )
-      .run(userId, slug, libRs, mainRs, now());
+      .run(userId, language, slug, JSON.stringify(files), now());
 
-    // Keep the newest few; an unbounded history would grow without ever being
-    // asked for.
     db.prepare(
       `DELETE FROM snapshots
-        WHERE user_id = ? AND exercise_slug = ? AND kind = 'manual'
+        WHERE user_id = ? AND language = ? AND exercise_slug = ? AND kind = 'manual'
           AND id NOT IN (
             SELECT id FROM snapshots
-             WHERE user_id = ? AND exercise_slug = ? AND kind = 'manual'
+             WHERE user_id = ? AND language = ? AND exercise_slug = ? AND kind = 'manual'
              ORDER BY created_at DESC, id DESC LIMIT ?
           )`,
-    ).run(userId, slug, userId, slug, MANUAL_KEEP);
+    ).run(userId, language, slug, userId, language, slug, MANUAL_KEEP);
 
-    return db.prepare('SELECT * FROM snapshots WHERE id = ?').get(info.lastInsertRowid) as Snapshot;
+    return toSnapshot(db.prepare('SELECT * FROM snapshots WHERE id = ?').get(info.lastInsertRowid) as SnapshotRow);
   },
 
-  /**
-   * Record the code that just passed, replacing any earlier one.
-   *
-   * The most recent passing version is the useful fallback: a student who
-   * passes, refactors, then breaks it wants what worked last, not what worked
-   * first.
-   */
-  savePassing(userId: number, slug: string, libRs: string | null, mainRs: string | null): void {
+  /** The code that just passed, replacing any earlier passing copy. */
+  savePassing(userId: number, language: Language, slug: string, files: Files): void {
     const db = getDb();
-    db.prepare(
-      `DELETE FROM snapshots WHERE user_id = ? AND exercise_slug = ? AND kind = 'passing'`,
-    ).run(userId, slug);
-    db.prepare(
-      `INSERT INTO snapshots (user_id, exercise_slug, kind, lib_rs, main_rs, created_at)
-       VALUES (?, ?, 'passing', ?, ?, ?)`,
-    ).run(userId, slug, libRs, mainRs, now());
+    db.transaction(() => {
+      db.prepare(
+        `DELETE FROM snapshots WHERE user_id = ? AND language = ? AND exercise_slug = ? AND kind = 'passing'`,
+      ).run(userId, language, slug);
+      db.prepare(
+        `INSERT INTO snapshots (user_id, language, exercise_slug, kind, files_json, created_at)
+         VALUES (?, ?, ?, 'passing', ?, ?)`,
+      ).run(userId, language, slug, JSON.stringify(files), now());
+    })();
   },
 
-  /** Newest first. Scoped to the caller, like everything else here. */
-  list(userId: number, slug: string): Snapshot[] {
-    return getDb()
-      .prepare(
-        `SELECT * FROM snapshots WHERE user_id = ? AND exercise_slug = ?
-          ORDER BY created_at DESC, id DESC`,
-      )
-      .all(userId, slug) as Snapshot[];
+  /** Newest first. Scoped to the caller. */
+  list(userId: number, language: Language, slug: string): Snapshot[] {
+    return (
+      getDb()
+        .prepare(
+          `SELECT * FROM snapshots WHERE user_id = ? AND language = ? AND exercise_slug = ?
+            ORDER BY created_at DESC, id DESC`,
+        )
+        .all(userId, language, slug) as SnapshotRow[]
+    ).map(toSnapshot);
   },
 
-  /** Returns undefined for another student's snapshot, so it reads as missing. */
+  /** Undefined for another student's snapshot, so it reads as missing. */
   byId(userId: number, id: number): Snapshot | undefined {
-    return getDb()
-      .prepare('SELECT * FROM snapshots WHERE id = ? AND user_id = ?')
-      .get(id, userId) as Snapshot | undefined;
+    const row = getDb().prepare('SELECT * FROM snapshots WHERE id = ? AND user_id = ?').get(id, userId) as
+      | SnapshotRow
+      | undefined;
+    return row ? toSnapshot(row) : undefined;
   },
 };
 
 // ── attempts and runner usage ────────────────────────────────────────────────
 
+/** D5: attempt output is kept up to 1 MB. */
+export const ATTEMPT_OUTPUT_MAX_BYTES = 1024 * 1024;
+
+function capUtf8(text: string, maxBytes: number): string {
+  const buf = Buffer.from(text, 'utf8');
+  return buf.length <= maxBytes ? text : buf.subarray(0, maxBytes).toString('utf8');
+}
+
+export interface AttemptInput {
+  userId: number;
+  language: Language;
+  slug: string;
+  runId?: string | null;
+  kind: 'run' | 'test';
+  outcome?: string | null;
+  exitCode: number | null;
+  durationMs: number | null;
+  files?: Files | null;
+  output?: string | null;
+}
+
 export const attempts = {
-  record(userId: number, slug: string, kind: 'run' | 'test', exitCode: number, durationMs: number): void {
+  record(a: AttemptInput): void {
     getDb()
       .prepare(
-        `INSERT INTO attempts (user_id, exercise_slug, kind, exit_code, duration_ms, created_at)
-         VALUES (?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO attempts
+           (user_id, language, exercise_slug, run_id, kind, outcome, exit_code, duration_ms, files_json, output, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
-      .run(userId, slug, kind, exitCode, durationMs, now());
+      .run(
+        a.userId,
+        a.language,
+        a.slug,
+        a.runId ?? null,
+        a.kind,
+        a.outcome ?? null,
+        a.exitCode,
+        a.durationMs,
+        a.files ? JSON.stringify(a.files) : null,
+        a.output == null ? null : capUtf8(a.output, ATTEMPT_OUTPUT_MAX_BYTES),
+        now(),
+      );
+  },
+
+  listForExercise(userId: number, language: Language, slug: string, limit = 20) {
+    return getDb()
+      .prepare(
+        `SELECT id, run_id, kind, outcome, exit_code, duration_ms, created_at FROM attempts
+          WHERE user_id = ? AND language = ? AND exercise_slug = ?
+          ORDER BY created_at DESC, id DESC LIMIT ?`,
+      )
+      .all(userId, language, slug, limit);
   },
 };
 

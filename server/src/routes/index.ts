@@ -4,10 +4,14 @@
  * Ownership rule applied throughout: the acting user comes from the session,
  * and every read or write is scoped to it. A row belonging to someone else
  * returns 404, never 403, so its existence is not revealed.
+ *
+ * Exercise routes are prefixed by language (docs/v1-contracts.md):
+ *   /api/:lang/exercises, /api/:lang/exercises/:slug/...
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { config } from '../config/index.js';
+import { isLanguage, LANGUAGES, SLUG_PATTERN, type Language } from '../languages.js';
 import { logger, redactIdentifier } from '../logger.js';
 import {
   clearSessionCookie,
@@ -18,15 +22,29 @@ import {
   sendError,
   sendJson,
   setSessionCookie,
+  type Caller,
 } from '../middleware/http.js';
 import { attempts, progress, sessions, snapshots, users } from '../repositories/index.js';
-import { InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
-import { getExercise, listExercises, materialiseFiles, placements } from '../services/exercises.js';
-// Runner is imported as a value too: cooldownFor() is read here so the window the
-// client counts down and the window the server enforces cannot drift apart.
-import { CooldownError, Runner, RunTimeoutError, runner } from '../services/runner.js';
+import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
+import {
+  getExercise,
+  listExercises,
+  materialiseRustFiles,
+  pickEditorFiles,
+  placementsFor,
+  publicView,
+  workingFiles,
+  type Exercise,
+} from '../services/exercises.js';
+import * as runs from '../services/runs.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
+const formatLimiter = new RateLimiter(60, 60_000);
+
+const MAX_ARGS = 32;
+const MAX_ARG_LEN = 4096;
+
+type Params = { lang: Language; slug: string };
 
 export async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
@@ -39,39 +57,83 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
     return;
   }
 
-  if (path === '/api/login' && method === 'POST') return login(req, res);
-  if (path === '/api/logout' && method === 'POST') return logout(req, res);
-  if (path === '/api/me' && method === 'GET') return me(req, res);
-  if (path === '/api/exercises' && method === 'GET') return listAll(req, res);
+  // ── auth (/api/auth/*; the Rust reference's /api/login etc. kept as aliases)
+  if ((path === '/api/auth/login' || path === '/api/login') && method === 'POST') return login(req, res);
+  if ((path === '/api/auth/logout' || path === '/api/logout') && method === 'POST') return logout(req, res);
+  if ((path === '/api/auth/me' || path === '/api/me') && method === 'GET') return me(req, res);
+  if (path === '/api/auth/dev-login' && method === 'POST') return devLogin(req, res);
 
-  const exerciseMatch = /^\/api\/exercises\/([a-z0-9_]+)$/.exec(path);
-  if (exerciseMatch?.[1] && method === 'GET') return getOne(req, res, exerciseMatch[1]);
+  if (path === '/api/languages' && method === 'GET') return languages(req, res);
 
-  if (path === '/api/progress' && method === 'GET') return listProgress(req, res);
-
-  const progressMatch = /^\/api\/progress\/([a-z0-9_]+)$/.exec(path);
-  if (progressMatch?.[1] && method === 'PUT') return saveProgress(req, res, progressMatch[1]);
-  if (progressMatch?.[1] && method === 'DELETE') return resetProgress(req, res, progressMatch[1]);
-
-  const runMatch = /^\/api\/exercises\/([a-z0-9_]+)\/(run|test)$/.exec(path);
-  if (runMatch?.[1] && runMatch[2] && method === 'POST') {
-    return execute(req, res, runMatch[1], runMatch[2] as 'run' | 'test');
-  }
-
-  const snapMatch = /^\/api\/snapshots\/([a-z0-9_]+)$/.exec(path);
-  if (snapMatch?.[1] && method === 'GET') return listSnapshots(req, res, snapMatch[1]);
-  if (snapMatch?.[1] && method === 'POST') return createSnapshot(req, res, snapMatch[1]);
-
-  const restoreMatch = /^\/api\/snapshots\/([a-z0-9_]+)\/restore$/.exec(path);
-  if (restoreMatch?.[1] && method === 'POST') return restoreSnapshot(req, res, restoreMatch[1]);
-
+  // ── runs, not language-scoped (the id is enough)
   if (path === '/api/runner' && method === 'GET') return runnerState(req, res);
-  if (path === '/api/runner/cancel' && method === 'POST') return cancelRun(req, res);
+  const cancelMatch = /^\/api\/runs\/([A-Za-z0-9_-]{1,64})\/cancel$/.exec(path);
+  if (cancelMatch?.[1] && method === 'POST') return cancelRun(req, res, cancelMatch[1]);
+
+  // ── language-scoped
+  const langMatch = /^\/api\/([a-z]+)(\/.*)$/.exec(path);
+  if (langMatch?.[1] && langMatch[2] && isLanguage(langMatch[1])) {
+    const lang = langMatch[1];
+    const rest = langMatch[2];
+
+    if (rest === '/exercises' && method === 'GET') return listAll(req, res, lang);
+    if (rest === '/progress' && method === 'GET') return listProgress(req, res, lang);
+
+    const m = /^\/(exercises|progress|snapshots)\/([^/]+)(?:\/([a-z]+))?(?:\/([a-z]+))?$/.exec(rest);
+    if (m?.[1] && m[2] && SLUG_PATTERN.test(m[2])) {
+      const p: Params = { lang, slug: m[2] };
+      const [, group, , action, sub] = m;
+
+      if (group === 'exercises') {
+        if (!action && method === 'GET') return getOne(req, res, p);
+        if (action === 'code' && !sub && method === 'PUT') return saveCode(req, res, p);
+        if (action === 'reset' && !sub && method === 'POST') return resetCode(req, res, p);
+        if (action === 'format' && !sub && method === 'POST') return formatCode(req, res, p);
+        if ((action === 'run' || action === 'test' || action === 'submit') && !sub && method === 'POST') {
+          return execute(req, res, p, action === 'run' ? 'run' : 'test');
+        }
+        if (action === 'attempts' && !sub && method === 'GET') return listAttempts(req, res, p);
+        if (action === 'snapshots' && !sub && method === 'GET') return listSnapshots(req, res, p);
+        if (action === 'snapshots' && !sub && method === 'POST') return createSnapshot(req, res, p);
+        if (action === 'snapshots' && sub === 'restore' && method === 'POST') return restoreSnapshot(req, res, p);
+      }
+      // Rust reference shapes, language-prefixed.
+      if (group === 'progress' && !action && method === 'PUT') return saveCode(req, res, p);
+      if (group === 'progress' && !action && method === 'DELETE') return resetCode(req, res, p);
+      if (group === 'snapshots' && !action && method === 'GET') return listSnapshots(req, res, p);
+      if (group === 'snapshots' && !action && method === 'POST') return createSnapshot(req, res, p);
+      if (group === 'snapshots' && action === 'restore' && !sub && method === 'POST') return restoreSnapshot(req, res, p);
+    }
+  }
 
   sendError(res, 404, 'not_found', 'Not found.');
 }
 
+async function body<T>(req: IncomingMessage, res: ServerResponse): Promise<T | null> {
+  try {
+    return await readJsonBody<T>(req, 2 * 1024 * 1024);
+  } catch (err) {
+    const large = String(err).includes('large');
+    sendError(res, large ? 413 : 400, large ? 'payload_too_large' : 'invalid_request', large ? 'Payload too large.' : 'Invalid request.');
+    return null;
+  }
+}
+
+function exerciseFor(res: ServerResponse, p: Params): Exercise | null {
+  const ex = getExercise(p.lang, p.slug);
+  if (!ex) {
+    sendError(res, 404, 'not_found', 'Exercise not found.');
+    return null;
+  }
+  return ex;
+}
+
 // ── auth ─────────────────────────────────────────────────────────────────────
+
+function startSession(req: IncomingMessage, res: ServerResponse, userId: number): void {
+  const { token } = sessions.create(userId, config.sessionTtlHours, req.headers['user-agent'] ?? null);
+  setSessionCookie(res, token, config.sessionTtlHours);
+}
 
 async function login(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const ip = clientIp(req, config.appEnv === 'production');
@@ -82,16 +144,10 @@ async function login(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return;
   }
 
-  let body: { identifier?: string; password?: string };
-  try {
-    body = await readJsonBody(req);
-  } catch (err) {
-    sendError(res, 400, 'invalid_request', String(err).includes('large') ? 'Payload too large.' : 'Invalid request.');
-    return;
-  }
-
-  const identifier = (body.identifier ?? '').trim();
-  const password = body.password ?? '';
+  const b = await body<{ identifier?: unknown; password?: unknown }>(req, res);
+  if (!b) return;
+  const identifier = typeof b.identifier === 'string' ? b.identifier.trim() : '';
+  const password = typeof b.password === 'string' ? b.password : '';
   if (identifier === '' || password === '') {
     sendError(res, 400, 'invalid_request', 'Identifier and password are required.');
     return;
@@ -100,21 +156,16 @@ async function login(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     const result = await signIn(identifier, password);
     const user = users.upsertOnLogin(identifier, result.rebootUserId, result.claims);
-    const session = sessions.create(user.id, config.sessionTtlHours, req.headers['user-agent'] ?? null);
-    setSessionCookie(res, session.id, config.sessionTtlHours);
+    startSession(req, res, user.id);
     logger.info('login.ok', { userId: user.id, identifier: redactIdentifier(identifier) });
-    // The upstream token is deliberately not returned or stored: it proves
-    // enrolment and nothing else, and we do not call reboot01's API.
+    // The upstream token is deliberately not returned or stored.
     sendJson(res, 200, { identifier: user.identifier_normalized });
   } catch (err) {
     if (err instanceof InvalidIdentifierError) {
-      // A format problem, not a credential problem: saying so is not
-      // enumeration, because it reveals nothing about whether an account exists.
       sendError(res, 400, 'invalid_identifier', err.message);
       return;
     }
     if (err instanceof InvalidCredentialsError) {
-      // One generic message regardless of which factor failed — anti-enumeration.
       sendError(res, 401, 'invalid_credentials', 'Invalid credentials.');
       return;
     }
@@ -127,11 +178,35 @@ async function login(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
 }
 
+/**
+ * D14: sign in as any username without reboot01, for local development and
+ * tests only. In production the route does not exist (404, not 403).
+ */
+async function devLogin(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  if (!config.devLoginEnabled) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  const b = await body<{ username?: unknown }>(req, res);
+  if (!b) return;
+  const username = typeof b.username === 'string' ? b.username.trim() : '';
+  try {
+    assertUsername(username);
+  } catch (err) {
+    sendError(res, 400, 'invalid_identifier', (err as Error).message);
+    return;
+  }
+  const user = users.upsertOnLogin(username, null, null);
+  startSession(req, res, user.id);
+  logger.warn('login.dev', { userId: user.id, identifier: redactIdentifier(username), env: config.appEnv });
+  sendJson(res, 200, { identifier: user.identifier_normalized, dev: true });
+}
+
 function logout(req: IncomingMessage, res: ServerResponse): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
   // Revokes THIS session only — a student signed in elsewhere stays signed in.
-  sessions.revoke(caller.sessionId);
+  sessions.revoke(caller.sessionHash);
   clearSessionCookie(res);
   logger.info('logout.ok', { userId: caller.user.id });
   sendJson(res, 200, { ok: true });
@@ -140,55 +215,57 @@ function logout(req: IncomingMessage, res: ServerResponse): void {
 function me(req: IncomingMessage, res: ServerResponse): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  sendJson(res, 200, { identifier: caller.user.identifier_normalized });
+  sendJson(res, 200, { identifier: caller.user.identifier_normalized, devLogin: config.devLoginEnabled });
 }
 
 // ── content ──────────────────────────────────────────────────────────────────
 
-function listAll(req: IncomingMessage, res: ServerResponse): void {
+function languages(req: IncomingMessage, res: ServerResponse): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  const done = new Set(
-    progress.listForUser(caller.user.id).filter((p) => p.status === 'passed').map((p) => p.exercise_slug),
-  );
   sendJson(res, 200, {
-    exercises: listExercises().map((e) => ({ ...e, passed: done.has(e.slug) })),
-    placements,
+    languages: LANGUAGES.map((language) => ({ language, exercises: listExercises(language).length })),
   });
 }
 
-function getOne(req: IncomingMessage, res: ServerResponse, slug: string): void {
+function listAll(req: IncomingMessage, res: ServerResponse, lang: Language): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  const ex = getExercise(slug);
-  if (!ex) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
-    return;
-  }
-  const saved = progress.get(caller.user.id, slug);
+  const done = new Set(
+    progress
+      .listForUser(caller.user.id, lang)
+      .filter((p) => p.status === 'passed')
+      .map((p) => p.exercise_slug),
+  );
   sendJson(res, 200, {
-    slug: ex.slug,
-    kind: ex.kind,
-    argv: ex.argv,
-    readme: ex.readme,
-    placements: ex.placements,
-    libRs: ex.kind === 'lib' ? (saved?.lib_rs ?? ex.starter) : null,
-    mainRs: ex.kind === 'lib' ? (saved?.main_rs ?? ex.mainRs) : (saved?.main_rs ?? ex.starter),
-    // The test crate is deliberately NOT sent. Hiding it in the UI while still
-    // shipping it would be cosmetic — it would sit in the network response for
-    // anyone who opened devtools. The server writes it into the container fresh
-    // on every run, so it never needs to reach the browser.
+    language: lang,
+    exercises: listExercises(lang).map((e) => ({ ...e, passed: done.has(e.slug) })),
+    placements: placementsFor(lang),
+  });
+}
+
+function getOne(req: IncomingMessage, res: ServerResponse, p: Params): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  const saved = progress.get(caller.user.id, p.lang, p.slug);
+  sendJson(res, 200, {
+    ...publicView(ex),
+    // The test is deliberately NOT sent: the runner writes it server-side.
+    files: workingFiles(ex, saved?.files),
+    starter: ex.starter,
     status: saved?.status ?? 'in_progress',
   });
 }
 
 // ── progress ─────────────────────────────────────────────────────────────────
 
-function listProgress(req: IncomingMessage, res: ServerResponse): void {
+function listProgress(req: IncomingMessage, res: ServerResponse, lang: Language): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
   sendJson(res, 200, {
-    progress: progress.listForUser(caller.user.id).map((p) => ({
+    progress: progress.listForUser(caller.user.id, lang).map((p) => ({
       slug: p.exercise_slug,
       status: p.status,
       updatedAt: p.updated_at,
@@ -196,61 +273,92 @@ function listProgress(req: IncomingMessage, res: ServerResponse): void {
   });
 }
 
-async function saveProgress(req: IncomingMessage, res: ServerResponse, slug: string): Promise<void> {
+/**
+ * Read `files` from a body. Accepts the Rust reference's {libRs, mainRs} for
+ * Rust exercises too, mapped onto src/lib.rs and src/main.rs.
+ */
+function filesFrom(ex: Exercise, b: { files?: unknown; libRs?: unknown; mainRs?: unknown }): Record<string, string> | null {
+  if (b.files !== undefined) return pickEditorFiles(ex, b.files);
+  if (ex.language === 'rust' && (typeof b.libRs === 'string' || typeof b.mainRs === 'string')) {
+    const raw: Record<string, unknown> = {};
+    if (typeof b.libRs === 'string') raw[ex.kind === 'lib' ? 'src/lib.rs' : 'src/main.rs'] = b.libRs;
+    if (typeof b.mainRs === 'string') raw['src/main.rs'] = b.mainRs;
+    return pickEditorFiles(ex, raw);
+  }
+  return null;
+}
+
+async function saveCode(req: IncomingMessage, res: ServerResponse, p: Params): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  if (!getExercise(slug)) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  const b = await body<{ files?: unknown; libRs?: unknown; mainRs?: unknown }>(req, res);
+  if (!b) return;
+  const files = filesFrom(ex, b);
+  if (!files) {
+    sendError(res, 400, 'invalid_files', `Only ${ex.editorFiles.join(' and ')} can be saved.`);
     return;
   }
-
-  let body: { libRs?: string; mainRs?: string };
-  try {
-    body = await readJsonBody(req);
-  } catch (err) {
-    sendError(res, 400, 'invalid_request', String(err).includes('large') ? 'Payload too large.' : 'Invalid request.');
-    return;
-  }
-
-  // Explicit allow-list. user_id, status and timestamps are not client-writable.
-  const saved = progress.save(caller.user.id, slug, {
-    libRs: typeof body.libRs === 'string' ? body.libRs : undefined,
-    mainRs: typeof body.mainRs === 'string' ? body.mainRs : undefined,
-  });
+  const saved = progress.save(caller.user.id, p.lang, p.slug, { files });
   sendJson(res, 200, { slug: saved.exercise_slug, updatedAt: saved.updated_at });
 }
 
-/**
- * Discard the student's saved code for one exercise.
- *
- * Reset has to happen here rather than in the client: re-fetching the exercise
- * returns the saved code, so a purely client-side reset handed the student back
- * exactly what they already had and looked like a dead button.
- */
-function resetProgress(req: IncomingMessage, res: ServerResponse, slug: string): void {
+/** Discard the saved code; status is kept. Returns the starter files. */
+function resetCode(req: IncomingMessage, res: ServerResponse, p: Params): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  if (!getExercise(slug)) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  progress.clearCode(caller.user.id, p.lang, p.slug);
+  logger.info('progress.reset', { userId: caller.user.id, language: p.lang, slug: p.slug });
+  sendJson(res, 200, { slug: p.slug, files: ex.starter });
+}
+
+async function formatCode(req: IncomingMessage, res: ServerResponse, p: Params): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!formatLimiter.check(String(caller.user.id)).allowed) {
+    sendError(res, 429, 'too_many_requests', 'Slow down a moment.');
     return;
   }
-  progress.clearCode(caller.user.id, slug);
-  logger.info('progress.reset', { userId: caller.user.id, slug });
-  sendJson(res, 200, { slug });
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  if (p.lang !== 'go') {
+    sendError(res, 404, 'not_supported', 'Format is available for Go exercises only.');
+    return;
+  }
+  const b = await body<{ files?: unknown }>(req, res);
+  if (!b) return;
+  const files = pickEditorFiles(ex, b.files);
+  if (!files) {
+    sendError(res, 400, 'invalid_files', `Only ${ex.editorFiles.join(' and ')} can be formatted.`);
+    return;
+  }
+  try {
+    const result = (await runs.format(caller.user.id, p.lang, files)) as
+      | { ok?: boolean; files?: Record<string, string>; changed?: string[]; error?: string }
+      | undefined;
+    if (!result || result.ok === false || result.error || !result.files) {
+      sendError(res, 400, 'unparseable', result?.error ?? 'The file could not be parsed.');
+      return;
+    }
+    sendJson(res, 200, { files: result.files, changed: result.changed ?? [] });
+  } catch (err) {
+    if (runError(res, err, 'run')) return;
+    logger.error('format.failed', { userId: caller.user.id, slug: p.slug, error: String(err) });
+    sendError(res, 503, 'runner_unavailable', 'The formatter is unavailable. Try again shortly.');
+  }
 }
 
 // ── snapshots ────────────────────────────────────────────────────────────────
 
-/** Metadata only — the code itself is fetched by restoring. */
-function listSnapshots(req: IncomingMessage, res: ServerResponse, slug: string): void {
+function listSnapshots(req: IncomingMessage, res: ServerResponse, p: Params): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  if (!getExercise(slug)) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
-    return;
-  }
+  if (!exerciseFor(res, p)) return;
   sendJson(res, 200, {
-    snapshots: snapshots.list(caller.user.id, slug).map((s) => ({
+    snapshots: snapshots.list(caller.user.id, p.lang, p.slug).map((s) => ({
       id: s.id,
       kind: s.kind,
       createdAt: s.created_at,
@@ -258,214 +366,249 @@ function listSnapshots(req: IncomingMessage, res: ServerResponse, slug: string):
   });
 }
 
-/** Save a copy of the working code the student can come back to. */
-function createSnapshot(req: IncomingMessage, res: ServerResponse, slug: string): void {
+/**
+ * Save a copy. With `files` in the body, those are saved as the working copy
+ * first (Go behaviour); without, the current working copy is snapshotted.
+ */
+async function createSnapshot(req: IncomingMessage, res: ServerResponse, p: Params): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  if (!getExercise(slug)) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  const b = (await body<{ files?: unknown; libRs?: unknown; mainRs?: unknown }>(req, res)) ;
+  if (!b) return;
+  const posted = filesFrom(ex, b);
+  if (b.files !== undefined && !posted) {
+    sendError(res, 400, 'invalid_files', 'Nothing to save.');
     return;
   }
-  const working = progress.get(caller.user.id, slug);
-  if (!working || (working.lib_rs === null && working.main_rs === null)) {
+  if (posted) progress.save(caller.user.id, p.lang, p.slug, { files: posted });
+  const working = progress.get(caller.user.id, p.lang, p.slug);
+  if (!working?.files) {
     sendError(res, 400, 'nothing_to_save', 'There is nothing to save yet.');
     return;
   }
-  const snap = snapshots.saveManual(caller.user.id, slug, working.lib_rs, working.main_rs);
-  logger.info('snapshot.created', { userId: caller.user.id, slug, id: snap.id });
+  const snap = snapshots.saveManual(caller.user.id, p.lang, p.slug, working.files);
+  logger.info('snapshot.created', { userId: caller.user.id, language: p.lang, slug: p.slug, id: snap.id });
   sendJson(res, 200, { id: snap.id, kind: snap.kind, createdAt: snap.created_at });
 }
 
-/**
- * Copy a snapshot back over the working code.
- *
- * Restoring writes into `progress` rather than only into the editor, so what
- * Run and Submit execute matches what the student is now looking at.
- */
-async function restoreSnapshot(req: IncomingMessage, res: ServerResponse, slug: string): Promise<void> {
+/** Copy a snapshot back over the working code, so Run executes what is shown. */
+async function restoreSnapshot(req: IncomingMessage, res: ServerResponse, p: Params): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  const ex = getExercise(slug);
-  if (!ex) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
-    return;
-  }
-
-  let body: { id?: number } = {};
-  try {
-    body = await readJsonBody(req);
-  } catch {
-    body = {};
-  }
-  if (typeof body.id !== 'number') {
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  const b = await body<{ id?: unknown }>(req, res);
+  if (!b) return;
+  if (typeof b.id !== 'number') {
     sendError(res, 400, 'invalid_request', 'A snapshot id is required.');
     return;
   }
-
-  // byId is scoped to the caller, so another student's snapshot is simply not
-  // found rather than forbidden — its existence is not revealed.
-  const snap = snapshots.byId(caller.user.id, body.id);
-  if (!snap || snap.exercise_slug !== slug) {
+  const snap = snapshots.byId(caller.user.id, b.id);
+  if (!snap || snap.language !== p.lang || snap.exercise_slug !== p.slug) {
     sendError(res, 404, 'not_found', 'Snapshot not found.');
     return;
   }
-
-  progress.save(caller.user.id, slug, { libRs: snap.lib_rs, mainRs: snap.main_rs });
-  logger.info('snapshot.restored', { userId: caller.user.id, slug, id: snap.id, kind: snap.kind });
-  sendJson(res, 200, {
-    kind: snap.kind,
-    libRs: ex.kind === 'lib' ? (snap.lib_rs ?? ex.starter) : null,
-    mainRs: ex.kind === 'lib' ? (snap.main_rs ?? ex.mainRs) : (snap.main_rs ?? ex.starter),
-  });
+  progress.save(caller.user.id, p.lang, p.slug, { files: snap.files });
+  logger.info('snapshot.restored', { userId: caller.user.id, language: p.lang, slug: p.slug, id: snap.id });
+  sendJson(res, 200, { kind: snap.kind, files: workingFiles(ex, snap.files) });
 }
 
 // ── run / test ───────────────────────────────────────────────────────────────
 
-async function execute(
-  req: IncomingMessage,
-  res: ServerResponse,
-  slug: string,
-  kind: 'run' | 'test',
-): Promise<void> {
-  const caller = requireCaller(req, res);
-  if (!caller) return;
+const cooldownFor = (mode: runs.RunMode) =>
+  mode === 'test' ? config.runner.cooldownTestSeconds : config.runner.cooldownRunSeconds;
 
-  const ex = getExercise(slug);
-  if (!ex) {
-    sendError(res, 404, 'not_found', 'Exercise not found.');
-    return;
-  }
-
-  let body: { args?: string[] } = {};
-  try {
-    body = await readJsonBody(req);
-  } catch {
-    body = {};
-  }
-
-  const cooling = runner.cooldownRemaining(String(caller.user.id), kind);
-  if (cooling > 0) {
-    res.setHeader('Retry-After', String(cooling));
+/** Map the dispatcher's typed errors to responses. Returns true when handled. */
+function runError(res: ServerResponse, err: unknown, mode: runs.RunMode): boolean {
+  const e = err as { name?: string; secondsRemaining?: number; depth?: number };
+  if (e?.name === 'CooldownError') {
+    const s = e.secondsRemaining ?? cooldownFor(mode);
+    res.setHeader('Retry-After', String(s));
     sendJson(res, 429, {
-      error: { code: 'cooling_down', message: `Ready in ${cooling}s.` },
-      secondsRemaining: cooling,
+      error: { code: 'cooling_down', message: `Ready in ${s}s.` },
+      secondsRemaining: s,
     });
-    return;
+    return true;
   }
+  if (e?.name === 'QueueFullError') {
+    sendError(res, 503, 'queue_full', 'Too many runs in flight. Try again in a moment.');
+    return true;
+  }
+  if (e?.name === 'BusyError') {
+    sendError(res, 409, 'run_in_progress', 'A run is already in progress.');
+    return true;
+  }
+  return false;
+}
 
-  const saved = progress.get(caller.user.id, slug);
-  const files = materialiseFiles(ex, { libRs: saved?.lib_rs, mainRs: saved?.main_rs });
-
-  try {
-    const userKey = String(caller.user.id);
-    await runner.writeFiles(userKey, files);
-
-    // Extra arguments were silently discarded; the student is now told.
-    const MAX_ARGS = 16;
-    const requestedArgs = body.args ?? [];
-    const args = requestedArgs.slice(0, MAX_ARGS);
-    const argsTruncated = requestedArgs.length > MAX_ARGS;
-
-    const cmd =
-      kind === 'test'
-        ? ['cargo', 'test', '--offline', '--color', 'always']
-        : ['cargo', 'run', '--offline', '--color', 'always', '--', ...args];
-    const cwd = kind === 'test' ? `/workspace/${slug}_test` : `/workspace/${slug}`;
-
-    const result = await runner.exec(userKey, cmd, { cwd, kind });
-    attempts.record(caller.user.id, slug, kind, result.exitCode, result.durationMs);
-
-    // Pass/fail is the exit code, not parsed output.
-    if (kind === 'test' && result.exitCode === 0) {
-      progress.save(caller.user.id, slug, { status: 'passed' });
-      // Keep the code that passed, so a later refactor that breaks it has
-      // something to fall back to.
-      snapshots.savePassing(caller.user.id, slug, saved?.lib_rs ?? null, saved?.main_rs ?? null);
-    }
-
-    sendJson(res, 200, {
-      exitCode: result.exitCode,
-      output: result.output,
-      durationMs: result.durationMs,
-      passed: kind === 'test' ? result.exitCode === 0 : undefined,
-      // What happened, in one word, so the client can say something specific
-      // instead of inferring it from an exit code. 137 is SIGKILL, which for a
-      // memory-capped container means the cgroup OOM killer.
-      outcome: result.cancelled
-        ? 'cancelled'
-        : result.truncated
-          ? 'output_limit'
-          : result.oomKilled
-            ? 'out_of_memory'
-            : 'ok',
-      argsTruncated,
-      maxArgs: MAX_ARGS,
-      // The client disables THIS button for this long. Run and Test throttle on
-      // separate clocks, so the window depends on which one was pressed — a
-      // shared one would make Run block Test and read as a dead button.
-      cooldownSeconds: Runner.cooldownFor(kind),
-    });
-  } catch (err) {
-    if (err instanceof CooldownError) {
-      res.setHeader('Retry-After', String(err.secondsRemaining));
-      sendJson(res, 429, {
-        error: { code: 'cooling_down', message: `Ready in ${err.secondsRemaining}s.` },
-        secondsRemaining: err.secondsRemaining,
-      });
-      return;
-    }
-    // A timeout is a fact about the student's program, not a failure of ours,
-    // so it comes back as a result with an outcome rather than a 503 blaming
-    // the infrastructure for their infinite loop.
-    if (err instanceof RunTimeoutError) {
-      attempts.record(caller.user.id, slug, kind, -1, err.seconds * 1000);
-      sendJson(res, 200, {
-        exitCode: -1,
-        output: '',
-        durationMs: err.seconds * 1000,
-        passed: kind === 'test' ? false : undefined,
-        outcome: 'timeout',
-        timeoutSeconds: err.seconds,
-        argsTruncated: false,
-        maxArgs: 16,
-        cooldownSeconds: Runner.cooldownFor(kind),
-      });
-      return;
-    }
-    logger.error('run.failed', { userId: caller.user.id, slug, kind, error: String(err) });
-    sendError(
-      res,
-      503,
-      'runner_unavailable',
-      'Something went wrong on our side, not in your code. Please try again in a moment.',
+/** What the runner receives for each language. */
+function filesForRunner(ex: Exercise, files: Record<string, string>, mode: runs.RunMode): Record<string, string> {
+  if (ex.language === 'rust') {
+    return Object.fromEntries(materialiseRustFiles(ex, files).map((f) => [f.path, f.content]));
+  }
+  if (ex.language === 'go') {
+    // Submit sends only the graded files. Run sends both, but a function
+    // exercise's demo is `package main` and cannot share a directory with the
+    // graded package, so it goes in ./demo (Go reference behaviour).
+    if (mode === 'test') return Object.fromEntries(Object.entries(files).filter(([k]) => ex.expectedFiles.includes(k)));
+    const pkg = ex.meta.studentPackage;
+    return Object.fromEntries(
+      Object.entries(files).map(([k, v]) => [k === 'main.go' && pkg !== 'main' ? 'demo/main.go' : k, v]),
     );
   }
+  return files;
 }
 
-async function cancelRun(req: IncomingMessage, res: ServerResponse): Promise<void> {
+async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mode: runs.RunMode): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  const stopped = await runner.cancel(String(caller.user.id));
-  // 200 either way: "there was nothing to cancel" is a normal race, not an
-  // error — the run can finish between the click and the request arriving.
-  sendJson(res, 200, { cancelled: stopped });
-}
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
 
-function runnerState(req: IncomingMessage, res: ServerResponse): void {
-  const caller = requireCaller(req, res);
-  if (!caller) return;
+  const b = await body<{ files?: unknown; libRs?: unknown; mainRs?: unknown; args?: unknown }>(req, res);
+  if (!b) return;
+
+  // A run executes the saved code, so a posted edit lands first.
+  if (b.files !== undefined || b.libRs !== undefined || b.mainRs !== undefined) {
+    const posted = filesFrom(ex, b);
+    if (!posted) {
+      sendError(res, 400, 'invalid_files', `Only ${ex.editorFiles.join(' and ')} can be run.`);
+      return;
+    }
+    progress.save(caller.user.id, p.lang, p.slug, { files: posted });
+  }
+
+  let args: string[] = [];
+  if (mode === 'run' && Array.isArray(b.args) && b.args.length > 0) {
+    if (!ex.argv) {
+      sendError(res, 400, 'no_arguments', 'This exercise does not read command-line arguments.');
+      return;
+    }
+    if (b.args.length > MAX_ARGS) {
+      sendError(res, 400, 'too_many_arguments', `At most ${MAX_ARGS} arguments.`);
+      return;
+    }
+    args = b.args.map(String);
+    if (args.some((a) => a.length > MAX_ARG_LEN)) {
+      sendError(res, 400, 'argument_too_long', 'An argument is too long.');
+      return;
+    }
+  }
+
+  const saved = progress.get(caller.user.id, p.lang, p.slug);
+  const files = workingFiles(ex, saved?.files);
+
+  let runId: string;
+  try {
+    runId = await runs.submit({
+      user: caller.user.id,
+      language: p.lang,
+      slug: p.slug,
+      files: filesForRunner(ex, files, mode),
+      args,
+      mode,
+      exercise: {
+        expectedFiles: ex.expectedFiles,
+        editorFiles: ex.editorFiles,
+        allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? (ex.meta.allowedFunctions as string[]) : undefined,
+      },
+    });
+  } catch (err) {
+    if (runError(res, err, mode)) return;
+    logger.error('run.submit_failed', { userId: caller.user.id, language: p.lang, slug: p.slug, error: String(err) });
+    sendError(res, 503, 'runner_unavailable', 'Something went wrong on our side, not in your code. Please try again in a moment.');
+    return;
+  }
+
+  const run = await runs.getRun(runId);
+  if (run) recordOnDone(caller, p, mode, run, files);
+
   sendJson(res, 200, {
-    activeRuns: runner.activeRuns,
-    queueDepth: runner.queueDepth,
-    /** Whether THIS student is waiting for a slot, as opposed to executing. */
-    queued: runner.isQueued(String(caller.user.id)),
-    /** So the client can count down to the moment a run will be stopped. */
-    timeoutSeconds: config.runner.timeoutSeconds,
-    /** When to warn that a run looks stuck, well before it is stopped. */
-    warnSeconds: config.runner.warnSeconds,
-    // Both clocks, so the client can gate each button independently.
-    cooldownRemainingRun: runner.cooldownRemaining(String(caller.user.id), 'run'),
-    cooldownRemainingTest: runner.cooldownRemaining(String(caller.user.id), 'test'),
+    runId,
+    state: run?.state ?? 'queued',
+    queuePosition: run?.queuePosition ?? 0,
+    // The client disables THIS button for this long; run and test have separate clocks.
+    cooldownSeconds: cooldownFor(mode),
+    argsTruncated: false,
+    maxArgs: MAX_ARGS,
+  });
+}
+
+function recordOnDone(caller: Caller, p: Params, mode: runs.RunMode, run: runs.RunLike, files: Record<string, string>): void {
+  const finish = (d: { outcome?: unknown; exitCode?: unknown; durationMs?: unknown }) => {
+    try {
+      const outcome = typeof d.outcome === 'string' ? d.outcome : null;
+      attempts.record({
+        userId: caller.user.id,
+        language: p.lang,
+        slug: p.slug,
+        runId: run.id,
+        kind: mode,
+        outcome,
+        exitCode: typeof d.exitCode === 'number' ? d.exitCode : null,
+        durationMs: typeof d.durationMs === 'number' ? d.durationMs : null,
+        files,
+        output: run.output ?? null,
+      });
+      // Pass/fail is the dispatcher's verdict, never parsed output.
+      if (mode === 'test' && outcome === 'passed') {
+        progress.save(caller.user.id, p.lang, p.slug, { status: 'passed' });
+        snapshots.savePassing(caller.user.id, p.lang, p.slug, files);
+      }
+    } catch (err) {
+      logger.error('run.record_failed', { runId: run.id, error: String(err) });
+    }
+  };
+
+  if (run.state === 'done') {
+    finish(run);
+    return;
+  }
+  const onEvent = (evt: runs.RunEventLike) => {
+    if (evt.type !== 'done') return;
+    run.events.off('event', onEvent);
+    finish(evt as { outcome?: unknown; exitCode?: unknown; durationMs?: unknown });
+  };
+  run.events.on('event', onEvent);
+}
+
+function listAttempts(req: IncomingMessage, res: ServerResponse, p: Params): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!exerciseFor(res, p)) return;
+  sendJson(res, 200, { attempts: attempts.listForExercise(caller.user.id, p.lang, p.slug) });
+}
+
+async function cancelRun(req: IncomingMessage, res: ServerResponse, id: string): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const run = await runs.getRun(id);
+  // Someone else's run is "nothing to cancel", same as a finished one.
+  if (!run || String(run.user) !== String(caller.user.id)) {
+    sendJson(res, 200, { cancelled: false });
+    return;
+  }
+  sendJson(res, 200, { cancelled: await runs.cancel(id, String(caller.user.id)) });
+}
+
+async function runnerState(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const user = String(caller.user.id);
+  const live = await runs.limits();
+  sendJson(res, 200, {
     maxConcurrent: config.runner.maxConcurrent,
+    cooldownRunSeconds: config.runner.cooldownRunSeconds,
+    cooldownTestSeconds: config.runner.cooldownTestSeconds,
+    timeoutSeconds: config.runner.timeoutSeconds,
+    warnSeconds: config.runner.warnSeconds,
+    memoryMb: config.runner.memoryMb,
+    cpus: config.runner.cpus,
+    outputLimitBytes: config.runner.outputLimitBytes,
+    ...(live ?? {}),
+    cooldownRemainingRun: (await runs.cooldownRemaining(user, 'run')) ?? 0,
+    cooldownRemainingTest: (await runs.cooldownRemaining(user, 'test')) ?? 0,
   });
 }

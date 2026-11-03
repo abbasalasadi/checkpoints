@@ -17,11 +17,13 @@ import { config, loadSecrets } from './config/index.js';
 import { closeDatabase, migrate, openDatabase } from './db/index.js';
 import { logger } from './logger.js';
 import { handle } from './routes/index.js';
+import { createRunSocketServer, RUN_SOCKET_PATTERN } from './routes/run-socket.js';
 import { createTerminalServer } from './routes/terminal.js';
-import { runner } from './services/runner.js';
+import './services/exercises.js';
+import { lifecycle } from './services/runs.js';
 
 async function main() {
-  // Step 2a — abort now, with a message that says what to do.
+  // Step 2a — abort now on a missing required secret (none today: D6).
   loadSecrets();
 
   // Step 3 — the first write truncates the file.
@@ -46,19 +48,25 @@ async function main() {
     process.exit(1);
   }
 
-  // Step 2b — a broken runner should surface here, not on a student's first click.
+  // Step 2b — the run dispatcher (services/runner/). A broken one should
+  // surface here, not on a student's first click.
+  const dispatcher = await lifecycle();
+  if (!dispatcher) {
+    process.stderr.write('\n[FATAL] Run dispatcher (services/runner/index.js) failed to load.\n\n');
+    process.exit(1);
+  }
   try {
-    await runner.preflight();
+    await dispatcher.preflightRunners?.();
   } catch (err) {
     logger.error('startup.runner_unavailable', { error: String(err) });
     process.stderr.write(
-      `\n[FATAL] Runner unavailable: ${String(err)}\n` +
-        `        Start Docker and run \`make runner-build\`.\n\n`,
+      `\n[FATAL] Runner unavailable: ${String(err)}\n` + `        Start Docker and build the runner images.\n\n`,
     );
     process.exit(1);
   }
-  runner.start();
+  dispatcher.startRunners?.();
 
+  const runSocket = createRunSocketServer();
   const terminal = createTerminalServer();
 
   const server = createServer((req, res) => {
@@ -82,7 +90,10 @@ async function main() {
 
   server.on('upgrade', (req, socket, head) => {
     const url = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
-    if (url.pathname === terminal.path) {
+    const runMatch = RUN_SOCKET_PATTERN.exec(url.pathname);
+    if (runMatch?.[1]) {
+      void runSocket.upgrade(req, socket, head, runMatch[1]);
+    } else if (url.pathname === terminal.path) {
       void terminal.upgrade(req, socket, head);
     } else {
       socket.destroy();
@@ -100,7 +111,7 @@ async function main() {
       shuttingDown = true;
       logger.info('shutdown.begin', { signal });
       server.close(() => {
-        void runner.stop().finally(() => {
+        void Promise.allSettled([dispatcher.stopRunners?.()]).finally(() => {
           closeDatabase();
           logger.info('shutdown.complete', {});
           process.exit(0);

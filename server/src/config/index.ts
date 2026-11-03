@@ -16,10 +16,11 @@ const LOG_LEVELS: LogLevel[] = ['debug', 'info', 'warn', 'error'];
 
 /** Operational defaults. Every one of these is safe to run with. */
 const defaults = {
-  appName: 'rust-checkpoints',
+  appName: 'checkpoints',
   appEnv: 'development',
-  apiPort: 8128,
-  webPort: 5190,
+  apiPort: 8157,
+  webPort: 5203,
+  contentDir: 'content',
   dbPath: 'var/db/app.db',
   logEnabled: true,
   logLevel: 'info' as LogLevel,
@@ -46,7 +47,19 @@ const defaults = {
   // legitimate run while halving how long a stuck one wastes a slot.
   runnerTimeoutSeconds: 60,
   runnerWarnSeconds: 20,
+  // D16: one cap for every language's captured output.
+  runnerOutputLimitBytes: 1024 * 1024,
+  runnerBackend: 'docker',
 };
+
+/** First non-empty variable wins: lets .env.example names and the Rust names coexist. */
+function first(...names: string[]): string | undefined {
+  for (const n of names) {
+    const v = process.env[n];
+    if (v !== undefined && v !== '') return n;
+  }
+  return names[0];
+}
 
 function str(name: string, fallback: string): string {
   const v = process.env[name];
@@ -102,6 +115,8 @@ export const config = {
   appEnv: str('APP_ENV', defaults.appEnv),
 
   apiPort: int('API_PORT', defaults.apiPort),
+  /** Absolute — content/<lang>/ for each language lives under it. */
+  contentDir: fromRoot(str('CONTENT_DIR', defaults.contentDir)),
   webPort: int('WEB_PORT', defaults.webPort),
 
   /** Absolute — resolved against the repo root, not cwd. */
@@ -112,13 +127,19 @@ export const config = {
   logDir: str('LOG_DIR', defaults.logDir),
 
   sessionTtlHours: int('SESSION_TTL_HOURS', defaults.sessionTtlHours),
-  platformSigninUrl: str('PLATFORM_SIGNIN_URL', defaults.platformSigninUrl),
+  platformSigninUrl: str(first('REBOOT01_SIGNIN_URL', 'PLATFORM_SIGNIN_URL')!, defaults.platformSigninUrl),
+  /** D14: dev-login exists only outside production. */
+  get devLoginEnabled(): boolean {
+    return this.appEnv !== 'production';
+  },
 
   runner: {
     image: str('RUNNER_IMAGE', defaults.runnerImage),
-    maxConcurrent: int('RUNNER_MAX_CONCURRENT', defaults.runnerMaxConcurrent),
-    cooldownRunSeconds: int('RUNNER_COOLDOWN_RUN_SECONDS', defaults.runnerCooldownRunSeconds),
-    cooldownTestSeconds: int('RUNNER_COOLDOWN_TEST_SECONDS', defaults.runnerCooldownTestSeconds),
+    backend: str('RUNNER_BACKEND', defaults.runnerBackend),
+    maxConcurrent: int(first('RUNNER_CONCURRENCY', 'RUNNER_MAX_CONCURRENT')!, defaults.runnerMaxConcurrent),
+    cooldownRunSeconds: int(first('COOLDOWN_RUN_SEC', 'RUNNER_COOLDOWN_RUN_SECONDS')!, defaults.runnerCooldownRunSeconds),
+    cooldownTestSeconds: int(first('COOLDOWN_SUBMIT_SEC', 'RUNNER_COOLDOWN_TEST_SECONDS')!, defaults.runnerCooldownTestSeconds),
+    outputLimitBytes: int('RUNNER_OUTPUT_LIMIT_BYTES', defaults.runnerOutputLimitBytes),
     idleSeconds: int('RUNNER_IDLE_SECONDS', defaults.runnerIdleSeconds),
     terminalIdleSeconds: int('RUNNER_TERMINAL_IDLE_SECONDS', defaults.runnerTerminalIdleSeconds),
     memoryMb: int('RUNNER_MEMORY_MB', defaults.runnerMemoryMb),
@@ -131,14 +152,10 @@ export const config = {
 };
 
 /**
- * Called explicitly at startup rather than at import time, so tests can import
- * the config module without being killed by a missing secret.
+ * Called explicitly at startup. Sessions are random tokens stored as SHA-256
+ * hashes (D6), so no signing key is needed; nothing is required today. Kept as
+ * the single place a future required secret would fail fast.
  */
-export function loadSecrets() {
-  return {
-    sessionSigningKey: requiredSecret(
-      'SESSION_SIGNING_KEY',
-      'Set it in .env — generate one with: openssl rand -hex 32',
-    ),
-  };
+export function loadSecrets(): Record<string, never> {
+  return {};
 }

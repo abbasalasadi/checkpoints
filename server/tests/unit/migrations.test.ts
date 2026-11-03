@@ -23,7 +23,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const serverDir = resolve(here, '../..');
 
 /** Every table the application actually reads or writes. */
-const REQUIRED_TABLES = ['users', 'sessions', 'progress', 'snapshots'];
+const REQUIRED_TABLES = ['users', 'sessions', 'progress', 'snapshots', 'attempts'];
 
 test('migrating a fresh database creates every required table', () => {
   const dir = mkdtempSync(join(tmpdir(), 'rc-migrate-'));
@@ -78,4 +78,22 @@ test('the build copies migrations next to the compiled code that loads them', ()
 
   const src = readdirSync(join(serverDir, 'src/db/migrations')).filter((f) => f.endsWith('.sql'));
   assert.deepEqual(sql.sort(), src.sort(), 'dist migrations drifted from source');
+});
+
+test('every exercise-keyed table carries a language column', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'rc-migrate-'));
+  try {
+    const db = openDatabase(join(dir, 'test.db'));
+    migrate(db);
+    for (const table of ['progress', 'attempts', 'snapshots']) {
+      const cols = db.prepare(`PRAGMA table_info(${table})`).all().map((r) => (r as { name: string }).name);
+      assert.ok(cols.includes('language'), `${table} has no language column`);
+    }
+    const sessionCols = db.prepare('PRAGMA table_info(sessions)').all().map((r) => (r as { name: string }).name);
+    assert.ok(sessionCols.includes('token_hash'), 'sessions must store the token hash');
+    assert.ok(!sessionCols.includes('id'), 'sessions must not store a raw token id');
+  } finally {
+    closeDatabase();
+    rmSync(dir, { recursive: true, force: true });
+  }
 });

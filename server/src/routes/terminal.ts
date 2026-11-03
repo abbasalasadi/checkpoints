@@ -16,7 +16,7 @@ import { WebSocketServer, type WebSocket } from 'ws';
 import { config } from '../config/index.js';
 import { logger } from '../logger.js';
 import { resolveCaller } from '../middleware/http.js';
-import { runner } from '../services/runner.js';
+import { runner } from '../services/runner/index.js';
 
 interface ClientMessage {
   type: 'input' | 'resize';

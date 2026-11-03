@@ -1,9 +1,7 @@
 /**
- * Config tests. These cover the two behaviours the scaffolding phase promises:
- * required secrets abort startup, operational settings fall back silently.
- *
- * loadSecrets() calls process.exit, so it is exercised in a child process
- * rather than mocked — a mock here would test the mock, not the behaviour.
+ * Config tests. Operational settings fall back to the Rust defaults (D16) and
+ * are overridable from .env. Environment-dependent cases run in a child
+ * process, because config is evaluated once at import.
  */
 
 import { test } from 'node:test';
@@ -14,36 +12,29 @@ import { dirname, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const serverDir = resolve(here, '../..');
-const entry = resolve(serverDir, 'src/main.ts');
 
-function startWith(env: Record<string, string>): { code: number; stderr: string } {
-  try {
-    execFileSync(process.execPath, ['--import', 'tsx', entry], {
-      cwd: serverDir,
-      env: { ...process.env, ...env, API_PORT: '0', LOG_ENABLED: 'false' },
-      timeout: 8000,
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
-    return { code: 0, stderr: '' };
-  } catch (err) {
-    const e = err as { status?: number; stderr?: Buffer; signal?: string };
-    // A clean start has no exit — the timeout kills it. That is success here.
-    if (e.signal === 'SIGTERM') return { code: 0, stderr: String(e.stderr ?? '') };
-    return { code: e.status ?? -1, stderr: String(e.stderr ?? '') };
-  }
+/** Evaluate config in a fresh process with the given environment. */
+function configWith(env: Record<string, string>): Record<string, unknown> {
+  const out = execFileSync(
+    process.execPath,
+    ['--import', 'tsx', '--input-type=module', '-e',
+      "const { config } = await import('./src/config/index.ts'); process.stdout.write(JSON.stringify({ ...config, devLoginEnabled: config.devLoginEnabled }));"],
+    { cwd: serverDir, env: { ...process.env, LOG_ENABLED: 'false', ...env }, timeout: 15000 },
+  );
+  return JSON.parse(String(out)) as Record<string, unknown>;
 }
 
-test('aborts with a clear message when SESSION_SIGNING_KEY is missing', () => {
-  const { code, stderr } = startWith({ SESSION_SIGNING_KEY: '' });
-  assert.equal(code, 1, 'should exit non-zero');
-  assert.match(stderr, /SESSION_SIGNING_KEY/, 'should name the missing variable');
-  assert.match(stderr, /openssl rand/, 'should say how to fix it');
+test('.env.example names override the defaults (COOLDOWN_*_SEC, RUNNER_CONCURRENCY)', () => {
+  const c = configWith({ COOLDOWN_RUN_SEC: '5', COOLDOWN_SUBMIT_SEC: '7', RUNNER_CONCURRENCY: '2' });
+  const r = c.runner as Record<string, number>;
+  assert.equal(r.cooldownRunSeconds, 5);
+  assert.equal(r.cooldownTestSeconds, 7);
+  assert.equal(r.maxConcurrent, 2);
 });
 
-test('starts when only operational settings are absent', () => {
-  // No API_PORT/LOG_LEVEL/DB_PATH set: all have safe defaults.
-  const { code } = startWith({ SESSION_SIGNING_KEY: 'test-key-not-a-real-secret' });
-  assert.equal(code, 0, 'missing operational settings must not be fatal');
+test('dev-login is disabled only in production', () => {
+  assert.equal(configWith({ APP_ENV: 'production' }).devLoginEnabled, false);
+  assert.equal(configWith({ APP_ENV: 'dev' }).devLoginEnabled, true);
 });
 
 test('config defaults are the values the plan specifies', async () => {
@@ -58,6 +49,10 @@ test('config defaults are the values the plan specifies', async () => {
   // 384, not 256: measured. brackets_matching_test pulls rand -> zerocopy,
   // which is OOM-killed at 256 MB even with CARGO_BUILD_JOBS=1.
   assert.equal(config.runner.memoryMb, 384);
+  assert.equal(config.runner.cpus, 0.5);
+  assert.equal(config.runner.timeoutSeconds, 60);
+  assert.equal(config.runner.outputLimitBytes, 1024 * 1024);
+  assert.equal(config.apiPort, 8157);
 });
 
 // ── username-only login ──────────────────────────────────────────────────────
