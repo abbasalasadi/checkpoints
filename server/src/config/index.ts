@@ -14,6 +14,11 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 const LOG_LEVELS: LogLevel[] = ['debug', 'info', 'warn', 'error'];
 
+/** APP_ENV values that allow dev-login. Anything else (production, a typo) does not. */
+const DEV_ENVS = ['development', 'dev', 'test'];
+/** Every APP_ENV the server accepts; an unknown value refuses to start. */
+export const APP_ENVS = [...DEV_ENVS, 'production'];
+
 /** Operational defaults. Every one of these is safe to run with. */
 const defaults = {
   appName: 'checkpoints',
@@ -130,7 +135,7 @@ export const config = {
   platformSigninUrl: str(first('REBOOT01_SIGNIN_URL', 'PLATFORM_SIGNIN_URL')!, defaults.platformSigninUrl),
   /** D14: dev-login exists only outside production. */
   get devLoginEnabled(): boolean {
-    return this.appEnv !== 'production';
+    return DEV_ENVS.includes(this.appEnv);
   },
 
   runner: {

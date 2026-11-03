@@ -13,7 +13,7 @@
  */
 
 import { createServer } from 'node:http';
-import { config, loadSecrets } from './config/index.js';
+import { APP_ENVS, config, loadSecrets } from './config/index.js';
 import { closeDatabase, migrate, openDatabase } from './db/index.js';
 import { isLanguage, LANGUAGES, type Language } from './languages.js';
 import { logger } from './logger.js';
@@ -26,6 +26,11 @@ import { lifecycle } from './services/runs.js';
 async function main() {
   // Step 2a — abort now on a missing required secret (none today: D6).
   loadSecrets();
+  // A misspelled APP_ENV must not silently become a dev server with dev-login on.
+  if (!APP_ENVS.includes(config.appEnv)) {
+    process.stderr.write(`[FATAL] Unknown APP_ENV "${config.appEnv}"; expected one of ${APP_ENVS.join(', ')}\n`);
+    process.exit(1);
+  }
 
   // Step 3 — the first write truncates the file.
   logger.info('startup.begin', {

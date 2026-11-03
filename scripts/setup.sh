@@ -33,8 +33,12 @@ print_info "  $DB_DIR"
 # from the template only when it is missing; never overwrite, never print it.
 env_file="$(resolve_env_file)"
 if [ ! -f "$env_file" ]; then
-  [ -f "$ROOT_DIR/.env.example" ] || die ".env and .env.example are both missing"
-  cp "$ROOT_DIR/.env.example" "$env_file"
+  if [ -f "$ROOT_DIR/.env.example" ]; then
+    cp "$ROOT_DIR/.env.example" "$env_file"
+  else
+    # A copy made by `make send` carries no .env* files; the server's built-in defaults apply.
+    : > "$env_file"
+  fi
   chmod 0600 "$env_file"
   print_info "[LOCAL] Created .env from .env.example — fill it in, or run 'make secrets-pull'"
 else

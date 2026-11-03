@@ -32,6 +32,7 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 5. Stars, sidebar search and status filters, compact sidebar rail.
 6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
 7. Offline indicator with draft re-sync; loading skeletons.
+8. Hardening: Go run containers with a read-only root filesystem (Go cache and temp on tmpfs), then re-run Go parity (audit v1.0 F3; the Go reference also runs writable).
 
 **Done when:** same pattern, tagged `v2.0`.
 
