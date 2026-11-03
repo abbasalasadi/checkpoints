@@ -2,7 +2,7 @@
 
 **State:** V1 steps 1-9 done and pushed. Build + 145 tests pass on lan_vm1; every exercise passes parity in all three languages (rust 40, go 60, js 29). Nothing deployed (D13); only fake users (D14).
 
-**Next action:** step 10 — browser check of Go (Run, Submit, Cancel, Format, args) once a Go runner image is available where the browser can reach it; Rust and JS already checked in the browser. Then self-audit (`docs/audits/`) and release note. After that: work with the owner on V2 features.
+**Next action:** step 10 — self-audit by a reviewer sub-agent (cost request checkpoints-c1 sent to the manager), fix blocking findings, release note. Go is proven end to end through the API on lan_vm1; Rust and JS also in the browser. After that: work with the owner on V2 features.
 
 **Open / for the owner:**
 - Deploy day: approve deploy, live DB merge (`make migrate-merge`), nginx with old-site disable (`LEGACY_DISABLE=1`); clear fake users first.

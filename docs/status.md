@@ -10,6 +10,7 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 ## Done
 - V1 steps 1-9 built and integrated (2026-11-03). Result check: lan_vm1 build + 145 tests (36 server, 109 web) — pass; runner images built (go 546 MB, js 109 MB, rust 1.25 GB); `make parity` — rust 40/40, go 60/60, js 29/29 solutions pass and starters fail, run + Go format ok — correct (matches the references)
 - Browser check on laptop (fake user): sign-in, Go/JS/Rust switcher, checkpoint → level tree, Rust Submit (streamed output, diagnostics, 90 s cooldown), JS Run (streamed, 30 s cooldown) — pass. Go in the browser not yet clicked through (no Go image on laptop; Go runner proven by parity on lan_vm1)
+- API smoke test on lan_vm1 (`scripts/smoke-vm.sh`), all three languages: dev login, detail, Run (+ 30 s cooldown 429), Go Format (changed files), Submit with reference solution = passed, Cancel, attempts — pass. Fixed on the way: format never reported changed files
 - Local smoke test: dev login, /api/{go,js,rust}/exercises (60/29/40), detail, save — pass
 
 ## Running
