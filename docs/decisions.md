@@ -49,5 +49,7 @@ Documents not applicable: <list, one reason each>
 | D10 | 2026-11-03 | Versions: V1 merge (parity, migration, redirects, deploy) · V2 student features · V3 exam and extras · then redesign | same | Ship the merge first |
 | D11 | 2026-11-03 | Ports from manager (`[ANSWER] checkpoints-1`): `API_PORT=8157` (laptop; deploy VM on 127.0.0.1 behind nginx — confirmed free on the deploy VM by the manager (bind at deploy, which needs owner approval)), `WEB_PORT=5203` (laptop only) | — | Implements D2 |
 | D12 | 2026-11-03 | No `SESSION_SECRET`: sessions are random 256-bit opaque tokens stored (hashed, D6) in the database, as in the reference projects; nothing is signed | "what is session secret? isnt it in the reference projects?" | The design doc listed an unused variable |
+| D13 | 2026-11-03 | No deploy, migration or nginx change without the owner present; V1 stops at "tested locally and on the assigned VM" | "No, wait for me" | Deploying is an owner action |
+| D14 | 2026-11-03 | Development uses an empty database with fake test users (dev-only login, refused when `APP_ENV=production`); live databases are pulled and migrated only just before deployment, after fake users are cleared | "for now just create empty database and create your own users with fake logins just for testing. we will clear your fake users before database sync before deployments." | Live data holds students' solutions |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.
