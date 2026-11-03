@@ -52,7 +52,7 @@ const detail = await call('GET', `/api/${lang}/exercises/${slug}`);
 check('exercise detail', detail.status === 200 && detail.json.files, String(detail.status));
 const starter = detail.json.files ?? {};
 
-const run = await call('POST', `/api/${lang}/exercises/${slug}/run`, { files: starter, args: ['42', '0123456789'] });
+const run = await call('POST', `/api/${lang}/exercises/${slug}/run`, { files: starter, ...(detail.json.argv ? { args: ['42', '0123456789'] } : {}) });
 check('run accepted', run.status === 200 && run.json.runId, JSON.stringify(run.json).slice(0, 120));
 if (run.json.runId) {
   const done = await waitDone(run.json.runId);
