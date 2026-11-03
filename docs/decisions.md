@@ -54,3 +54,4 @@ Documents not applicable: <list, one reason each>
 | D15 | 2026-11-03 | Cooldowns 30 s Run / 90 s Submit per user, counted from the end of the previous run (as in the live references); replaces the spec's 5 s / 10 s | "keep the cooldown as 30 s / 90 s" | Matches production behaviour |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.
+| D16 | 2026-11-03 | When Go, JS and Rust references conflict, Rust's behaviour is the default (owner). E.g. output cap 1 MB, memory 384 MB / 0.5 CPU, concurrency 3. | Owner instruction |

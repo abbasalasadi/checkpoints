@@ -1,30 +1,51 @@
-# <project> — Versions
+# Checkpoints — Versions
 
-All requirements, captured at the start, sorted by version. Only the current version (`release.md`) is built. Architecture, data model and stack are chosen with every version in view.
+All requirements, captured at the start, sorted by version. Only the current version (`release.md`) is built. Architecture, data model and stack are chosen with every version in view. Specification: `docs/00_requirements/`, `docs/01_design/`; decisions: `docs/decisions.md`.
 
 Current version: **V1**
 
-## V1 Basic
-**Goal:** <the smallest complete product a user can actually use, in one sentence>
+Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-checkpoints`, JS `/home/abbas/Documents/js-checkpoints`, Rust `/home/abbas/Documents/rust`.
 
-**Features** (5–10):
-1. <feature>
-2. <feature>
+## V1 Merge
+**Goal:** One app where a student signs in once and practises Go, JS and Rust exactly as on the three live testers today.
 
-**Done when:** runs from a clean checkout; tests pass; <really deployed at … / installed on …>; self-audit passed; tagged `v1.0`; short release note.
+**Features:**
+1. One sign-in with the Reboot01 username, valid for all three tracks; logout.
+2. Track switcher and canonical routes `/go/:slug`, `/js/:slug`, `/rust/:slug`; per-track checkpoint → level tree with status.
+3. Workbench carried over from the references: subject, Monaco editor, file tabs, args, Run, Submit, Cancel, Format (Go), autosave, reset, snapshots (3 manual + last passing), stuck dialog, diagnostics.
+4. Grading identical to the references; where they conflict, Rust is the default (D16). One streaming WebSocket protocol for all three.
+5. One dispatcher: global queue and per-user cooldowns 30 s Run / 90 s Submit from run end (D15).
+6. One SQLite schema with `language` in every key; hashed session tokens (D6); attempts store files and output (D5).
+7. Migration script that merges the three live databases (tested on fake data only until deployment, D14).
+8. Deployment kit: one systemd unit, nginx site with 301 redirects from the three old subdomains, backups. Prepared, not run (D13).
 
-## V2 Medium
-**Goal:** <one sentence>
+**Done when:** runs from a clean checkout; every reference solution passes and every starter fails in all three tracks; tests pass on the assigned VM; secret scan clean; self-audit passed; deployed after owner approval; tagged `v1.0`.
 
-**Features** (5–10):
-1. <feature>
+## V2 Student features
+**Goal:** A student can see and reuse everything they have done across all three tracks.
+
+**Features:**
+1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics.
+2. History explorer with filters and attempt detail (code + output).
+3. Solutions vault and ZIP export.
+4. Preferences (theme, font size, tab size, word wrap, keybindings) synced to the account.
+5. Stars, sidebar search and status filters, compact sidebar rail.
+6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
+7. Offline indicator with draft re-sync; loading skeletons.
 
 **Done when:** same pattern, tagged `v2.0`.
 
-## V3 Advanced
-**Goal:** <one sentence>
+## V3 Exam and extras
+**Goal:** A student can rehearse a timed checkpoint and get help without being handed the answer.
 
-**Features** (5–10):
-1. <feature>
+**Features:**
+1. Mock exam: one random exercise per level, timer (default 180 min), pristine starters, practice drafts set aside on the server (D7), report.
+2. Hints with a 10-second delay for every exercise (D4).
+3. Command palette and keyboard shortcut sheet.
+4. Assertion diff card on failed tests.
+5. Focus (zen) mode, font controls, post-pass "next exercise" prompt, breadcrumbs.
 
 **Done when:** same pattern, tagged `v3.0`.
+
+## After V3
+Full visual redesign (owner's plan).
