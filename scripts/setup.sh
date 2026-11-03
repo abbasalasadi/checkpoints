@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# (LOCAL) Prepare a clean checkout for development.
+# Checks prerequisites, creates runtime dirs, seeds .env, installs workspaces.
+set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
+print_info "[LOCAL] Checking prerequisites"
+
+require_command node "install Node.js 20 or newer"
+require_command npm  "ships with Node.js"
+
+node_major="$(node -v | sed -E 's/^v([0-9]+).*/\1/')"
+[ "$node_major" -ge 20 ] || die "Node 20+ required, found $(node -v)"
+print_info "  node $(node -v), npm $(npm -v)"
+
+# Docker is a hard requirement locally, not only on the VM: the runner IS Docker
+# (docs/04-runner.md), so tests exercise real containers. Fail here with a clear
+# message rather than surfacing a confusing socket error much later.
+require_command docker "the runner is Docker — see docs/04-runner.md"
+if ! docker info >/dev/null 2>&1; then
+  die "Docker is installed but its daemon is unreachable.
+       Start Docker, or add your user to the 'docker' group:
+         sudo usermod -aG docker \$USER   # then log out and back in"
+fi
+print_info "  $(docker --version)"
+
+print_info "[LOCAL] Creating runtime directories under var/"
+ensure_runtime_dirs
+print_info "  $LOG_DIR"
+print_info "  $DB_DIR"
+
+# .env is committed (private repo, project convention), so it normally exists
+# already. Only fill in a missing signing key rather than overwriting anything.
+env_file="$(resolve_env_file)"
+if [ ! -f "$env_file" ]; then
+  die "$env_file is missing. It is committed to this repository — restore it with:
+       git checkout -- .env"
+fi
+if grep -qE '^SESSION_SIGNING_KEY=\s*$' "$env_file"; then
+  if command -v openssl >/dev/null 2>&1; then
+    secret="$(openssl rand -hex 32)"
+    sed -i "s|^SESSION_SIGNING_KEY=.*|SESSION_SIGNING_KEY=$secret|" "$env_file"
+    print_info "[LOCAL] Generated a SESSION_SIGNING_KEY into .env"
+  else
+    die "SESSION_SIGNING_KEY is empty and openssl is unavailable — set it by hand"
+  fi
+else
+  print_info "[LOCAL] .env present with a signing key"
+fi
+
+print_info "[LOCAL] Installing workspace dependencies"
+cd "$ROOT_DIR"
+if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+print_info ""
+print_info "✅ setup complete — run 'make run' to start, 'make help' for all commands"

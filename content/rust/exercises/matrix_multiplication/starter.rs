@@ -1,0 +1,3 @@
+pub fn multiply(m: Matrix, multiplier: i32) -> Matrix {
+    todo!()
+}

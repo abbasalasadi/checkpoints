@@ -1,0 +1,40 @@
+# Line endings are a correctness matter here, not a style one.
+#
+# scripts/deploy archives the WORKING TREE, not git. On a Windows checkout with
+# core.autocrlf=true and no rules, every shell script and every .rs file arrives
+# CRLF — which would bake a `#!/bin/sh\r` entrypoint into the runner image (bad
+# interpreter: every graded run fails) and ship student-facing sources with
+# stray carriage returns.
+#
+# This bit the go-checkpoints repository on 2026-09-09 and was caught only
+# because that deploy was moved to Linux; see go-checkpoints/docs/10-cloud-run.md
+# §6. Nothing had protected this repository either.
+#
+# Anything the container executes, or that the toolchain reads, is pinned to LF.
+
+* text=auto
+
+*.sh        text eol=lf
+*.rs        text eol=lf
+*.toml      text eol=lf
+*.js        text eol=lf
+*.mjs       text eol=lf
+*.cjs       text eol=lf
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.sql       text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.html      text eol=lf
+*.css       text eol=lf
+
+Makefile    text eol=lf
+Dockerfile  text eol=lf
+*.template  text eol=lf
+.env*       text eol=lf
+
+*.png binary
+*.jpg binary
+*.gz  binary

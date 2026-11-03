@@ -1,0 +1,25 @@
+{
+  "slug": "counting_words",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3
+    },
+    {
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "checkpoint": "final",
+      "level": 2
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_2/counting_words"
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "profanity_filter",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 3
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_3/profanity_filter"
+}

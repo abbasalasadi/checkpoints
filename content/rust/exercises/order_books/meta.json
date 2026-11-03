@@ -1,0 +1,21 @@
+{
+  "slug": "order_books",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 4
+    },
+    {
+      "checkpoint": "final",
+      "level": 4
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_4/order_books"
+}

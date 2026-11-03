@@ -1,0 +1,27 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file=../.env src/main.ts",
+    "serve": "tsx --env-file=../.env src/main.ts",
+    "start": "node --env-file=../.env dist/main.js",
+    "build": "tsc -p tsconfig.json && node -e \"require('node:fs').cpSync('src/db/migrations','dist/db/migrations',{recursive:true})\"",
+    "test": "node --import tsx --test tests/unit/*.test.ts tests/integration/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/dockerode": "^4.0.1",
+    "@types/node": "^22.10.2",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.11.1",
+    "dockerode": "^5.0.1",
+    "node-pty": "^1.1.0",
+    "ws": "^8.21.1"
+  }
+}

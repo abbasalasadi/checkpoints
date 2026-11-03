@@ -1,0 +1,756 @@
+{
+  "exercises": [
+    {
+      "slug": "blood_types_s",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "brackets_matching",
+      "kind": "bin",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": true,
+      "testShape": "lib",
+      "deps": [
+        {
+          "name": "rand",
+          "version": "0.9.2"
+        }
+      ]
+    },
+    {
+      "slug": "brain_fuck",
+      "kind": "bin",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": true,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "car_rental",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "check_user_name",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "count_factorial_steps",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "counting_words",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "display_table",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "dress_code",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "drop_the_blog",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "filter_table",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "flat_tree",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "format_me",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "get_document_id",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "insertion_sort",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "inv_pyramid",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "lucas_number",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "lunch_queue",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "matrix_determinant",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "matrix_display",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "matrix_multiplication",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2021",
+      "argv": false,
+      "testShape": "main",
+      "deps": []
+    },
+    {
+      "slug": "min_and_max",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2021",
+      "argv": false,
+      "testShape": "main",
+      "deps": []
+    },
+    {
+      "slug": "modify_letter",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "moving_targets",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "negative_spelling",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "nextprime",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "office_worker",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "order_books",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "organize_garage",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "own_and_return",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "partial_sums",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "previousprime",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "prime_checker",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "profanity_filter",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "queens",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "reverse_it",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "rot21",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "rpn",
+      "kind": "bin",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": true,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "scytale_decoder",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    },
+    {
+      "slug": "smallest",
+      "kind": "lib",
+      "edition": "2024",
+      "testEdition": "2024",
+      "argv": false,
+      "testShape": "lib",
+      "deps": []
+    }
+  ],
+  "placements": [
+    {
+      "exercise": "matrix_multiplication",
+      "checkpoint": "1",
+      "level": 1
+    },
+    {
+      "exercise": "min_and_max",
+      "checkpoint": "1",
+      "level": 1
+    },
+    {
+      "exercise": "modify_letter",
+      "checkpoint": "1",
+      "level": 2
+    },
+    {
+      "exercise": "reverse_it",
+      "checkpoint": "1",
+      "level": 2
+    },
+    {
+      "exercise": "smallest",
+      "checkpoint": "1",
+      "level": 2
+    },
+    {
+      "exercise": "counting_words",
+      "checkpoint": "1",
+      "level": 3
+    },
+    {
+      "exercise": "inv_pyramid",
+      "checkpoint": "1",
+      "level": 3
+    },
+    {
+      "exercise": "partial_sums",
+      "checkpoint": "1",
+      "level": 3
+    },
+    {
+      "exercise": "insertion_sort",
+      "checkpoint": "1",
+      "level": 4
+    },
+    {
+      "exercise": "rpn",
+      "checkpoint": "1",
+      "level": 4
+    },
+    {
+      "exercise": "nextprime",
+      "checkpoint": "2",
+      "level": 1
+    },
+    {
+      "exercise": "previousprime",
+      "checkpoint": "2",
+      "level": 1
+    },
+    {
+      "exercise": "reverse_it",
+      "checkpoint": "2",
+      "level": 1
+    },
+    {
+      "exercise": "count_factorial_steps",
+      "checkpoint": "2",
+      "level": 2
+    },
+    {
+      "exercise": "lucas_number",
+      "checkpoint": "2",
+      "level": 2
+    },
+    {
+      "exercise": "matrix_determinant",
+      "checkpoint": "2",
+      "level": 2
+    },
+    {
+      "exercise": "own_and_return",
+      "checkpoint": "2",
+      "level": 2
+    },
+    {
+      "exercise": "check_user_name",
+      "checkpoint": "2",
+      "level": 3
+    },
+    {
+      "exercise": "dress_code",
+      "checkpoint": "2",
+      "level": 3
+    },
+    {
+      "exercise": "get_document_id",
+      "checkpoint": "2",
+      "level": 3
+    },
+    {
+      "exercise": "order_books",
+      "checkpoint": "2",
+      "level": 4
+    },
+    {
+      "exercise": "prime_checker",
+      "checkpoint": "2",
+      "level": 4
+    },
+    {
+      "exercise": "rot21",
+      "checkpoint": "2",
+      "level": 4
+    },
+    {
+      "exercise": "queens",
+      "checkpoint": "2",
+      "level": 5
+    },
+    {
+      "exercise": "scytale_decoder",
+      "checkpoint": "2",
+      "level": 5
+    },
+    {
+      "exercise": "counting_words",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "inv_pyramid",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "nextprime",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "partial_sums",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "previousprime",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "reverse_it",
+      "checkpoint": "3",
+      "level": 1
+    },
+    {
+      "exercise": "check_user_name",
+      "checkpoint": "3",
+      "level": 2
+    },
+    {
+      "exercise": "dress_code",
+      "checkpoint": "3",
+      "level": 2
+    },
+    {
+      "exercise": "get_document_id",
+      "checkpoint": "3",
+      "level": 2
+    },
+    {
+      "exercise": "negative_spelling",
+      "checkpoint": "3",
+      "level": 3
+    },
+    {
+      "exercise": "queens",
+      "checkpoint": "3",
+      "level": 3
+    },
+    {
+      "exercise": "rpn",
+      "checkpoint": "3",
+      "level": 3
+    },
+    {
+      "exercise": "scytale_decoder",
+      "checkpoint": "3",
+      "level": 3
+    },
+    {
+      "exercise": "matrix_display",
+      "checkpoint": "3",
+      "level": 4
+    },
+    {
+      "exercise": "office_worker",
+      "checkpoint": "3",
+      "level": 4
+    },
+    {
+      "exercise": "organize_garage",
+      "checkpoint": "3",
+      "level": 4
+    },
+    {
+      "exercise": "blood_types_s",
+      "checkpoint": "3",
+      "level": 5
+    },
+    {
+      "exercise": "format_me",
+      "checkpoint": "3",
+      "level": 5
+    },
+    {
+      "exercise": "moving_targets",
+      "checkpoint": "3",
+      "level": 5
+    },
+    {
+      "exercise": "car_rental",
+      "checkpoint": "3",
+      "level": 6
+    },
+    {
+      "exercise": "drop_the_blog",
+      "checkpoint": "3",
+      "level": 6
+    },
+    {
+      "exercise": "lunch_queue",
+      "checkpoint": "3",
+      "level": 6
+    },
+    {
+      "exercise": "count_factorial_steps",
+      "checkpoint": "final",
+      "level": 1
+    },
+    {
+      "exercise": "matrix_multiplication",
+      "checkpoint": "final",
+      "level": 1
+    },
+    {
+      "exercise": "min_and_max",
+      "checkpoint": "final",
+      "level": 1
+    },
+    {
+      "exercise": "counting_words",
+      "checkpoint": "final",
+      "level": 2
+    },
+    {
+      "exercise": "modify_letter",
+      "checkpoint": "final",
+      "level": 2
+    },
+    {
+      "exercise": "reverse_it",
+      "checkpoint": "final",
+      "level": 2
+    },
+    {
+      "exercise": "smallest",
+      "checkpoint": "final",
+      "level": 2
+    },
+    {
+      "exercise": "inv_pyramid",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "nextprime",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "partial_sums",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "previousprime",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "prime_checker",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "profanity_filter",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "scytale_decoder",
+      "checkpoint": "final",
+      "level": 3
+    },
+    {
+      "exercise": "insertion_sort",
+      "checkpoint": "final",
+      "level": 4
+    },
+    {
+      "exercise": "matrix_determinant",
+      "checkpoint": "final",
+      "level": 4
+    },
+    {
+      "exercise": "order_books",
+      "checkpoint": "final",
+      "level": 4
+    },
+    {
+      "exercise": "rot21",
+      "checkpoint": "final",
+      "level": 4
+    },
+    {
+      "exercise": "rpn",
+      "checkpoint": "final",
+      "level": 4
+    },
+    {
+      "exercise": "blood_types_s",
+      "checkpoint": "final",
+      "level": 5
+    },
+    {
+      "exercise": "office_worker",
+      "checkpoint": "final",
+      "level": 5
+    },
+    {
+      "exercise": "lunch_queue",
+      "checkpoint": "final",
+      "level": 6
+    },
+    {
+      "exercise": "matrix_display",
+      "checkpoint": "final",
+      "level": 6
+    },
+    {
+      "exercise": "queens",
+      "checkpoint": "final",
+      "level": 6
+    },
+    {
+      "exercise": "display_table",
+      "checkpoint": "final",
+      "level": 7
+    },
+    {
+      "exercise": "drop_the_blog",
+      "checkpoint": "final",
+      "level": 7
+    },
+    {
+      "exercise": "filter_table",
+      "checkpoint": "final",
+      "level": 7
+    },
+    {
+      "exercise": "flat_tree",
+      "checkpoint": "final",
+      "level": 8
+    },
+    {
+      "exercise": "brackets_matching",
+      "checkpoint": "final",
+      "level": 9
+    },
+    {
+      "exercise": "brain_fuck",
+      "checkpoint": "final",
+      "level": 9
+    }
+  ]
+}

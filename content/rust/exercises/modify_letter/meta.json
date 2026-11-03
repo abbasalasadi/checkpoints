@@ -1,0 +1,21 @@
+{
+  "slug": "modify_letter",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2
+    },
+    {
+      "checkpoint": "final",
+      "level": 2
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_2/modify_letter"
+}

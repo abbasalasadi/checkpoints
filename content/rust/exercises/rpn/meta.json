@@ -1,0 +1,25 @@
+{
+  "slug": "rpn",
+  "kind": "bin",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": true,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4
+    },
+    {
+      "checkpoint": "3",
+      "level": 3
+    },
+    {
+      "checkpoint": "final",
+      "level": 4
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_4/rpn"
+}

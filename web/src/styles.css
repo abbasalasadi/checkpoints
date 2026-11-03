@@ -1,0 +1,364 @@
+/* Frameless shell.
+ *
+ * The browser's default body margin was showing as a white frame around the
+ * app. Everything lives in one container sized to the viewport, and nothing
+ * scrolls at the document level — individual panes scroll instead, so the
+ * layout never shifts under the user.
+ */
+
+/* ── design tokens ─────────────────────────────────────────────────────────
+ * The theme was 30 hand-picked hex values spread across 78 inline styles, with
+ * four near-identical panel shades among them. Naming them collapses that into
+ * one scale and makes a change to the theme a change in one place.
+ *
+ * Every foreground/background pair below clears WCAG AA (4.5:1); the dimmest
+ * text sits at 5.26:1 on the base, which is what stops "very dark" turning into
+ * "unreadable".
+ */
+:root {
+  /* surfaces, deepest first */
+  --bg: #07080b;
+  --surface: #0b0d12;
+  --raised: #101318;
+  --hover: #161a21;
+  --code-bg: #05060a;
+
+  /* lines */
+  --border: #1e232c;
+  --border-strong: #2a313d;
+
+  /* type */
+  --text: #dbe3ef;
+  --text-muted: #94a3b8;
+  --text-dim: #77839c;
+
+  /* accents */
+  --accent: #2f6feb;
+  --accent-text: #6ba4ff;
+  --success: #3ddc97;
+  --danger: #f0736a;
+  /* Filled destructive button; --danger is for text and reads too light here. */
+  --danger-solid: #a83c34;
+  --warning: #e0a33a;
+
+  /* disabled controls read as inert rather than merely faded */
+  --disabled-bg: #14171e;
+  --disabled-text: #5c6678;
+
+  --radius: 6px;
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Dark themes render text heavier; this keeps strokes from filling in. */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── splitters ─────────────────────────────────────────────────────────────
+ * A wide invisible hit area over a thin visible line: 3px is accurate enough
+ * to look tidy but too thin to grab reliably.
+ */
+.splitter {
+  position: relative;
+  flex: 0 0 auto;
+  background: transparent;
+  z-index: 5;
+}
+.splitter::after {
+  content: "";
+  position: absolute;
+  background: var(--border);
+  transition: background 120ms ease;
+}
+.splitter[data-axis="x"] {
+  width: 9px;
+  margin: 0 -3px;
+  cursor: col-resize;
+}
+.splitter[data-axis="x"]::after {
+  inset: 0 4px;
+}
+.splitter[data-axis="y"] {
+  height: 9px;
+  margin: -3px 0;
+  cursor: row-resize;
+}
+.splitter[data-axis="y"]::after {
+  inset: 4px 0;
+}
+.splitter:hover::after,
+.splitter[data-dragging="true"]::after {
+  background: var(--accent);
+}
+.splitter:focus-visible {
+  outline: none;
+}
+.splitter:focus-visible::after {
+  background: var(--accent-text);
+}
+
+/* Whole-window guard while dragging, or the pointer selects text and the
+ * cursor flickers back to the default over child elements. */
+body[data-resizing="x"] {
+  cursor: col-resize;
+}
+body[data-resizing="y"] {
+  cursor: row-resize;
+}
+body[data-resizing] * {
+  user-select: none !important;
+  pointer-events: none;
+}
+body[data-resizing] .splitter {
+  pointer-events: auto;
+}
+
+/* ── markdown ──────────────────────────────────────────────────────────────
+ * Instructions are the thing students read most, so this is sized for reading
+ * rather than for density.
+ */
+.markdown {
+  line-height: 1.65;
+  font-size: 0.92rem;
+  color: var(--text);
+  overflow-wrap: break-word;
+}
+.markdown > *:first-child {
+  margin-top: 0;
+}
+
+/* Every README opens with `## <exercise>`, and that heading is now the page's
+ * only title — so it is sized as one rather than as a section heading. */
+.markdown > h2:first-child,
+.markdown > h1:first-child {
+  font-size: 1.3rem;
+  color: var(--text);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  color: var(--text);
+  line-height: 1.3;
+  margin: 1.6em 0 0.6em;
+}
+.markdown h1 {
+  font-size: 1.25rem;
+}
+.markdown h2 {
+  font-size: 1.08rem;
+}
+.markdown h3 {
+  font-size: 0.97rem;
+}
+.markdown p {
+  margin: 0.7em 0;
+}
+.markdown ul,
+.markdown ol {
+  padding-left: 1.3rem;
+  margin: 0.7em 0;
+}
+.markdown li {
+  margin: 0.3em 0;
+}
+.markdown a {
+  color: var(--accent-text);
+}
+.markdown code {
+  background: var(--raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 0.08em 0.35em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.86em;
+}
+.markdown pre {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.8rem 0.9rem;
+  overflow-x: auto;
+  margin: 0.9em 0;
+}
+.markdown pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+.markdown blockquote {
+  border-left: 3px solid var(--border-strong);
+  margin: 0.9em 0;
+  padding: 0.1em 0 0.1em 0.9rem;
+  color: var(--text-muted);
+}
+.markdown table {
+  border-collapse: collapse;
+  margin: 0.9em 0;
+  display: block;
+  overflow-x: auto;
+}
+.markdown th,
+.markdown td {
+  border: 1px solid var(--border-strong);
+  padding: 0.35rem 0.6rem;
+  text-align: left;
+}
+.markdown th {
+  background: var(--surface);
+}
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 1.4em 0;
+}
+
+/* ── scrollbars ────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a4356;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Keyboard focus.
+ *
+ * Several controls set `border: none` for looks, which on a dark background
+ * left the browser's default outline nearly invisible. An explicit ring on
+ * :focus-visible only — so it appears for keyboard users and never as a halo
+ * after a mouse click.
+ */
+:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* The default selection blue is close to unreadable against these surfaces. */
+::selection {
+  background: #26436f;
+  color: #ffffff;
+}
+
+/* ── dialogs ───────────────────────────────────────────────────────────────
+ * The panel was a flat rectangle one border-shade away from the page behind
+ * it, which on a near-black theme left it barely readable as a separate layer.
+ * Depth now comes from three cues rather than the border alone: the backdrop
+ * blurs and desaturates the page, the panel sits on a lighter surface, and a
+ * deep shadow separates the two.
+ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(3, 5, 9, 0.72);
+  backdrop-filter: blur(3px) saturate(0.8);
+  animation: modal-fade 0.14s ease-out;
+}
+
+.modal-panel {
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.65),
+    /* A one-pixel top highlight reads as a lit edge and lifts the panel off
+       the backdrop far more cheaply than a heavier border would. */ inset 0 1px 0
+      rgba(255, 255, 255, 0.05);
+  animation: modal-rise 0.16s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes modal-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+/* Motion is decoration here; the dialog must still appear without it. */
+@media (prefers-reduced-motion: reduce) {
+  .modal-backdrop,
+  .modal-panel {
+    animation: none;
+  }
+}
+
+/* Dialog buttons. The confirm action is filled, the cancel is a quiet outline —
+   previously both were filled boxes of near-identical darkness, so neither read
+   as the primary choice. */
+.dlg-btn {
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.dlg-btn-quiet {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+}
+.dlg-btn-quiet:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.dlg-btn-primary {
+  background: var(--accent);
+  color: #ffffff;
+}
+/* Hover deepens rather than lightens: a lighter blue drops the white label to
+   3.9:1, below AA. Deepening keeps it at 5.5:1. */
+.dlg-btn-primary:hover {
+  background: #2a63d4;
+}
+
+.dlg-btn-danger {
+  background: var(--danger-solid);
+  color: #ffffff;
+}
+.dlg-btn-danger:hover {
+  background: #bd453c;
+}

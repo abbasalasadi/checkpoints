@@ -1,0 +1,21 @@
+{
+  "slug": "matrix_display",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4
+    },
+    {
+      "checkpoint": "final",
+      "level": 6
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_6/matrix_display"
+}

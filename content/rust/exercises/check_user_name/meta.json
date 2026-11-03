@@ -1,0 +1,21 @@
+{
+  "slug": "check_user_name",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 3
+    },
+    {
+      "checkpoint": "3",
+      "level": 2
+    }
+  ],
+  "sourcedFrom": "Checkpoint_3/Level_2/check_user_name"
+}

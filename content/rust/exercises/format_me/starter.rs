@@ -1,0 +1,17 @@
+use std::fmt;
+
+pub struct Park {}
+
+pub enum ParkType {}
+
+impl fmt::Display for Park {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        todo!()
+    }
+}
+
+impl fmt::Display for ParkType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        todo!()
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "brain_fuck",
+  "kind": "bin",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": true,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "final",
+      "level": 9
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_9/brain_fuck"
+}

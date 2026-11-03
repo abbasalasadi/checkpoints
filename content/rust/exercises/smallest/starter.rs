@@ -1,0 +1,3 @@
+pub fn smallest(h: HashMap<&str, i32>) -> i32 {
+    todo!()
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "matrix_multiplication",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2021",
+  "argv": false,
+  "testShape": "main",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1
+    },
+    {
+      "checkpoint": "final",
+      "level": 1
+    }
+  ],
+  "sourcedFrom": "Checkpoint_final/Level_1/matrix_multiplication"
+}

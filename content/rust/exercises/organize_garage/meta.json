@@ -1,0 +1,17 @@
+{
+  "slug": "organize_garage",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4
+    }
+  ],
+  "sourcedFrom": "Checkpoint_3/Level_4/organize_garage"
+}

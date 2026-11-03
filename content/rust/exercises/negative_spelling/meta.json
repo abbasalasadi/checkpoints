@@ -1,0 +1,17 @@
+{
+  "slug": "negative_spelling",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 3
+    }
+  ],
+  "sourcedFrom": "Checkpoint_3/Level_3/negative_spelling"
+}

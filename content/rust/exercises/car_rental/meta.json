@@ -1,0 +1,17 @@
+{
+  "slug": "car_rental",
+  "kind": "lib",
+  "edition": "2024",
+  "testEdition": "2024",
+  "argv": false,
+  "testShape": "lib",
+  "deps": [],
+  "starterFrom": "readme",
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 6
+    }
+  ],
+  "sourcedFrom": "Checkpoint_3/Level_6/car_rental"
+}
