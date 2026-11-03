@@ -12,6 +12,7 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 
 ## Running
 - <item> — run <id> on <host> — <how to check>
+- VM: lan_vm1 assigned (checkpoints-1, shared, 4 threads / 6 GB / 15 GB disk, ~2 days from 2026-11-03). Start runs only when `make health HOST=lan_vm1` shows 1-min load < 4 and > 8 GB free. On finish: clean task folders and Docker images, send [RELEASE].
 
 ## Blocked
 - <item> — <cause> — <what unblocks it; sweep state if a result was wrong>
