@@ -31,7 +31,7 @@ The design is organized into modular engineering documents:
 | [**03_backend_and_api_design.md**](03_backend_and_api_design.md) | Backend & API Architecture | Express server lifecycle, middleware pipelines (auth, rate limits), REST API routes, WebSocket streaming protocol, and structured logging. |
 | [**04_execution_engine_and_runners.md**](04_execution_engine_and_runners.md) | Execution Engine & Runners | `RunnerDispatcher` FIFO queue, concurrency ceilings, language-specific grading pipelines (Go, JS, Rust), and Docker vs. Cloud Run backends. |
 | [**05_frontend_architecture_and_components.md**](05_frontend_architecture_and_components.md) | Frontend Architecture & Components | React 18 + Vite SPA, context state graph, component hierarchy, responsive multi-breakpoint layout, Monaco integration, and mobile touch ergonomics. |
-| [**06_deployment_and_operations.md**](06_deployment_and_operations.md) | Deployment & Operations | Host ports (`API_PORT=8133`), Nginx reverse proxy, SSL, legacy subdomain 301 redirects, systemd service unit, and production cutover runbook. |
+| [**06_deployment_and_operations.md**](06_deployment_and_operations.md) | Deployment & Operations | Host ports (`API_PORT=8157`), Nginx reverse proxy, SSL, legacy subdomain 301 redirects, systemd service unit, and production cutover runbook. |
 
 ---
 
@@ -50,7 +50,7 @@ flowchart TD
         Nginx["Nginx Reverse Proxy (:443)"]
         StaticSPA["Static Assets (web/dist)"]
         
-        subgraph Backend ["Single Node.js Process (:8133)"]
+        subgraph Backend ["Single Node.js Process (:8157)"]
             Router["Express API Router"]
             WS["WebSocket Server (/ws/output)"]
             Auth["Auth Service (Reboot01 API)"]

@@ -47,5 +47,6 @@ Documents not applicable: <list, one reason each>
 | D8 | 2026-11-03 | Format-on-save runs through the runner queue as a `format` job with its own cooldown | same | Keeps the 2-container ceiling intact |
 | D9 | 2026-11-03 | Accepted risk: the backend has Docker socket access (root-equivalent on the VM); mitigated by the socket never being reachable from requests, fixed images, and the hardened container flags | same | Required to run sandboxes locally |
 | D10 | 2026-11-03 | Versions: V1 merge (parity, migration, redirects, deploy) · V2 student features · V3 exam and extras · then redesign | same | Ship the merge first |
+| D11 | 2026-11-03 | Ports from manager (`[ANSWER] checkpoints-1`): `API_PORT=8157` (laptop; deploy VM on 127.0.0.1 behind nginx — **not bound on the VM until the manager confirms**), `WEB_PORT=5203` (laptop only) | — | Implements D2 |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.

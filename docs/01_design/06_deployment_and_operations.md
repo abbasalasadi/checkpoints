@@ -11,8 +11,8 @@ This document specifies the production infrastructure, port allocations, Nginx r
 * **Process Target:** Single Node.js backend daemon (<70 MB idle, <180 MB peak RSS) replacing three separate Node daemons previously running for Go, JS, and Rust.
 
 ### 1.1 Port Allocation
-* **`API_PORT = 8133`:** Binds to `127.0.0.1:8133` on the host, serving the Express API and `/ws/output` WebSocket upgrades behind Nginx.
-* **`WEB_PORT = 5192`:** Reserved for local development Vite server. In production, Nginx serves the pre-built `web/dist` SPA directly from disk.
+* **`API_PORT = 8157`:** Binds to `127.0.0.1:8157` on the host, serving the Express API and `/ws/output` WebSocket upgrades behind Nginx.
+* **`WEB_PORT = 5203`:** Reserved for local development Vite server. In production, Nginx serves the pre-built `web/dist` SPA directly from disk.
 * *Ports:* reserved by the manager (decisions D2) and recorded in `docs/decisions.md`; the legacy ports stay in use until cutover.
 
 ---
@@ -82,7 +82,7 @@ server {
 
   # Real-Time WebSocket Output Stream
   location /ws/ {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_http_version 1.1;
     proxy_set_header Upgrade    $http_upgrade;
     proxy_set_header Connection "upgrade";
@@ -94,7 +94,7 @@ server {
 
   # REST API Endpoints
   location /api/ {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -104,7 +104,7 @@ server {
 
   # Health Check Endpoint
   location = /healthz {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_set_header Host $host;
   }
 
@@ -198,7 +198,7 @@ sequenceDiagram
     Admin->>DB: Execute node dist/db/migrate-old/merge.js
     DB-->>Admin: Verified 0 orphaned records & foreign keys valid
     Admin->>NewSvc: systemctl enable --now checkpoints.service
-    Admin->>VM: Verify curl -f http://127.0.0.1:8133/healthz
+    Admin->>VM: Verify curl -f http://127.0.0.1:8157/healthz
     Admin->>Nginx: Link sites-available/checkpoints.conf to sites-enabled
     Admin->>Nginx: nginx -t && systemctl reload nginx
     Admin->>Legacy: Disable legacy systemd units (systemctl disable go-checkpoints js-checkpoints rust-checkpoints)

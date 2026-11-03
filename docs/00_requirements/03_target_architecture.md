@@ -71,8 +71,8 @@ checkpoints/
 flowchart TD
     Client["Browser (Vite + React SPA)"] -->|HTTPS (Port 443)| Nginx["Nginx Reverse Proxy"]
     Nginx -->|Static Assets| SPADist["web/dist (Built SPA)"]
-    Nginx -->|/api/*| ExpressBackend["Node.js Backend (Port 8133)"]
-    Nginx -->|/ws/output| WSServer["WebSocket Server (Port 8133)"]
+    Nginx -->|/api/*| ExpressBackend["Node.js Backend (Port 8157)"]
+    Nginx -->|/ws/output| WSServer["WebSocket Server (Port 8157)"]
 
     subgraph BackendProcess ["Single Node.js Process"]
         ExpressBackend --> AuthGuard["Auth & Session Middleware"]

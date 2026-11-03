@@ -99,9 +99,9 @@ flowchart TD
 | Variable | Default (Local) | Production (`.env.vm`) | Role |
 |---|---|---|---|
 | `NODE_ENV` | `development` | `production` | Node runtime profile |
-| `API_PORT` | `8133` | `8133` | Express & WebSocket listen port |
-| `WEB_PORT` | `5192` | — | Vite dev server listen port |
-| `APP_BASE_URL` | `http://localhost:5192`| `https://checkpoints.appsyss.com` | Canonical public origin |
+| `API_PORT` | `8157` | `8157` | Express & WebSocket listen port |
+| `WEB_PORT` | `5203` | — | Vite dev server listen port |
+| `APP_BASE_URL` | `http://localhost:5203`| `https://checkpoints.appsyss.com` | Canonical public origin |
 | `DB_PATH` | `var/db/app.db` | `/home/abbas/Documents/checkpoints/var/db/app.db` | SQLite database file |
 | `CONTENT_DIR`| `content` | `/home/abbas/Documents/checkpoints/content` | Exercise catalogue root |
 | `RUNNER_BACKEND` | `docker` | `docker` (or `cloudrun`) | Sandbox engine |
@@ -133,9 +133,9 @@ function num(name: string, fallback: number): number {
 
 export const config = {
   env: process.env.NODE_ENV || 'development',
-  apiPort: num('API_PORT', 8133),
-  webPort: num('WEB_PORT', 5192),
-  appBaseUrl: process.env.APP_BASE_URL || 'http://localhost:5192',
+  apiPort: num('API_PORT', 8157),
+  webPort: num('WEB_PORT', 5203),
+  appBaseUrl: process.env.APP_BASE_URL || 'http://localhost:5203',
   dbPath: path.resolve(process.env.DB_PATH || 'var/db/app.db'),
   contentDir: path.resolve(process.env.CONTENT_DIR || 'content'),
   runner: {

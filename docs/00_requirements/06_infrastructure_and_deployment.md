@@ -24,10 +24,10 @@ The unified platform consolidates these down to **one production API port** and 
 
 | Port | Variable | Context | Role |
 |---|---|---|---|
-| **8133** | `API_PORT` | Production VM & Local Backend | Unified Express API & WebSocket Server (consolidating 8128, 8130, 8133) |
-| **5192** | `WEB_PORT` | Local Development | Single Vite Dev Server |
+| **8157** | `API_PORT` | Production VM & Local Backend | Unified Express API & WebSocket Server (replaces legacy 8128, 8130, 8133) |
+| **5203** | `WEB_PORT` | Local Development | Single Vite Dev Server |
 
-*(Ports 8128, 8130, and 8133 will be decommissioned and freed once legacy services are retired).*
+*(Legacy ports 8128, 8130 and 8133 will be decommissioned and freed once legacy services are retired).*
 
 ---
 
@@ -110,7 +110,7 @@ server {
 
   # Real-time WebSocket Output Streaming
   location /ws/ {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_http_version 1.1;
     proxy_set_header Upgrade    $http_upgrade;
     proxy_set_header Connection "upgrade";
@@ -122,7 +122,7 @@ server {
 
   # REST API
   location /api/ {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -132,7 +132,7 @@ server {
 
   # Health Check Endpoint
   location = /healthz {
-    proxy_pass http://127.0.0.1:8133;
+    proxy_pass http://127.0.0.1:8157;
     proxy_set_header Host $host;
   }
 

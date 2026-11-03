@@ -25,7 +25,7 @@ sequenceDiagram
     Main->>Express: Build Express application (middleware + routes)
     Main->>HTTP: Create HTTP server wrapping Express app
     Main->>WS: Attach WebSocket upgrade listener (/ws/output)
-    Main->>HTTP: Listen on API_PORT (8133)
+    Main->>HTTP: Listen on API_PORT (8157)
     Note over Main: Server ready to accept HTTP & WS traffic
 ```
 
