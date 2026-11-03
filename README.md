@@ -31,6 +31,10 @@ These testers are still being tested. If something breaks, gives a wrong result,
 
 Built by **Abbas Hasan** ([abbhasan](https://github.com/abbhasan)), Discord: **@abbhasan**.
 
+## Acknowledgements
+
+Special thanks to **Ali Alsaroo** ([aalsaroo](https://github.com/aalsaroo)) for key frontend design suggestions, mobile touch ergonomics, and mock exam simulation contributions.
+
 ## Disclaimer
 
 This is a voluntary, free, community project. It is **not affiliated with Reboot or reboot01**. The source code is private. Access uses your reboot01 credentials.
