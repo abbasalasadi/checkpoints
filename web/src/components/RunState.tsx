@@ -6,7 +6,7 @@
  * `starting` matters most — the first run after an idle reap creates a
  * container and does a cold cargo build, seconds rather than half a second.
  */
-import { diagnose } from '../lib/diagnostics.js';
+import type { Diagnosis } from '../lib/diagnostics/index.js';
 
 export type RunPhase = 'idle' | 'cooling-down' | 'queued' | 'starting' | 'running' | 'done';
 
@@ -15,9 +15,8 @@ export function RunState({
   seconds,
   elapsed = 0,
   timeoutSeconds,
-  exitCode,
-  output = '',
-  kind = 'test',
+  queuePosition,
+  diagnosis,
 }: {
   phase: RunPhase;
   seconds?: number;
@@ -25,19 +24,20 @@ export function RunState({
   elapsed?: number;
   /** When it will be stopped, so the student can see the deadline approaching. */
   timeoutSeconds?: number;
-  exitCode?: number;
-  output?: string;
-  kind?: 'run' | 'test';
+  /** Runs ahead of this one, when queued. */
+  queuePosition?: number;
+  /** How the finished run went; null for a run with nothing to say. */
+  diagnosis?: Diagnosis | null;
 }) {
   const label = {
     idle: '',
     'cooling-down': `Ready in ${seconds ?? 0}s`,
-    queued: 'Waiting for a free slot…',
+    queued: queuePosition ? `Waiting for a free slot… (${queuePosition} ahead)` : 'Waiting for a free slot…',
     starting: 'Starting your container…',
     // Counting UP to a stated limit rather than down to zero: a run that ends
     // in 1s should not first flash "119s remaining", which reads as a wait.
     running: timeoutSeconds ? `Running… ${elapsed}s / ${timeoutSeconds}s` : `Running… ${elapsed}s`,
-    done: exitCode === undefined ? '' : diagnose(kind, exitCode, output).title,
+    done: diagnosis?.title ?? '',
   }[phase];
 
   if (!label) return null;
@@ -47,9 +47,11 @@ export function RunState({
     phase === 'running' && !!timeoutSeconds && elapsed >= timeoutSeconds * 0.75;
   const tone =
     phase === 'done'
-      ? exitCode === 0
+      ? diagnosis?.tone === 'ok'
         ? 'var(--success)'
-        : 'var(--danger)'
+        : diagnosis?.tone === 'error'
+          ? 'var(--danger)'
+          : 'var(--warning)'
       : nearingLimit
         ? 'var(--warning)'
         : 'var(--text-muted)';

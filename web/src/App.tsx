@@ -3,7 +3,19 @@ import Editor from '@monaco-editor/react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { markdownComponents } from './lib/markdown.js';
-import { api, ApiFailure, type ExerciseDetail, type ExerciseSummary, type Placement, type SnapshotMeta } from './lib/api.js';
+import {
+  api,
+  ApiFailure,
+  filesOf,
+  runSocketUrl,
+  type ExerciseDetail,
+  type ExerciseSummary,
+  type Language,
+  type Placement,
+  type RunMessage,
+  type RunnerState,
+  type SnapshotMeta,
+} from './lib/api.js';
 import { TerminalPane, type TerminalHandle } from './components/Terminal.js';
 import { useConfirm } from './components/Dialog.js';
 import { Splitter, usePaneSize } from './components/Split.js';
@@ -14,11 +26,57 @@ import { StuckDialog } from './components/StuckDialog.js';
 import { useToast } from './components/Toast.js';
 import { RunState, type RunPhase } from './components/RunState.js';
 import { RunNotice, noticeFor, type NoticeSpec } from './components/RunNotice.js';
-import { diagnose } from './lib/diagnostics.js';
+import { canonicalOutcome, diagnoseRun, noticeOutcome, type Diagnosis } from './lib/diagnostics/index.js';
+import { lint as lintGo } from './lib/lint/go.js';
+import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
-import { navigate, onNavigate, slugFromLocation } from './lib/route.js';
+import { LANGUAGES, isLanguage, navigate, onNavigate, readLocation } from './lib/route.js';
 
 type Screen = 'loading' | 'login' | 'app';
+
+/** Autosave fires this long after typing stops. */
+export const AUTOSAVE_MS = 900;
+
+const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust' };
+const LAST_LANGUAGE_KEY = 'cp.language';
+
+function lastLanguage(): Language {
+  try {
+    const v = localStorage.getItem(LAST_LANGUAGE_KEY);
+    if (isLanguage(v)) return v;
+  } catch {
+    /* storage unavailable */
+  }
+  return 'rust';
+}
+function rememberLanguage(lang: Language): void {
+  try {
+    localStorage.setItem(LAST_LANGUAGE_KEY, lang);
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+/** Monaco's language id for a file, falling back to the track's. */
+export function editorLanguage(file: string, track: Language): string {
+  if (file.endsWith('.go')) return 'go';
+  if (/\.(m|c)?js$/.test(file)) return 'javascript';
+  if (file.endsWith('.rs')) return 'rust';
+  if (file.endsWith('.json')) return 'json';
+  if (file.endsWith('.toml') || file.endsWith('.mod')) return 'plaintext';
+  return track === 'js' ? 'javascript' : track;
+}
+
+/** The command line echoed before a run, so the student sees what ran. */
+function shownCommand(lang: Language, kind: 'run' | 'test', args: string, files: string[]): string {
+  const a = args.trim() ? ` ${args.trim()}` : '';
+  if (lang === 'rust') return kind === 'test' ? 'cargo test' : `cargo run${a ? ` --${a}` : ''}`;
+  if (lang === 'go') return kind === 'test' ? 'go test' : `go run .${a}`;
+  const entry = files.includes('main.js') ? 'main.js' : (files[0] ?? 'main.js');
+  return kind === 'test' ? 'node test' : `node ${entry}${a}`;
+}
+
+const nameOf = (r: { identifier?: string; login?: string }) => r.identifier ?? r.login ?? '';
 
 export function App() {
   const [screen, setScreen] = useState<Screen>('loading');
@@ -34,7 +92,7 @@ export function App() {
     api
       .me()
       .then((r) => {
-        setIdentifier(r.identifier);
+        setIdentifier(nameOf(r));
         setScreen('app');
       })
       .catch(() => setScreen('login'));
@@ -77,14 +135,29 @@ function Login({
   const [pw, setPw] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  /**
+   * The server offers a username-only sign-in outside production (D14). The
+   * question is asked, not assumed: a failed or missing endpoint means no.
+   */
+  const [devLogin, setDevLogin] = useState(false);
+  const [useReal, setUseReal] = useState(false);
+
+  useEffect(() => {
+    api
+      .authConfig()
+      .then((c) => setDevLogin(c.devLogin === true))
+      .catch(() => setDevLogin(false));
+  }, []);
+
+  const dev = devLogin && !useReal;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
     try {
-      const r = await api.login(id, pw);
-      onSignedIn(r.identifier);
+      const r = dev ? await api.devLogin(id.trim()) : await api.login(id, pw);
+      onSignedIn(nameOf(r) || id.trim());
     } catch (err) {
       // The backend returns one generic message regardless of which factor
       // failed; surfacing it verbatim preserves that anti-enumeration property.
@@ -94,20 +167,30 @@ function Login({
     }
   }
 
+  const disabled = busy || !id.trim() || (!dev && !pw);
   return (
     <Centre>
       <form onSubmit={submit} style={{ width: 'min(22rem, 90vw)', textAlign: 'center' }}>
         <div style={{ color: 'var(--accent-text)', display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
           <Logo size={76} />
         </div>
-        <h1 style={{ fontSize: '1.5rem', marginTop: 0, marginBottom: '.3rem' }}>Rust Checkpoints</h1>
+        <h1 style={{ fontSize: '1.5rem', marginTop: 0, marginBottom: '.3rem' }}>Checkpoints</h1>
         <p style={{ color: 'var(--text-muted)', marginTop: 0, marginBottom: '1.5rem' }}>
-          Sign in with your reboot01 account.
+          {dev ? 'Development sign-in: a username is enough.' : 'Sign in with your reboot01 account.'}
         </p>
         {/* The headings centre, but the fields do not: centred text jumping
             left as you type a username reads as a glitch. */}
-        <input value={id} onChange={(e) => setId(e.target.value)} placeholder="reboot01 username" autoComplete="username" style={{ ...field, textAlign: 'left' }} />
-        <input value={pw} onChange={(e) => setPw(e.target.value)} type="password" placeholder="Password" autoComplete="current-password" style={{ ...field, textAlign: 'left' }} />
+        <input
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder={dev ? 'Any username' : 'reboot01 username'}
+          autoComplete="username"
+          aria-label="Username"
+          style={{ ...field, textAlign: 'left' }}
+        />
+        {!dev && (
+          <input value={pw} onChange={(e) => setPw(e.target.value)} type="password" placeholder="Password" autoComplete="current-password" aria-label="Password" style={{ ...field, textAlign: 'left' }} />
+        )}
         {reason && !error && (
           <p
             role="status"
@@ -127,15 +210,26 @@ function Login({
           </p>
         )}
         {error && <p style={{ color: 'var(--danger)', fontSize: '.9rem' }}>{error}</p>}
-        <button type="submit" disabled={busy || !id || !pw} style={{ ...field, ...primaryBtn(busy || !id || !pw) }}>
+        <button type="submit" disabled={disabled} style={{ ...field, ...primaryBtn(disabled) }}>
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
+        {devLogin && (
+          <button type="button" onClick={() => setUseReal((v) => !v)} style={{ ...ghostBtn, fontSize: '.78rem', color: 'var(--text-muted)' }}>
+            {useReal ? 'Use the development sign-in' : 'Sign in with reboot01 instead'}
+          </button>
+        )}
       </form>
     </Centre>
   );
 }
 
 // ── workbench ────────────────────────────────────────────────────────────────
+
+interface Pending {
+  language: Language;
+  slug: string;
+  files: Record<string, string>;
+}
 
 function Workbench({
   identifier,
@@ -144,41 +238,40 @@ function Workbench({
   identifier: string;
   onSignedOut: (reason?: string) => void;
 }) {
+  const initial = useMemo(() => readLocation(), []);
+  const [language, setLanguage] = useState<Language>(() => initial.language ?? lastLanguage());
   const [list, setList] = useState<ExerciseSummary[]>([]);
   const [placements, setPlacements] = useState<Placement[]>([]);
   // Seeded from the URL, so a refresh or a shared link opens the same exercise.
-  const [slug, setSlug] = useState<string | null>(() => slugFromLocation());
+  const [slug, setSlug] = useState<string | null>(initial.slug);
   const [detail, setDetail] = useState<ExerciseDetail | null>(null);
-  const [libRs, setLibRs] = useState('');
-  const [mainRs, setMainRs] = useState('');
-  const [tab, setTab] = useState<'lib' | 'main'>('lib');
+  const [files, setFiles] = useState<Record<string, string>>({});
+  const [order, setOrder] = useState<string[]>([]);
+  const [tab, setTab] = useState<string>('');
   const [phase, setPhase] = useState<RunPhase>('idle');
   /**
    * Cool-down remaining per kind. Run and Test throttle on separate clocks
-   * server-side, so one countdown cannot represent both: a shared one would
-   * disable Test for the whole Run window and block the check-then-submit
-   * rhythm the Run button exists to encourage.
+   * server-side, so one countdown cannot represent both.
    */
   const [cool, setCool] = useState<{ run: number; test: number }>({ run: 0, test: 0 });
-  const [exitCode, setExitCode] = useState<number | undefined>();
-  const [lastOutput, setLastOutput] = useState('');
+  const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null);
   const [lastKind, setLastKind] = useState<'run' | 'test'>('test');
   const [args, setArgs] = useState('');
-  // Both levels of the tree start collapsed. Nothing is auto-selected either —
-  // landing on an exercise whose sidebar entry is hidden inside a closed group
-  // is confusing.
   const [notice, setNotice] = useState<NoticeSpec | null>(null);
   const [cancelling, setCancelling] = useState(false);
+  const [formatting, setFormatting] = useState(false);
+  const [queuePosition, setQueuePosition] = useState(0);
   /** Seconds the current run has been going, and the limit it is counting to. */
   const [elapsed, setElapsed] = useState(0);
-  const [timeoutSeconds, setTimeoutSeconds] = useState<number | undefined>();
-  const [warnSeconds, setWarnSeconds] = useState<number | undefined>();
+  const [limits, setLimits] = useState<RunnerState>({});
   /** Dismissed for THIS run, so the warning cannot nag every second. */
   const [stuckDismissed, setStuckDismissed] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
   const [openLevels, setOpenLevels] = useState<Set<string>>(new Set());
   const term = useRef<TerminalHandle | null>(null);
+  const socket = useRef<WebSocket | null>(null);
+  const runId = useRef<string | null>(null);
   const { confirm, dialog } = useConfirm();
   const [saveState, setSaveState] = useState<'saved' | 'saving' | 'unsaved' | 'failed'>('saved');
   const [savedAt, setSavedAt] = useState<Date | null>(null);
@@ -187,27 +280,34 @@ function Workbench({
   /**
    * What is pending, and which exercise it belongs to.
    *
-   * The slug is captured here rather than read at save time: a debounced save
-   * that fires after the student has switched exercises would otherwise write
-   * one exercise's code into another's row.
+   * The language and slug are captured here rather than read at save time: a
+   * debounced save that fires after the student has switched exercises would
+   * otherwise write one exercise's code into another's row.
    */
-  const pending = useRef<{ slug: string; libRs: string; mainRs: string; kind: 'lib' | 'bin' } | null>(null);
+  const pending = useRef<Pending | null>(null);
 
-  /** Write whatever is pending. Safe to call at any time; a no-op when clean. */
-  /** Returns false if there was an edit that could not be saved. */
+  // Legacy /e/:slug links are Rust; rewrite them so the address bar is honest.
+  useEffect(() => {
+    if (initial.legacy || !initial.language) navigate(language, initial.slug, { replace: true });
+    rememberLanguage(language);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** Write whatever is pending. Returns false if there was an edit that could not be saved. */
   const flush = useCallback(async () => {
     const p = pending.current;
     if (!p) return true;
     pending.current = null;
     setSaveState('saving');
     try {
-      await api.save(p.slug, p.kind === 'lib' ? { libRs: p.libRs, mainRs: p.mainRs } : { mainRs: p.mainRs });
+      await api.save(p.language, p.slug, p.files);
       setSaveState('saved');
       setSavedAt(new Date());
       return true;
     } catch (err) {
-      // Put it back so the next attempt retries rather than losing the edit.
-      pending.current = p;
+      // Put it back so the next attempt retries rather than losing the edit,
+      // unless a newer edit already replaced it.
+      if (!pending.current) pending.current = p;
       // 'failed' rather than 'unsaved': this one is shown, because the student
       // cannot otherwise know their work is at risk.
       setSaveState('failed');
@@ -218,19 +318,13 @@ function Workbench({
 
   /** Record an edit and mark it unsaved. The debounce below writes it. */
   const markDirty = useCallback(
-    (next: { libRs?: string; mainRs?: string }) => {
-      if (!detail) return;
-      pending.current = {
-        slug: detail.slug,
-        kind: detail.kind,
-        libRs: next.libRs ?? libRs,
-        mainRs: next.mainRs ?? mainRs,
-      };
+    (next: Record<string, string>) => {
+      if (!detail || !slug) return;
+      pending.current = { language, slug, files: next };
       setSaveState('unsaved');
     },
-    [detail, libRs, mainRs],
+    [detail, language, slug],
   );
-
 
   // Persisted so a layout tuned once survives a reload; clamped so no drag can
   // leave a pane unusable.
@@ -239,21 +333,65 @@ function Workbench({
   const results = usePaneSize('results', 240, 90, 640);
 
   useEffect(() => {
-    void api.exercises().then((r) => {
-      setList(r.exercises);
-      setPlacements(r.placements);
-      // A slug that is not a real exercise — mistyped or renamed — should not
-      // leave a broken entry behind for Back to return to.
-      const current = slugFromLocation();
-      if (current && !r.exercises.some((e) => e.slug === current)) {
-        setSlug(null);
-        navigate(null, { replace: true });
-      }
-    });
-  }, []);
+    let live = true;
+    setList([]);
+    setPlacements([]);
+    void api
+      .exercises(language)
+      .then((r) => {
+        if (!live) return;
+        setList(r.exercises);
+        setPlacements(r.placements);
+        // A slug that is not a real exercise — mistyped or renamed — should not
+        // leave a broken entry behind for Back to return to.
+        const current = readLocation();
+        if (current.slug && !r.exercises.some((e) => e.slug === current.slug)) {
+          setSlug(null);
+          navigate(language, null, { replace: true });
+        }
+      })
+      .catch((err) => {
+        if (err instanceof ApiFailure && err.status === 401) onSignedOut('Your session expired. Sign in again — your saved work is safe.');
+      });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [language]);
 
-  // Back and Forward move between exercises rather than out of the app.
-  useEffect(() => onNavigate((next) => setSlug(next)), []);
+  // Back and Forward move between exercises and tracks rather than out of the app.
+  useEffect(
+    () =>
+      onNavigate((loc) => {
+        if (loc.language) setLanguage(loc.language);
+        setSlug(loc.slug);
+      }),
+    [],
+  );
+
+  /** Close the live run's socket. The run itself continues server-side. */
+  const detach = useCallback(() => {
+    socket.current?.close();
+    socket.current = null;
+    runId.current = null;
+  }, []);
+  useEffect(() => detach, [detach]);
+
+  /** Switching track is a navigation: flush, then land on the track's root. */
+  const switchLanguage = useCallback(
+    async (next: Language) => {
+      if (next === language) return;
+      await flush();
+      rememberLanguage(next);
+      setLanguage(next);
+      setSlug(null);
+      setDetail(null);
+      setOpenGroups(new Set());
+      setOpenLevels(new Set());
+      navigate(next, null);
+    },
+    [flush, language],
+  );
 
   /**
    * Set when the tree itself picked the exercise: its branch is already open,
@@ -262,54 +400,86 @@ function Workbench({
   const pickedFromTree = useRef(false);
 
   /** Selecting an exercise is a navigation, so it belongs in the history. */
-  const select = useCallback((next: string) => {
-    // Only a real change reloads; re-clicking the open exercise must not leave
-    // the flag armed for a later Back.
-    setSlug((prev) => {
-      if (prev !== next) pickedFromTree.current = true;
-      return next;
-    });
-    navigate(next);
+  const select = useCallback(
+    (next: string) => {
+      setSlug((prev) => {
+        if (prev !== next) pickedFromTree.current = true;
+        return next;
+      });
+      navigate(language, next);
+    },
+    [language],
+  );
+
+  /** Load an exercise's files into the editor. */
+  const loadFiles = useCallback((d: ExerciseDetail | { files?: Record<string, string>; libRs?: string | null; mainRs?: string; kind?: string; editorFiles?: string[] }) => {
+    const f = filesOf(d as ExerciseDetail);
+    setFiles(f.files);
+    setOrder(f.order);
+    setTab((t) => (f.order.includes(t) ? t : (f.order[0] ?? '')));
+    return f;
   }, []);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug) {
+      setDetail(null);
+      return;
+    }
+    let live = true;
+    const lang = language;
     // Flush the exercise being left before loading the next, or a pending edit
     // would be dropped on the switch.
-    void flush().then(() => api.exercise(slug)).then((d) => {
-      setDetail(d);
-      setLibRs(d.libRs ?? '');
-      setMainRs(d.mainRs);
-      setTab(d.kind === 'lib' ? 'lib' : 'main');
-      setPhase('idle');
-      setExitCode(undefined);
-      setArgs('');
-      pending.current = null;
-      setSaveState('saved');
-      void api.snapshots(slug).then((r) => setSnaps(r.snapshots)).catch(() => setSnaps([]));
-      // Arriving by link, refresh or Back on a collapsed tree gives no clue where
-      // the open exercise sits, so open its first branch — one, not every
-      // checkpoint that reuses it. A click in the tree needs nothing opened.
-      const first = d.placements[0];
-      if (!pickedFromTree.current && first) {
-        setOpenGroups((prev) => new Set([...prev, first.checkpoint]));
-        setOpenLevels((prev) => new Set([...prev, `${first.checkpoint}/${first.level}`]));
-      }
-      pickedFromTree.current = false;
-    });
+    void flush()
+      .then(() => api.exercise(lang, slug))
+      .then((d) => {
+        if (!live) return;
+        detach();
+        setDetail(d);
+        const f = filesOf(d);
+        setFiles(f.files);
+        setOrder(f.order);
+        setTab(f.order[0] ?? '');
+        setPhase('idle');
+        setDiagnosis(null);
+        setNotice(null);
+        setArgs('');
+        pending.current = null;
+        setSaveState('saved');
+        void api.snapshots(lang, slug).then((r) => live && setSnaps(r.snapshots)).catch(() => setSnaps([]));
+        // Arriving by link, refresh or Back on a collapsed tree gives no clue where
+        // the open exercise sits, so open its first branch.
+        const first = d.placements?.[0];
+        if (!pickedFromTree.current && first) {
+          setOpenGroups((prev) => new Set([...prev, first.checkpoint]));
+          setOpenLevels((prev) => new Set([...prev, `${first.checkpoint}/${first.level}`]));
+        }
+        pickedFromTree.current = false;
+      })
+      .catch((err) => {
+        if (!live) return;
+        if (err instanceof ApiFailure && err.status === 401) {
+          onSignedOut('Your session expired. Sign in again — your saved work is safe.');
+          return;
+        }
+        if (err instanceof ApiFailure && err.status === 404) {
+          setSlug(null);
+          navigate(lang, null, { replace: true });
+        }
+      });
+    return () => {
+      live = false;
+    };
     // flush is stable; re-running this on every keystroke would reload the file.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]);
+  }, [slug, language]);
 
-  // Cool-down countdown, so a disabled button always explains itself rather
-  // than looking broken.
   // Autosave shortly after typing stops. Without this, work done between runs
-  // is lost if the tab closes — the only saves were on Run and Submit.
+  // is lost if the tab closes.
   useEffect(() => {
     if (saveState !== 'unsaved') return;
-    const id = setTimeout(() => void flush(), 1200);
+    const id = setTimeout(() => void flush(), AUTOSAVE_MS);
     return () => clearTimeout(id);
-  }, [saveState, libRs, mainRs, flush]);
+  }, [saveState, files, flush]);
 
   // Leaving the page is the case autosave cannot cover with a timer.
   useEffect(() => {
@@ -324,6 +494,7 @@ function Workbench({
     };
   }, [flush]);
 
+  // Cool-down countdown, so a disabled button always explains itself.
   useEffect(() => {
     if (cool.run <= 0 && cool.test <= 0) return;
     const t = setTimeout(
@@ -333,54 +504,20 @@ function Workbench({
     return () => clearTimeout(t);
   }, [cool]);
 
-  // Fetched once at mount, not on the first poll: otherwise the very first run
-  // shows "Running… 3s" with no limit until a poll lands, and the limit
-  // appearing mid-run looks like it changed.
+  // Fetched once at mount, so the first run already shows its limit.
   useEffect(() => {
     void api
       .runnerState()
-      .then((s) => {
-        setTimeoutSeconds(s.timeoutSeconds);
-        setWarnSeconds(s.warnSeconds);
-      })
+      .then(setLimits)
       .catch(() => undefined);
   }, []);
 
-  // One tick per second while a run is in flight. Reset happens at the start of
-  // execute(), not here, so a queued run counts from when it was submitted.
+  // One tick per second while a run is in flight. A queued run counts from
+  // when it was submitted.
   useEffect(() => {
     if (phase !== 'running' && phase !== 'queued' && phase !== 'starting') return;
     const t = setInterval(() => setElapsed((e) => e + 1), 1000);
     return () => clearInterval(t);
-  }, [phase]);
-
-  /**
-   * While a run is in flight, ask whether it is actually executing or just
-   * waiting for a free slot.
-   *
-   * The POST blocks server-side until a slot frees, so without this the UI says
-   * "Running…" when nothing of the student's is running — and at capacity, that
-   * silence is precisely when they need to be told why.
-   */
-  useEffect(() => {
-    if (phase !== 'running' && phase !== 'queued') return;
-    let live = true;
-    const id = setInterval(() => {
-      void api
-        .runnerState()
-        .then((s) => {
-          if (!live) return;
-          setTimeoutSeconds(s.timeoutSeconds);
-          // Only ever moves between these two: never override 'done' or an
-          // error state that landed while the poll was in flight.
-          setPhase((p) => (p === 'running' || p === 'queued' ? (s.queued ? 'queued' : 'running') : p));
-        })
-        .catch(() => undefined);
-    }, 1500);
-    return () => {
-      live = false;
-      clearInterval(id);
-    };
   }, [phase]);
 
   const grouped = useMemo(() => {
@@ -395,7 +532,29 @@ function Workbench({
     return byCheckpoint;
   }, [placements]);
 
-  const passed = useMemo(() => new Set(list.filter((e) => e.passed).map((e) => e.slug)), [list]);
+  const passed = useMemo(
+    () => new Set(list.filter((e) => e.passed ?? e.status === 'passed').map((e) => e.slug)),
+    [list],
+  );
+
+  /**
+   * Advisory problems the checkpoint would reject, found before Submit. Only
+   * the graded files: a demo main is never submitted, so its imports are fine.
+   */
+  const lintWarnings = useMemo<string[]>(() => {
+    if (!detail) return [];
+    const graded = detail.expectedFiles?.length ? detail.expectedFiles : null;
+    if (language === 'go' && graded) {
+      const subset = Object.fromEntries(Object.entries(files).filter(([f]) => graded.includes(f)));
+      return lintGo(subset, detail.allowedFunctions ?? [], detail.studentPackage).map(
+        (l) => `${l.file}:${l.line} — ${l.message}`,
+      );
+    }
+    if (language === 'js' && graded?.[0]) {
+      return lintJs(files[graded[0]] ?? '', detail.reservedNames ?? []).map((w) => w.message);
+    }
+    return [];
+  }, [detail, files, language]);
 
   const toggle = (set: (fn: (prev: Set<string>) => Set<string>) => void, key: string) =>
     set((prev) => {
@@ -405,11 +564,18 @@ function Workbench({
       return next;
     });
 
+  function sessionExpired() {
+    setPhase('idle');
+    detach();
+    onSignedOut('Your session expired. Sign in again — your saved work is safe.');
+  }
+
   async function execute(kind: 'run' | 'test') {
-    if (!detail) return;
-    // The runner executes the SAVED code. If the save did not land, running
-    // anyway would grade the previous version and report the result as though
-    // it were this one — worse than not running at all.
+    if (!detail || !slug) return;
+    const lang = language;
+    const exerciseSlug = slug;
+    // The runner must grade what is on screen. If the save did not land, the
+    // stored copy is stale — stop rather than report a result for other code.
     if (!(await flush())) {
       setNotice({
         tone: 'error',
@@ -418,66 +584,24 @@ function Workbench({
       });
       return;
     }
-    setExitCode(undefined);
-    setLastOutput('');
+    detach();
+    setDiagnosis(null);
     setLastKind(kind);
     setNotice(null);
     setCancelling(false);
     setElapsed(0);
+    setQueuePosition(0);
     setStuckDismissed(false);
     setPhase('starting');
-    // Clear first: the previous result must not be mistaken for this one, and
-    // scrolling back through old output to find the current failure is worse
-    // than losing it. Safe to do before the request because the buttons are
-    // disabled during the cool-down, so this call will not be refused.
+    // Clear first: the previous result must not be mistaken for this one.
     term.current?.clear();
-    const shown =
-      kind === 'test' ? 'cargo test' : `cargo run${args.trim() ? ` -- ${args.trim()}` : ''}`;
-    term.current?.write(`\x1b[36m$ ${shown}\x1b[0m\r\n`);
+    term.current?.write(`\x1b[36m$ ${shownCommand(lang, kind, args, order)}\x1b[0m\r\n`);
+
+    let started;
     try {
-      setPhase('running');
-      const res = kind === 'test' ? await api.test(detail.slug) : await api.run(detail.slug, splitArgs(args));
-      term.current?.write(res.output.replace(/\n/g, '\r\n'));
-
-      // A hint under the output, dimmed and prefixed so it is never mistaken
-      // for something cargo said.
-      const d = diagnose(kind, res.exitCode, res.output);
-      if (d.hint && res.outcome === 'ok') {
-        term.current?.write(`\r\n\x1b[2m── ${d.title}: ${d.hint}\x1b[0m\r\n`);
-      }
-
-      setNotice(
-        noticeFor(res.outcome, {
-          timeoutSeconds: res.timeoutSeconds,
-          argsTruncated: res.argsTruncated,
-          maxArgs: res.maxArgs,
-          emptyOutput: res.exitCode === 0 && res.output.trim() === '',
-          kind,
-        }),
-      );
-      // A run that was stopped has no meaningful exit code, and showing one
-      // would send diagnose() looking for a compile error that never happened.
-      const stopped =
-        res.outcome === 'timeout' || res.outcome === 'cancelled' || res.outcome === 'out_of_memory';
-      if (stopped) {
-        term.current?.write(
-          `\r\n\x1b[33m[${res.outcome === 'cancelled' ? 'cancelled' : 'stopped'}]\x1b[0m\r\n`,
-        );
-      }
-      setLastOutput(res.output);
-      setExitCode(stopped ? undefined : res.exitCode);
-      setPhase('done');
-      // Start the cool-down now, so the buttons disable before the student can
-      // press again and be refused.
-      setCool((c) => ({ ...c, [kind]: res.cooldownSeconds }));
-      if (kind === 'test' && res.passed) {
-        setList((prev) => prev.map((e) => (e.slug === detail.slug ? { ...e, passed: true } : e)));
-        // Submit stores the passing code; pick the new snapshot up so it can be
-        // restored without a reload.
-        void api.snapshots(detail.slug).then((r) => setSnaps(r.snapshots)).catch(() => undefined);
-      }
+      started = await api.start(lang, exerciseSlug, kind, files, splitArgs(args));
     } catch (err) {
-      if (err instanceof ApiFailure && err.error.code === 'cooling_down') {
+      if (err instanceof ApiFailure && (err.error.code === 'cooling_down' || err.status === 429)) {
         // Reachable from a second tab, where this tab's countdown is unaware of
         // the other's run.
         const wait = err.error.secondsRemaining ?? 5;
@@ -486,40 +610,154 @@ function Workbench({
         term.current?.write(`\r\n\x1b[33m[waiting ${wait}s before the next ${kind}]\x1b[0m\r\n`);
         return;
       }
-      if (err instanceof ApiFailure && err.status === 401) {
-        // Expired mid-session. The reason travels to the sign-in screen, since
-        // this component is about to unmount and any notice with it.
-        setPhase('idle');
-        onSignedOut('Your session expired. Sign in again — your saved work is safe.');
-        return;
-      }
-      if (err instanceof ApiFailure && err.error.code === 'runner_unavailable') {
+      if (err instanceof ApiFailure && err.status === 401) return sessionExpired();
+      if (err instanceof ApiFailure && (err.error.code === 'runner_unavailable' || err.status === 503)) {
         term.current?.write(`\r\n\x1b[31m${err.error.message}\x1b[0m\r\n`);
         setNotice(noticeFor('runner_error'));
         setPhase('idle');
         return;
       }
       logger.error('run.failed', { error: String(err) });
+      term.current?.write(`\r\n\x1b[31m${err instanceof ApiFailure ? err.error.message : 'The run could not be started.'}\x1b[0m\r\n`);
       setPhase('idle');
+      return;
+    }
+
+    runId.current = started.runId;
+    if ((started.queuePosition ?? 0) > 0) {
+      setQueuePosition(started.queuePosition ?? 0);
+      setPhase('queued');
+    }
+    listen(started.runId, kind, lang, exerciseSlug, started.cooldownSeconds ?? 0);
+  }
+
+  /** Stream a run's output from /ws/runs/:id until it is done. */
+  function listen(id: string, kind: 'run' | 'test', lang: Language, exerciseSlug: string, startCooldown: number) {
+    const ws = new WebSocket(runSocketUrl(id));
+    socket.current = ws;
+    let collected = '';
+    let finished = false;
+
+    ws.onmessage = (event) => {
+      if (socket.current !== ws) return;
+      let m: RunMessage;
+      try {
+        m = JSON.parse(String(event.data)) as RunMessage;
+      } catch {
+        return;
+      }
+      if (m.type === 'output') {
+        const chunk = m.data ?? m.text ?? '';
+        collected += chunk;
+        // xterm needs CR LF; normalise without doubling an existing CR.
+        term.current?.write(chunk.replace(/\r?\n/g, '\r\n'));
+      } else if (m.type === 'state') {
+        if (m.state === 'queued') {
+          setQueuePosition(m.queuePosition ?? 0);
+          setPhase('queued');
+        } else if (m.state === 'starting') {
+          setPhase('starting');
+        } else if (m.state === 'running') {
+          setPhase('running');
+        }
+      } else if (m.type === 'done') {
+        finished = true;
+        finish(m, collected, kind, lang, exerciseSlug, startCooldown);
+        ws.close();
+      }
+    };
+    const lost = () => {
+      if (finished || socket.current !== ws) return;
+      finished = true;
+      socket.current = null;
+      runId.current = null;
+      setCancelling(false);
+      setPhase('idle');
+      setNotice({
+        tone: 'warn',
+        title: 'Lost the connection to the run.',
+        detail: 'Its result may not appear here. Check your connection and run again.',
+      });
+    };
+    ws.onerror = lost;
+    ws.onclose = lost;
+  }
+
+  function finish(
+    m: Extract<RunMessage, { type: 'done' }>,
+    output: string,
+    kind: 'run' | 'test',
+    lang: Language,
+    exerciseSlug: string,
+    startCooldown: number,
+  ) {
+    socket.current = null;
+    runId.current = null;
+    const canonical = canonicalOutcome(m.outcome, m.exitCode);
+    const d = diagnoseRun(lang, kind, {
+      outcome: m.outcome,
+      exitCode: m.exitCode,
+      output,
+      limits: { timeoutSeconds: m.timeoutSeconds ?? limits.timeoutSeconds, outputLimitBytes: limits.outputLimitBytes, memoryMb: limits.memoryMb },
+    });
+    // A hint under the output, dimmed and prefixed so it is never mistaken for
+    // something the toolchain said. Stopped runs are explained by the notice.
+    const stopped = ['timeout', 'cancelled', 'oom', 'output_limit', 'error'].includes(canonical);
+    if (d.hint && !stopped) term.current?.write(`\r\n\x1b[2m── ${d.title}: ${d.hint}\x1b[0m\r\n`);
+    if (stopped && canonical !== 'error') {
+      term.current?.write(`\r\n\x1b[33m[${canonical === 'cancelled' ? 'cancelled' : 'stopped'}]\x1b[0m\r\n`);
+    }
+    setNotice(
+      noticeFor(noticeOutcome(canonical), {
+        timeoutSeconds: m.timeoutSeconds ?? limits.timeoutSeconds,
+        argsTruncated: m.argsTruncated,
+        maxArgs: m.maxArgs,
+        emptyOutput: canonical === 'passed' && output.trim() === '',
+        kind,
+      }),
+    );
+    setDiagnosis(d);
+    setPhase('done');
+    setCancelling(false);
+    // The server starts this kind's clock when the run ends; so does the UI.
+    setCool((c) => ({ ...c, [kind]: m.cooldownSeconds ?? startCooldown }));
+    const didPass = m.passed ?? (kind === 'test' && canonical === 'passed');
+    if (kind === 'test' && didPass && lang === language) {
+      setList((prev) => prev.map((e) => (e.slug === exerciseSlug ? { ...e, passed: true, status: 'passed' } : e)));
+      // Submit stores the passing code; pick the new snapshot up.
+      void api.snapshots(lang, exerciseSlug).then((r) => setSnaps(r.snapshots)).catch(() => undefined);
     }
   }
 
-  /**
-   * Stop the run in flight.
-   *
-   * The in-flight POST is deliberately left alone rather than aborted: the
-   * server answers it with outcome 'cancelled' plus whatever the program
-   * printed before it died, which is more useful than a dropped request.
-   */
+  /** Stop the run in flight. The socket stays open to receive 'done'. */
   async function cancelRun() {
-    if (!running) return;
+    const id = runId.current;
+    if (!running || !id) return;
     setCancelling(true);
     try {
-      await api.cancelRun();
+      await api.cancelRun(id);
     } catch (err) {
       // Losing the race — the run finished first — is not worth reporting.
       logger.error('cancel.failed', { error: String(err) });
       setCancelling(false);
+    }
+  }
+
+  /** Go only: gofumpt server-side, the formatter the checkpoint gates on. */
+  async function formatCode() {
+    if (!detail || !slug || language !== 'go') return;
+    setFormatting(true);
+    try {
+      const r = await api.format(language, slug, files);
+      const next = { ...files, ...r.files };
+      setFiles(next);
+      markDirty(next);
+      showToast(r.changed.length ? `Formatted ${r.changed.join(', ')}` : 'Already formatted');
+    } catch (err) {
+      if (err instanceof ApiFailure && err.status === 401) return sessionExpired();
+      showToast(err instanceof ApiFailure ? err.error.message : 'Could not format');
+    } finally {
+      setFormatting(false);
     }
   }
 
@@ -530,18 +768,19 @@ function Workbench({
       confirmLabel: 'Sign out',
     });
     if (!ok) return;
-    // Revoke the session even if the request fails, so the browser does not
-    // keep showing a signed-in UI backed by a dead cookie.
+    await flush();
+    // Revoke the session even if the request fails.
     await api.logout().catch(() => undefined);
+    detach();
     onSignedOut();
   }
 
   async function saveCopy() {
-    if (!detail) return;
+    if (!detail || !slug) return;
     await flush();
     try {
-      await api.saveSnapshot(detail.slug);
-      const r = await api.snapshots(detail.slug);
+      await api.saveSnapshot(language, slug, files);
+      const r = await api.snapshots(language, slug);
       setSnaps(r.snapshots);
       showToast('Copy saved');
     } catch (err) {
@@ -550,19 +789,22 @@ function Workbench({
   }
 
   async function restore(id: number, label: string) {
-    if (!detail) return;
+    if (!detail || !slug) return;
     // Drop the pending edit, or the autosave would write the old code back over
     // what was just restored.
     pending.current = null;
-    const r = await api.restoreSnapshot(detail.slug, id);
-    setLibRs(r.libRs ?? '');
-    setMainRs(r.mainRs);
-    setSaveState('saved');
-    showToast(`Restored ${label}`);
+    try {
+      const r = await api.restoreSnapshot(language, slug, id);
+      loadFiles({ ...r, kind: detail.kind, editorFiles: order });
+      setSaveState('saved');
+      showToast(`Restored ${label}`);
+    } catch (err) {
+      showToast(err instanceof ApiFailure ? err.error.message : 'Could not restore');
+    }
   }
 
   async function resetExercise() {
-    if (!detail) return;
+    if (!detail || !slug) return;
     const ok = await confirm({
       title: 'Reset this exercise?',
       body: 'Your saved code for this exercise is replaced with the starting stub. This cannot be undone.',
@@ -570,26 +812,27 @@ function Workbench({
       destructive: true,
     });
     if (!ok) return;
-    // Drop the pending edit first, or the autosave would write the old code
-    // straight back over the reset.
     pending.current = null;
-    await api.reset(detail.slug);
-    const d = await api.exercise(detail.slug);
-    setLibRs(d.libRs ?? '');
-    setMainRs(d.mainRs);
-    setSaveState('saved');
-    showToast('Restored the starting stub');
+    try {
+      await api.reset(language, slug);
+      const d = await api.exercise(language, slug);
+      loadFiles(d);
+      setSaveState('saved');
+      showToast('Restored the starting stub');
+    } catch (err) {
+      showToast(err instanceof ApiFailure ? err.error.message : 'Could not reset');
+    }
   }
 
   const running = phase === 'running' || phase === 'starting' || phase === 'queued';
-  // A run inside the cool-down is refused server-side, so do not offer it.
   const cooling = cool.run > 0 || cool.test > 0;
-  // Only `running` blocks both buttons; each kind's own cool-down blocks only it.
-  const busy = running;
   const blocked = { run: running || cool.run > 0, test: running || cool.test > 0 };
   const passingSnap = snaps.find((s) => s.kind === 'passing');
   const manualSnaps = snaps.filter((s) => s.kind === 'manual');
-  const tabs = detail?.kind === 'lib' ? (['lib', 'main'] as const) : (['main'] as const);
+  // Rust shows arguments only where the exercise reads argv; Go and JS
+  // programs may always take them.
+  const showArgs = !!detail && (detail.argv === true || (language !== 'rust' && detail.argv !== false));
+  const readme = detail?.readme ?? detail?.subject ?? '';
 
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
@@ -610,6 +853,38 @@ function Workbench({
             Sign out
           </button>
         </div>
+
+        {/* Track switcher. A segmented control: exactly one is always current. */}
+        <div role="tablist" aria-label="Language" style={{ display: 'flex', gap: 2, marginBottom: '.7rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 2 }}>
+          {LANGUAGES.map((l) => (
+            <button
+              key={l}
+              type="button"
+              role="tab"
+              aria-selected={language === l}
+              onClick={() => void switchLanguage(l)}
+              style={{
+                ...ghostBtn,
+                flex: 1,
+                fontSize: '.78rem',
+                borderRadius: 'calc(var(--radius) - 2px)',
+                background: language === l ? 'var(--accent)' : 'transparent',
+                color: language === l ? '#fff' : 'var(--text-muted)',
+              }}
+            >
+              {LANGUAGE_LABEL[l]}
+            </button>
+          ))}
+        </div>
+
+        {/* A track without placements still lists its exercises, flat. */}
+        {grouped.size === 0 &&
+          list.map((e) => (
+            <button key={e.slug} type="button" onClick={() => select(e.slug)} style={treeRow(slug === e.slug ? 'var(--accent-text)' : 'var(--text-muted)', '.82rem')}>
+              <span style={{ width: 12, flex: 'none', color: 'var(--success)' }}>{passed.has(e.slug) && <Icon name="check" size={12} />}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.slug}</span>
+            </button>
+          ))}
 
         {[...grouped.entries()].map(([checkpoint, levels]) => {
           const inGroup = [...levels.values()].flat();
@@ -694,7 +969,7 @@ function Workbench({
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
           {detail ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-              {detail.readme}
+              {readme}
             </ReactMarkdown>
           ) : (
             <p style={{ color: 'var(--text-dim)' }}>Choose an exercise from the list to begin.</p>
@@ -718,7 +993,7 @@ function Workbench({
       >
         {/* A. file buttons */}
         <div style={{ display: 'flex', gap: '.3rem', padding: '.45rem .6rem', borderBottom: '1px solid var(--border)', flex: '0 0 auto' }}>
-          {tabs.map((f) => (
+          {order.map((f) => (
             <button
               key={f}
               type="button"
@@ -731,7 +1006,7 @@ function Workbench({
                 borderRadius: 0,
               }}
             >
-              {f === 'lib' ? 'lib.rs' : 'main.rs'}
+              {f}
             </button>
           ))}
 
@@ -767,6 +1042,14 @@ function Workbench({
           </span>
         </div>
 
+        {lintWarnings.length > 0 && (
+          <div role="status" style={{ padding: '.35rem .6rem', borderBottom: '1px solid var(--border)', color: 'var(--warning)', fontSize: '.76rem', display: 'flex', flexDirection: 'column', gap: '.15rem', flex: '0 0 auto' }}>
+            {lintWarnings.map((w, i) => (
+              <span key={i}>⚠ {w}</span>
+            ))}
+          </div>
+        )}
+
         {/* B. editor */}
         <div style={{ flex: '1 1 0', minHeight: 0 }}>
           <Editor
@@ -776,19 +1059,15 @@ function Workbench({
                This is vs-dark with the surfaces swapped for the theme tokens;
                Monaco cannot read CSS variables, so the values are literals. */
             beforeMount={defineEditorTheme}
-            theme="rust-checkpoints"
-            language="rust"
-            path={`${detail?.slug ?? 'none'}/${tab}`}
-            value={tab === 'lib' ? libRs : mainRs}
+            theme="checkpoints"
+            language={editorLanguage(tab, language)}
+            path={`${language}/${detail?.slug ?? 'none'}/${tab}`}
+            value={files[tab] ?? ''}
             onChange={(v) => {
-              const value = v ?? '';
-              if (tab === 'lib') {
-                setLibRs(value);
-                markDirty({ libRs: value });
-              } else {
-                setMainRs(value);
-                markDirty({ mainRs: value });
-              }
+              if (!tab) return;
+              const next = { ...files, [tab]: v ?? '' };
+              setFiles(next);
+              markDirty(next);
             }}
             options={{
               minimap: { enabled: false },
@@ -801,7 +1080,7 @@ function Workbench({
         </div>
 
         {/* C. arguments — only where the exercise reads argv */}
-        {detail?.argv && (
+        {showArgs && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.45rem .6rem', borderTop: '1px solid var(--border)', flex: '0 0 auto' }}>
             <label htmlFor="args" style={{ color: 'var(--text-muted)', fontSize: '.78rem', flex: '0 0 auto' }}>
               Arguments
@@ -845,6 +1124,11 @@ function Workbench({
                 <Icon name="submit" size={13} />
                 Submit
               </button>
+              {language === 'go' && (
+                <button type="button" onClick={() => void formatCode()} disabled={formatting || !detail} style={outlineBtn(formatting || !detail)} title="Format with gofumpt, as the checkpoint requires">
+                  {formatting ? 'Formatting…' : 'Format'}
+                </button>
+              )}
             </>
           )}
           {cooling && (
@@ -861,10 +1145,9 @@ function Workbench({
               phase={phase}
               seconds={cool[lastKind]}
               elapsed={elapsed}
-              timeoutSeconds={timeoutSeconds}
-              exitCode={exitCode}
-              output={lastOutput}
-              kind={lastKind}
+              timeoutSeconds={limits.timeoutSeconds}
+              queuePosition={queuePosition}
+              diagnosis={diagnosis}
             />
           </span>
         </div>
@@ -887,11 +1170,11 @@ function Workbench({
           running &&
           !cancelling &&
           !stuckDismissed &&
-          warnSeconds !== undefined &&
-          elapsed >= warnSeconds
+          limits.warnSeconds !== undefined &&
+          elapsed >= limits.warnSeconds
         }
         elapsed={elapsed}
-        timeoutSeconds={timeoutSeconds ?? 60}
+        timeoutSeconds={limits.timeoutSeconds ?? 60}
         onKeepWaiting={() => setStuckDismissed(true)}
         onCancel={() => {
           setStuckDismissed(true);
@@ -1023,9 +1306,9 @@ function primaryBtn(disabled: boolean): React.CSSProperties {
 /** Primary action. Greys out when disabled, so it does not invite a dead click. */
 /** Registered once, before the first editor mounts. */
 function defineEditorTheme(monaco: typeof import('monaco-editor')): void {
-  monaco.editor.defineTheme('rust-checkpoints', {
+  monaco.editor.defineTheme('checkpoints', {
     base: 'vs-dark',
-    inherit: true, // keep vs-dark's Rust token colours; only surfaces change
+    inherit: true, // keep vs-dark's token colours; only surfaces change
     rules: [],
     colors: {
       'editor.background': '#0b0d12', // --surface

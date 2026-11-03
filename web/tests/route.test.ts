@@ -1,12 +1,13 @@
 /**
  * URL routing tests.
  *
- * The behaviour that matters: a refresh or a shared link must reopen the same
- * exercise, and a hand-typed path must not smuggle anything into a request.
+ * A refresh or a shared link must reopen the same track and exercise, old Rust
+ * links must keep working, and a hand-typed path must not smuggle anything
+ * into a request.
  */
 
 import { beforeEach, describe, expect, test } from 'vitest';
-import { pathFor, slugFromLocation } from '../src/lib/route.js';
+import { parsePath, pathFor, readLocation, slugFromLocation } from '../src/lib/route.js';
 
 function at(path: string) {
   window.history.replaceState({}, '', path);
@@ -14,48 +15,56 @@ function at(path: string) {
 
 beforeEach(() => at('/'));
 
-describe('reading the exercise from the URL', () => {
+describe('reading the location', () => {
   test('the root selects nothing', () => {
-    expect(slugFromLocation()).toBeNull();
+    expect(readLocation()).toEqual({ language: null, slug: null, legacy: false });
   });
 
-  test('an exercise path yields its slug', () => {
-    at('/e/min_and_max');
-    expect(slugFromLocation()).toBe('min_and_max');
+  test.each([
+    ['/go/hello', 'go', 'hello'],
+    ['/js/is-positive', 'js', 'is-positive'],
+    ['/rust/min_and_max', 'rust', 'min_and_max'],
+    ['/rust/min_and_max/', 'rust', 'min_and_max'],
+  ])('%s yields %s / %s', (path, language, slug) => {
+    at(path);
+    expect(readLocation()).toMatchObject({ language, slug, legacy: false });
+    expect(slugFromLocation()).toBe(slug);
   });
 
-  test('a trailing slash is tolerated', () => {
-    at('/e/min_and_max/');
-    expect(slugFromLocation()).toBe('min_and_max');
+  test('a bare track selects the track only', () => {
+    expect(parsePath('/go')).toEqual({ language: 'go', slug: null, legacy: false });
+  });
+
+  test('a legacy /e/ path is read as Rust and flagged for rewriting', () => {
+    expect(parsePath('/e/min_and_max')).toEqual({ language: 'rust', slug: 'min_and_max', legacy: true });
   });
 
   test('an unrelated path selects nothing rather than guessing', () => {
-    at('/something/else');
-    expect(slugFromLocation()).toBeNull();
+    expect(parsePath('/something/else')).toMatchObject({ language: null, slug: null });
   });
 });
 
 describe('rejecting anything that is not a slug', () => {
-  // Slugs are [a-z0-9_], the same class the API accepts. A hand-typed path must
-  // not be able to put path traversal or a query into a request URL.
   test.each([
-    ['/e/../../etc/passwd', 'traversal'],
-    ['/e/Min_And_Max', 'wrong case'],
-    ['/e/min-and-max', 'hyphen'],
-    ['/e/min%20and%20max', 'space'],
-    ['/e/', 'empty'],
+    ['/rust/../../etc/passwd', 'traversal'],
+    ['/rust/Min_And_Max', 'wrong case'],
+    ['/go/min%20and%20max', 'space'],
+    ['/go/a/b', 'extra segment'],
+    ['/e/', 'empty legacy'],
+    ['/go/%E0%A4%A', 'bad escape'],
   ])('%s is refused (%s)', (path) => {
-    at(path);
-    expect(slugFromLocation()).toBeNull();
+    expect(parsePath(path).slug).toBeNull();
   });
 });
 
 describe('building paths', () => {
-  test('a slug becomes an exercise path', () => {
-    expect(pathFor('reverse_it')).toBe('/e/reverse_it');
+  test('a slug becomes a track path', () => {
+    expect(pathFor('rust', 'reverse_it')).toBe('/rust/reverse_it');
+    expect(pathFor('go', 'hello')).toBe('/go/hello');
   });
 
-  test('no selection is the root', () => {
-    expect(pathFor(null)).toBe('/');
+  test('a track alone, and no selection', () => {
+    expect(pathFor('js', null)).toBe('/js');
+    expect(pathFor(null, null)).toBe('/');
   });
 });

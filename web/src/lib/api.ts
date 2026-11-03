@@ -37,26 +37,52 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return body as T;
 }
 
+export type Language = 'go' | 'js' | 'rust';
+
 export interface ExerciseSummary {
   slug: string;
-  kind: 'lib' | 'bin';
-  argv: boolean;
-  passed: boolean;
+  /** Rust: lib/bin. Go: func/prog. JS: absent. */
+  kind?: string;
+  argv?: boolean;
+  passed?: boolean;
+  /** Go/JS style progress; `passed` is derived from it when absent. */
+  status?: string;
+  title?: string | null;
 }
 export interface Placement {
   exercise: string;
   checkpoint: string;
   level: number;
 }
+/**
+ * One exercise, in whichever shape the language's service returns.
+ *
+ * The unified shape is `files` + `editorFiles`. Rust's reference shape
+ * (`libRs`/`mainRs`) is still read, so the web does not break while the
+ * server is converging.
+ */
 export interface ExerciseDetail {
   slug: string;
-  kind: 'lib' | 'bin';
-  argv: boolean;
-  readme: string;
+  language?: Language;
+  kind?: string;
+  argv?: boolean;
+  readme?: string;
+  /** Go/JS name it `subject`. */
+  subject?: string;
   placements: { checkpoint: string; level: number }[];
-  libRs: string | null;
-  mainRs: string;
-  status: 'in_progress' | 'passed';
+  files?: Record<string, string>;
+  /** Tab order. Defaults to the keys of `files`. */
+  editorFiles?: string[];
+  /** Files the platform grades (lint runs on these only). */
+  expectedFiles?: string[];
+  libRs?: string | null;
+  mainRs?: string;
+  status?: string;
+  /** Go lint inputs. */
+  allowedFunctions?: string[];
+  studentPackage?: string;
+  /** JS lint input. */
+  reservedNames?: string[];
 }
 export interface SnapshotMeta {
   id: number;
@@ -65,10 +91,8 @@ export interface SnapshotMeta {
 }
 
 /**
- * How the run ended, in one word.
- *
- * The exit code alone cannot distinguish these: 101 covers a compile error, a
- * panic and a failing test alike, and a killed process says nothing about why.
+ * How the run ended, in one word (Rust vocabulary, used by RunNotice).
+ * The runner may also send the Go/JS words; lib/diagnostics canonicalises them.
  */
 export type RunOutcome =
   | 'ok'
@@ -79,61 +103,123 @@ export type RunOutcome =
   /** Client-side only: the server refused the run (503), so nothing ever ran. */
   | 'runner_error';
 
-export interface RunResult {
-  exitCode: number;
-  output: string;
-  durationMs: number;
-  passed?: boolean;
-  outcome?: RunOutcome;
-  /** Present when outcome is 'timeout'. */
+/** POST /api/:lang/exercises/:slug/(run|test) answer: the run is queued, results stream. */
+export interface StartedRun {
+  runId: string;
+  queuePosition?: number;
+  /** Cool-down this kind will have once the run ends. */
+  cooldownSeconds?: number;
+}
+
+/** WebSocket /ws/runs/:id messages. */
+export type RunMessage =
+  | { type: 'state'; state: 'queued' | 'starting' | 'running' | string; queuePosition?: number }
+  | { type: 'output'; data?: string; text?: string; stream?: 'stdout' | 'stderr' }
+  | {
+      type: 'done';
+      outcome?: string;
+      exitCode?: number | null;
+      passed?: boolean;
+      durationMs?: number;
+      timeoutSeconds?: number;
+      argsTruncated?: boolean;
+      maxArgs?: number;
+      cooldownSeconds?: number;
+    };
+
+export interface RunnerState {
+  activeRuns?: number;
+  queueDepth?: number;
+  maxConcurrent?: number;
   timeoutSeconds?: number;
-  /** More arguments were supplied than the runner accepts. */
-  argsTruncated?: boolean;
-  maxArgs?: number;
-  /** How long the server will refuse another run OF THIS KIND for. The other kind is unaffected. */
-  cooldownSeconds: number;
+  warnSeconds?: number;
+  outputLimitBytes?: number;
+  memoryMb?: number;
+}
+
+const enc = encodeURIComponent;
+const ex = (lang: Language, slug: string) => `/api/${lang}/exercises/${enc(slug)}`;
+
+/** The editor's files for a detail in either shape, in tab order. */
+export function filesOf(d: ExerciseDetail): { order: string[]; files: Record<string, string> } {
+  if (d.files && Object.keys(d.files).length > 0) {
+    const files = { ...d.files };
+    const listed = (d.editorFiles ?? []).filter((f) => f in files);
+    const order = [...listed, ...Object.keys(files).filter((f) => !listed.includes(f))];
+    return { order, files };
+  }
+  const files: Record<string, string> = {};
+  if (d.kind !== 'bin' && d.libRs != null) files['lib.rs'] = d.libRs;
+  files['main.rs'] = d.mainRs ?? '';
+  return { order: Object.keys(files), files };
+}
+
+/** Rust's legacy save body travels alongside `files` so either server shape accepts it. */
+function saveBody(files: Record<string, string>) {
+  const lib = files['lib.rs'] ?? files['src/lib.rs'];
+  const main = files['main.rs'] ?? files['src/main.rs'];
+  return { files, ...(lib !== undefined ? { libRs: lib } : {}), ...(main !== undefined ? { mainRs: main } : {}) };
 }
 
 export const api = {
-  me: () => request<{ identifier: string }>('/api/me'),
+  me: () => request<{ identifier?: string; login?: string }>('/api/me'),
   login: (identifier: string, password: string) =>
-    request<{ identifier: string }>('/api/login', {
+    request<{ identifier?: string; login?: string }>('/api/login', {
       method: 'POST',
       body: JSON.stringify({ identifier, password }),
     }),
+  /** Whether the username-only dev sign-in is offered (never in production). */
+  authConfig: () => request<{ devLogin: boolean }>('/api/auth/config'),
+  devLogin: (username: string) =>
+    request<{ identifier?: string; login?: string }>('/api/auth/dev-login', {
+      method: 'POST',
+      body: JSON.stringify({ username }),
+    }),
   logout: () => request<{ ok: boolean }>('/api/logout', { method: 'POST' }),
-  exercises: () => request<{ exercises: ExerciseSummary[]; placements: Placement[] }>('/api/exercises'),
-  exercise: (slug: string) => request<ExerciseDetail>(`/api/exercises/${slug}`),
-  save: (slug: string, files: { libRs?: string; mainRs?: string }) =>
-    request<{ slug: string }>(`/api/progress/${slug}`, { method: 'PUT', body: JSON.stringify(files) }),
+  exercises: (lang: Language) =>
+    request<{ exercises: ExerciseSummary[]; placements: Placement[] }>(`/api/${lang}/exercises`),
+  exercise: (lang: Language, slug: string) => request<ExerciseDetail>(ex(lang, slug)),
+  save: (lang: Language, slug: string, files: Record<string, string>) =>
+    request<{ slug: string }>(`/api/${lang}/progress/${enc(slug)}`, {
+      method: 'PUT',
+      body: JSON.stringify(saveBody(files)),
+    }),
   /** Discard saved code so the exercise serves its starter again. */
-  reset: (slug: string) => request<{ slug: string }>(`/api/progress/${slug}`, { method: 'DELETE' }),
-  snapshots: (slug: string) => request<{ snapshots: SnapshotMeta[] }>(`/api/snapshots/${slug}`),
-  saveSnapshot: (slug: string) =>
-    request<SnapshotMeta>(`/api/snapshots/${slug}`, { method: 'POST', body: JSON.stringify({}) }),
-  restoreSnapshot: (slug: string, id: number) =>
-    request<{ kind: 'manual' | 'passing'; libRs: string | null; mainRs: string }>(
-      `/api/snapshots/${slug}/restore`,
+  reset: (lang: Language, slug: string) =>
+    request<{ slug: string }>(`/api/${lang}/progress/${enc(slug)}`, { method: 'DELETE' }),
+  snapshots: (lang: Language, slug: string) =>
+    request<{ snapshots: SnapshotMeta[] }>(`/api/${lang}/snapshots/${enc(slug)}`),
+  saveSnapshot: (lang: Language, slug: string, files: Record<string, string>) =>
+    request<SnapshotMeta>(`/api/${lang}/snapshots/${enc(slug)}`, {
+      method: 'POST',
+      body: JSON.stringify(saveBody(files)),
+    }),
+  restoreSnapshot: (lang: Language, slug: string, id: number) =>
+    request<{ kind: 'manual' | 'passing'; files?: Record<string, string>; libRs?: string | null; mainRs?: string }>(
+      `/api/${lang}/snapshots/${enc(slug)}/restore`,
       { method: 'POST', body: JSON.stringify({ id }) },
     ),
-  run: (slug: string, args: string[]) =>
-    request<RunResult>(`/api/exercises/${slug}/run`, { method: 'POST', body: JSON.stringify({ args }) }),
-  test: (slug: string) =>
-    request<RunResult>(`/api/exercises/${slug}/test`, { method: 'POST', body: JSON.stringify({}) }),
-  /** Stop the run in flight. Resolves false if it had already finished. */
-  cancelRun: () => request<{ cancelled: boolean }>('/api/runner/cancel', { method: 'POST' }),
-  runnerState: () =>
-    request<{
-      activeRuns: number;
-      queueDepth: number;
-      queued: boolean;
-      /** Run and Test throttle on separate clocks — see runner.ts cooldownFor(). */
-      cooldownRemainingRun: number;
-      cooldownRemainingTest: number;
-      maxConcurrent: number;
-      /** When a run will be stopped, so the UI can count down to it. */
-      timeoutSeconds: number;
-      /** When to warn that a run looks stuck, well before it is stopped. */
-      warnSeconds: number;
-    }>('/api/runner'),
+  /** Queue a run; output arrives on /ws/runs/:runId. */
+  start: (lang: Language, slug: string, mode: 'run' | 'test', files: Record<string, string>, args: string[]) =>
+    request<StartedRun>(`${ex(lang, slug)}/${mode}`, {
+      method: 'POST',
+      body: JSON.stringify({ ...saveBody(files), args }),
+    }),
+  /** Go only: gofumpt the files server-side. */
+  format: (lang: Language, slug: string, files: Record<string, string>) =>
+    request<{ files: Record<string, string>; changed: string[] }>(`${ex(lang, slug)}/format`, {
+      method: 'POST',
+      body: JSON.stringify({ files }),
+    }),
+  /** Stop a run. Resolves false if it had already finished. */
+  cancelRun: (runId: string) =>
+    request<{ cancelled: boolean }>(`/api/runs/${enc(runId)}/cancel`, { method: 'POST' }),
+  runnerState: () => request<RunnerState>('/api/runner'),
 };
+
+/** ws(s)://host/ws/runs/:id for the current origin. */
+export function runSocketUrl(runId: string): string {
+  const url = new URL(`/ws/runs/${encodeURIComponent(runId)}`, window.location.href);
+  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+  return url.toString();
+}

@@ -5,7 +5,7 @@
  */
 
 import { describe, expect, test } from 'vitest';
-import { diagnose } from '../src/lib/diagnostics.js';
+import { diagnose } from '../src/lib/diagnostics/rust.js';
 
 describe('success', () => {
   test('a passing test run', () => {
