@@ -92,7 +92,7 @@ print_info "  dependencies and runner image are current — proceeding"
 # It goes up AFTER the guards above, though: those abort without touching the VM,
 # and a refused deploy should never take the site down for nothing.
 
-archive="$ROOT_DIR/dist/rust-checkpoints-release.tar.gz"
+archive="$ROOT_DIR/dist/checkpoints-release.tar.gz"
 maintenance_on=0
 
 # Armed BEFORE maintenance is enabled, so a failure below — including a failed
@@ -120,7 +120,7 @@ ENV_FILE="$env_file" bash "$SCRIPTS_DIR/deploy/package.sh"
 
 # The archive goes over stdin, so the install script cannot also come that way.
 # Stage it on the VM first, then run it with the archive piped in.
-install_script="/tmp/rc-light-$$.sh"
+install_script="/tmp/cp-light-$$.sh"
 
 print_info "[VM] Staging the install script"
 ssh "${SSH_ARGS[@]}" "$target" "cat > '$install_script' && chmod 0700 '$install_script'" <<'INSTALL'

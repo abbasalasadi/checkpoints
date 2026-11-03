@@ -1,0 +1,24 @@
+# One unit for the unified Go/JS/Rust app. Template: scripts/deploy/deploy.sh
+# fills @PROJECT@ @ENV_FILE@ @NODE_BIN@ @USER@ @GROUP@ and installs it as
+# /etc/systemd/system/$REMOTE_SYSTEMD_SERVICE (default checkpoints.service).
+# Migrations run at startup; the API listens on 127.0.0.1:8157 (API_PORT).
+[Unit]
+Description=Checkpoints (Go, JavaScript, Rust)
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+WorkingDirectory=@PROJECT@
+EnvironmentFile=@ENV_FILE@
+Environment=APP_ENV=production
+ExecStart=@NODE_BIN@ @PROJECT@/server/dist/main.js
+Restart=always
+RestartSec=3
+User=@USER@
+Group=@GROUP@
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

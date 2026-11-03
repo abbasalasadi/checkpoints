@@ -17,10 +17,12 @@ DB_DIR="$VAR_DIR/db"
 TMP_DIR="$VAR_DIR/tmp"
 
 ENV_FILE_DEFAULT="$ROOT_DIR/.env"
-API_PORT_DEFAULT="8128"
-WEB_PORT_DEFAULT="5190"
-DOCKER_PORT_DEFAULT="8129"
+API_PORT_DEFAULT="8157"
+WEB_PORT_DEFAULT="5203"
+DOCKER_PORT_DEFAULT="8158"
 RUNNER_IMAGE_DEFAULT="rust-checkpoints-runner:latest"
+RUNNER_GO_IMAGE_DEFAULT="go-checkpoints-runner:dev"
+RUNNER_JS_IMAGE_DEFAULT="js-checkpoints-runner:dev"
 
 # ── Output ───────────────────────────────────────────────────────────────────
 # Context prefixes match the Makefile's ## (CONTEXT) labels.
@@ -67,6 +69,8 @@ resolve_api_port()    { printf '%s\n' "${API_PORT:-$API_PORT_DEFAULT}"; }
 resolve_web_port()    { printf '%s\n' "${WEB_PORT:-$WEB_PORT_DEFAULT}"; }
 resolve_docker_port() { printf '%s\n' "${DOCKER_PORT:-$DOCKER_PORT_DEFAULT}"; }
 resolve_runner_image(){ printf '%s\n' "${RUNNER_IMAGE:-$RUNNER_IMAGE_DEFAULT}"; }
+resolve_runner_go_image(){ printf '%s\n' "${RUNNER_GO_IMAGE:-$RUNNER_GO_IMAGE_DEFAULT}"; }
+resolve_runner_js_image(){ printf '%s\n' "${RUNNER_JS_IMAGE:-$RUNNER_JS_IMAGE_DEFAULT}"; }
 
 # ── SSH (used by the deploy scripts added in phase 07) ───────────────────────
 

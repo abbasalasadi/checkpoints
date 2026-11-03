@@ -29,23 +29,16 @@ ensure_runtime_dirs
 print_info "  $LOG_DIR"
 print_info "  $DB_DIR"
 
-# .env is committed (private repo, project convention), so it normally exists
-# already. Only fill in a missing signing key rather than overwriting anything.
+# .env is git-ignored (real values backed up with `make secrets-push`). Seed it
+# from the template only when it is missing; never overwrite, never print it.
 env_file="$(resolve_env_file)"
 if [ ! -f "$env_file" ]; then
-  die "$env_file is missing. It is committed to this repository — restore it with:
-       git checkout -- .env"
-fi
-if grep -qE '^SESSION_SIGNING_KEY=\s*$' "$env_file"; then
-  if command -v openssl >/dev/null 2>&1; then
-    secret="$(openssl rand -hex 32)"
-    sed -i "s|^SESSION_SIGNING_KEY=.*|SESSION_SIGNING_KEY=$secret|" "$env_file"
-    print_info "[LOCAL] Generated a SESSION_SIGNING_KEY into .env"
-  else
-    die "SESSION_SIGNING_KEY is empty and openssl is unavailable — set it by hand"
-  fi
+  [ -f "$ROOT_DIR/.env.example" ] || die ".env and .env.example are both missing"
+  cp "$ROOT_DIR/.env.example" "$env_file"
+  chmod 0600 "$env_file"
+  print_info "[LOCAL] Created .env from .env.example — fill it in, or run 'make secrets-pull'"
 else
-  print_info "[LOCAL] .env present with a signing key"
+  print_info "[LOCAL] .env present"
 fi
 
 print_info "[LOCAL] Installing workspace dependencies"

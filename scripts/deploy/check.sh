@@ -49,7 +49,7 @@ if ! ssh "${SSH_ARGS[@]}" -o ConnectTimeout=10 "$target" true 2>/dev/null; then
 fi
 
 remote_report="$(ssh "${SSH_ARGS[@]}" "$target" \
-  "NODE_BIN='$node_bin' PORT='${API_PORT:-8128}' PROJECT='${REMOTE_PROJECT_DIR}' bash -s" <<'REMOTE'
+  "NODE_BIN='$node_bin' PORT='${API_PORT:-8157}' PROJECT='${REMOTE_PROJECT_DIR}' bash -s" <<'REMOTE'
 set -uo pipefail
 if [ -x "$NODE_BIN" ]; then
   major="$("$NODE_BIN" -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
@@ -71,7 +71,7 @@ sudo -n true 2>/dev/null && echo "ok passwordless sudo" \
 # A port held by ANOTHER service is the failure that is hardest to read from a
 # log later — the service starts, then dies on EADDRINUSE.
 if ss -tln 2>/dev/null | grep -qE "[:.]${PORT}\\b"; then
-  pgrep -af "rust-checkpoints|server/dist/main.js" >/dev/null 2>&1 \
+  pgrep -af "checkpoints/server/dist/main.js" >/dev/null 2>&1 \
     && echo "ok port $PORT held by this app" \
     || echo "FAIL port $PORT is already in use by something else"
 else
@@ -94,7 +94,7 @@ fi
 print_info "Deploy environment:  $env_file"
 print_info "SSH target:          $(resolve_ssh_target)"
 print_info "Public host:         ${VM_DOMAIN}"
-print_info "Backend bind:        ${SERVER_HOST:-127.0.0.1}:${API_PORT:-8128}"
+print_info "Backend bind:        ${SERVER_HOST:-127.0.0.1}:${API_PORT:-8157}"
 print_info "Remote project dir:  ${REMOTE_PROJECT_DIR}"
 print_info "Remote runtime env:  ${REMOTE_ENV_FILE}"
 print_info "Systemd service:     ${REMOTE_SYSTEMD_SERVICE}"

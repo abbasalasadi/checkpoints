@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# (DEPLOY) Full deploy: check, package, nginx/HTTPS, runner image, install, health check.
+# (DEPLOY) Full deploy of the unified app: check, package, nginx/HTTPS, runner images,
+# install, health check. PREPARED, NOT RUN: the cut-over is the owner's call.
 #
 # Order and safety properties follow the detecto methodology:
 #   - maintenance is lifted by an EXIT trap set BEFORE it is enabled, so a
@@ -26,15 +27,15 @@ load_env_file "$env_file"
 build_ssh_args
 
 target="$(resolve_ssh_target)"
-archive="$ROOT_DIR/dist/rust-checkpoints-release.tar.gz"
+archive="$ROOT_DIR/dist/checkpoints-release.tar.gz"
 project="${REMOTE_PROJECT_DIR}"
 remote_env="${REMOTE_ENV_FILE}"
 service="${REMOTE_SYSTEMD_SERVICE}"
 host="${VM_DOMAIN}"
-port="${API_PORT:-8128}"
+port="${API_PORT:-8157}"
 bind="${SERVER_HOST:-127.0.0.1}"
 node_bin="${NODE_BIN:-/usr/bin/node}"
-install_script="/tmp/rc-install-$$.sh"
+install_script="/tmp/cp-install-$$.sh"
 maintenance_on=0
 
 cleanup() {
@@ -114,28 +115,15 @@ PATH="$(dirname "$NODE_BIN"):$PATH" npm ci --omit=dev --no-audit --no-fund
 cp "$PROJECT/.env.vm" "$REMOTE_ENV"
 chmod 0600 "$REMOTE_ENV"
 
-cat > /tmp/rc.service <<UNIT
-[Unit]
-Description=Rust Checkpoints
-After=network.target docker.service
-Requires=docker.service
-
-[Service]
-Type=simple
-WorkingDirectory=$PROJECT
-EnvironmentFile=$REMOTE_ENV
-ExecStart=$NODE_BIN $PROJECT/server/dist/main.js
-Restart=always
-RestartSec=3
-User=$user
-Group=$group
-NoNewPrivileges=true
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-UNIT
-run_privileged mv /tmp/rc.service "/etc/systemd/system/$SERVICE"
+# The unit is a template shipped in the release (deploy/systemd/), so the
+# laptop copy and the installed unit cannot drift apart.
+unit_tmp="$(mktemp)"
+sed -e "s|@PROJECT@|$PROJECT|g" -e "s|@ENV_FILE@|$REMOTE_ENV|g" -e "s|@NODE_BIN@|$NODE_BIN|g" \
+    -e "s|@USER@|$user|g" -e "s|@GROUP@|$group|g" \
+    "$PROJECT/deploy/systemd/checkpoints.service" > "$unit_tmp"
+if grep -q '@[A-Z_]*@' "$unit_tmp"; then echo "unfilled placeholder in systemd unit" >&2; exit 1; fi
+run_privileged install -m 0644 "$unit_tmp" "/etc/systemd/system/$SERVICE"
+rm -f "$unit_tmp"
 run_privileged systemctl daemon-reload
 run_privileged systemctl enable "$SERVICE"
 run_privileged systemctl restart "$SERVICE"
@@ -153,7 +141,7 @@ ssh "${SSH_ARGS[@]}" "$target" \
   "PROJECT='$project' REMOTE_ENV='$remote_env' SERVICE='$service' NODE_BIN='$node_bin' INSTALL_SCRIPT='$install_script' bash '$install_script'" \
   < "$archive"
 
-print_info "[VM] Building the runner image"
+print_info "[VM] Building the runner images (go, js, rust)"
 ENV_FILE="$env_file" bash "$SCRIPTS_DIR/deploy/runner-image.sh"
 # Migrations run at startup, so restarting after the image exists applies them
 # and proves the runner preflight passes.

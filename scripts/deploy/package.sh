@@ -8,7 +8,7 @@ require_command npm
 env_file="${ENV_FILE:-$ROOT_DIR/.env.vm}"
 load_env_file "$env_file"
 
-archive="$ROOT_DIR/dist/rust-checkpoints-release.tar.gz"
+archive="$ROOT_DIR/dist/checkpoints-release.tar.gz"
 staging="$ROOT_DIR/dist/deploy-root"
 mkdir -p "$(dirname "$archive")"
 rm -rf "$staging" "$archive"
@@ -44,6 +44,8 @@ copy "scripts/deploy/maintenance-on.sh"
 copy "scripts/deploy/maintenance-off.sh"
 copy "scripts/deploy/runner-image.sh"
 copy "scripts/deploy/vm.sh"
+copy "scripts/backup.sh"
+copy "scripts/migrate"
 
 find "$staging" \( -name node_modules -o -name .git -o -name var -o -name '*.tsbuildinfo' \) \
   -prune -exec rm -rf {} + 2>/dev/null || true
