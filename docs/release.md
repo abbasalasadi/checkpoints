@@ -38,4 +38,4 @@ Where the three references disagree on configuration, Rust's value is the defaul
 | 7 | Web app: sign-in, tree, workbench | 1, 2, 3 | done | lan_vm1 2026-11-03 |
 | 8 | Migration script tested on fake copies | 7 | done | lan_vm1 2026-11-03 |
 | 9 | Deploy kit + redirects (not run) | 8 | done | lan_vm1 2026-11-03 |
-| 10 | Self-audit, VM test run, release note | all | todo | — |
+| 10 | Self-audit, VM test run, release note | all | done (deploy + tag wait for owner) | docs/audits/v1.0-2026-11-03.md |

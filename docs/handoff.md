@@ -1,11 +1,15 @@
-# Handoff — 2026-11-03 (night)
+# Handoff — 2026-11-03 (night, end)
 
-**State:** V1 steps 1-9 done and pushed. Build + 145 tests pass on lan_vm1; every exercise passes parity in all three languages (rust 40, go 60, js 29). Nothing deployed (D13); only fake users (D14).
+**State:** V1 built, tested and audited; only deploy and tag remain, both owner actions (D13).
+- lan_vm1: build + 145 tests pass from a clean copy; parity rust 40/40, go 60/60, js 29/29; API smoke test passes for all three languages.
+- Browser click-through done for Rust and JS (Go proven through the API).
+- Self-audit: docs/audits/v1.0-2026-11-03.md — Pass after fixes (F1, F2 fixed; F3 moved to V2).
+- Release note draft: docs/releases/v1.0.md.
 
-**Next action:** step 10 — self-audit by a reviewer sub-agent (cost request checkpoints-c1 sent to the manager), fix blocking findings, release note. Go is proven end to end through the API on lan_vm1; Rust and JS also in the browser. After that: work with the owner on V2 features.
+**Next action (with the owner):** deploy day — owner approves; clear fake users; `make migrate-merge` on the pulled live DBs; deploy; nginx with `LEGACY_DISABLE=1`; check; tag `v1.0`. Then start V2 with the owner.
 
-**Open / for the owner:**
-- Deploy day: approve deploy, live DB merge (`make migrate-merge`), nginx with old-site disable (`LEGACY_DISABLE=1`); clear fake users first.
+**Open:**
+- Production tag for runner images (now `:dev` / `:latest`).
 - Reference repos have committed env files (status "Needed from the owner").
-- lan_vm1 (checkpoints-1) still holds the three runner images; remove them and send [RELEASE] when V1 checks end.
-- Image tags are `:dev`/`:latest`; choose a production tag before deploy.
+- lan_vm1 (checkpoints-1) holds the three runner images; remove and send [RELEASE] when the owner no longer needs VM checks.
+- Model overrides (haiku/sonnet) fail with API 404 in this tool; audit ran on the default model under cost approval checkpoints-c2.
