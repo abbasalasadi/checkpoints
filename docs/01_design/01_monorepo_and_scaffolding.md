@@ -106,8 +106,8 @@ flowchart TD
 | `CONTENT_DIR`| `content` | `/home/abbas/Documents/checkpoints/content` | Exercise catalogue root |
 | `RUNNER_BACKEND` | `docker` | `docker` (or `cloudrun`) | Sandbox engine |
 | `RUNNER_CONCURRENCY`| `2` | `2` | Global max concurrent containers |
-| `COOLDOWN_RUN_SEC` | `5` | `5` | Anti-spam cooldown for Run (seconds) |
-| `COOLDOWN_SUBMIT_SEC`| `10` | `10` | Anti-spam cooldown for Submit (seconds) |
+| `COOLDOWN_RUN_SEC` | `30` | `30` | Anti-spam cooldown for Run (seconds) |
+| `COOLDOWN_SUBMIT_SEC`| `90` | `90` | Anti-spam cooldown for Submit (seconds) |
 | `REBOOT01_SIGNIN_URL`| `https://learn.reboot01.com/api/auth/signin` | `https://learn.reboot01.com/api/auth/signin` | Upstream auth endpoint |
 
 ### 3.2 Configuration Loader (`server/src/config/index.ts`)
@@ -141,8 +141,8 @@ export const config = {
     backend: (process.env.RUNNER_BACKEND || 'docker') as 'docker' | 'cloudrun',
     maxConcurrent: num('RUNNER_CONCURRENCY', 2),
     cooldownSeconds: {
-      run: num('COOLDOWN_RUN_SEC', 5),
-      submit: num('COOLDOWN_SUBMIT_SEC', 10),
+      run: num('COOLDOWN_RUN_SEC', 30),
+      submit: num('COOLDOWN_SUBMIT_SEC', 90),
     },
   },
   auth: {

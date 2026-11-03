@@ -51,5 +51,6 @@ Documents not applicable: <list, one reason each>
 | D12 | 2026-11-03 | No `SESSION_SECRET`: sessions are random 256-bit opaque tokens stored (hashed, D6) in the database, as in the reference projects; nothing is signed | "what is session secret? isnt it in the reference projects?" | The design doc listed an unused variable |
 | D13 | 2026-11-03 | No deploy, migration or nginx change without the owner present; V1 stops at "tested locally and on the assigned VM" | "No, wait for me" | Deploying is an owner action |
 | D14 | 2026-11-03 | Development uses an empty database with fake test users (dev-only login, refused when `APP_ENV=production`); live databases are pulled and migrated only just before deployment, after fake users are cleared | "for now just create empty database and create your own users with fake logins just for testing. we will clear your fake users before database sync before deployments." | Live data holds students' solutions |
+| D15 | 2026-11-03 | Cooldowns 30 s Run / 90 s Submit per user, counted from the end of the previous run (as in the live references); replaces the spec's 5 s / 10 s | "keep the cooldown as 30 s / 90 s" | Matches production behaviour |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.

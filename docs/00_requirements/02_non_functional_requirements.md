@@ -53,8 +53,8 @@ This document defines performance, resource constraints, security boundaries, an
 
 ### 3.2 Cooldowns & Rate Limiting
 * **NFR-RATE-1 (Per-User Cooldown):** Enforce a mandatory cooldown between consecutive test runs per student:
-  * Submit mode: 10 seconds.
-  * Run mode: 5 seconds.
+  * Submit mode: 90 seconds, counted from the end of the previous run (D15).
+  * Run mode: 30 seconds, counted from the end of the previous run (D15).
 * **NFR-RATE-2 (API Rate Limiting):**
   * Authentication endpoints: 5 attempts per minute per IP.
   * General API endpoints: 60 requests per minute per user.

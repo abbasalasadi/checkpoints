@@ -121,7 +121,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
 ### 3.3 Execution Dispatch (`/api/:lang/run` & `/api/:lang/submit`)
 * `POST /api/:lang/run` & `POST /api/:lang/submit`
   * **Payload:** `{ "slug": "<slug>", "files": { "main.go": "..." }, "args": ["custom", "input"] }`
-  * **Cooldown Check:** Returns `429 Too Many Requests` `{ "secondsRemaining": 4 }` if triggered within the cooldown window (5s for run, 10s for submit).
+  * **Cooldown Check:** Returns `429 Too Many Requests` `{ "secondsRemaining": 4 }` if triggered within the cooldown window (30 s for run, 90 s for submit, from the end of the previous run — D15).
   * **Queueing:** Enqueues request in `RunnerDispatcher`. Returns immediate `202 Accepted` response with `{ "runId": "<uuid>", "queuePosition": 0 }`.
 
 ### 3.4 History, Solutions & Dashboard

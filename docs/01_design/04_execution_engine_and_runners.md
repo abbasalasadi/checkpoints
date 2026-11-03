@@ -39,8 +39,8 @@ flowchart TD
 ### 1.1 Concurrency & Cooldown Guard
 * **Global Concurrency Ceiling:** Maximum **2 concurrent containers**. Attempts exceeding this enter the FIFO queue.
 * **Independent Cooldowns:** Cooldowns are tracked per user and per action kind (`<userId>:<mode>`):
-  * **Submit Cooldown:** 10 seconds.
-  * **Run Cooldown:** 5 seconds.
+  * **Submit Cooldown:** 90 seconds (D15).
+  * **Run Cooldown:** 30 seconds (D15).
   * *Design Note:* Run and Submit operate on separate clocks so an active Run cooldown never blocks a student from submitting.
 
 ---
