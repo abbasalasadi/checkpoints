@@ -13,7 +13,7 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 1. One sign-in with the Reboot01 username, valid for all three tracks; logout.
 2. Track switcher and canonical routes `/go/:slug`, `/js/:slug`, `/rust/:slug`; per-track checkpoint → level tree with status.
 3. Workbench carried over from the references: subject, Monaco editor, file tabs, args, Run, Submit, Cancel, Format (Go), autosave, reset, snapshots (3 manual + last passing), stuck dialog, diagnostics.
-4. Grading identical to the references; where they conflict, Rust is the default (D16). One streaming WebSocket protocol for all three.
+4. Grading identical to the references; configuration conflicts default to Rust, content conflicts go to the owner (D16). One streaming WebSocket protocol for all three.
 5. One dispatcher: global queue and per-user cooldowns 30 s Run / 90 s Submit from run end (D15).
 6. One SQLite schema with `language` in every key; hashed session tokens (D6); attempts store files and output (D5).
 7. Migration script that merges the three live databases (tested on fake data only until deployment, D14).

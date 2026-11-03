@@ -4,7 +4,7 @@ Copied from `versions.md` when this version started. **The only scope.** Scope t
 
 **Goal:** One app where a student signs in once and practises Go, JS and Rust exactly as on the three live testers today.
 
-Where the three references disagree, the Rust behaviour is the default (D16).
+Where the three references disagree on configuration, Rust's value is the default; exercise and content conflicts go to the owner (D16).
 
 ## Features
 1. One sign-in with the Reboot01 username, valid for all three tracks; logout.
