@@ -108,7 +108,6 @@ flowchart TD
 | `RUNNER_CONCURRENCY`| `2` | `2` | Global max concurrent containers |
 | `COOLDOWN_RUN_SEC` | `5` | `5` | Anti-spam cooldown for Run (seconds) |
 | `COOLDOWN_SUBMIT_SEC`| `10` | `10` | Anti-spam cooldown for Submit (seconds) |
-| `SESSION_SECRET`| *(random 32B)* | *(random 32B)* | Session signing secret |
 | `REBOOT01_SIGNIN_URL`| `https://learn.reboot01.com/api/auth/signin` | `https://learn.reboot01.com/api/auth/signin` | Upstream auth endpoint |
 
 ### 3.2 Configuration Loader (`server/src/config/index.ts`)
