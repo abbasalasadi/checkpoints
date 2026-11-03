@@ -1,35 +1,11 @@
-# Checkpoint — Handoff
+# Handoff — 2026-11-03 (night)
 
-Overwritten at the end of every session. Any agent can resume from this file alone.
+**State:** V1 steps 1-9 done and pushed. Build + 145 tests pass on lan_vm1; every exercise passes parity in all three languages (rust 40, go 60, js 29). Nothing deployed (D13); only fake users (D14).
 
-Written: 2026-11-03 19:30 UTC · By: checkpoint_main · Baseline: commit 8728aa0, strategy adoption · Version: V1 (TBD)
+**Next action:** step 10 — run the app end to end in the browser (make run on laptop needs the three runner images; or run on lan_vm1), click through sign-in, tree, Run/Submit/Cancel/Format per language, fix what breaks; then self-audit (`docs/audits/`) and release note.
 
-## Done this session
-- Adopted unified management strategy from `/home/abbas/Documents/project_manager/`
-- Copied AGENTS.md to project root (entry point for all agents)
-- Copied all template docs: versions.md, release.md, later.md, status.md, handoff.md, decisions.md, self-audit-report.md
-- Loaded core.md and INDEX.md — now follows core priorities (Security > Data safety > Ship current > Design > Simplicity)
-- Updated memory with adoption details
-- Committed and pushed all changes (commit 8728aa0)
-- Remote control enabled for manager coordination
-
-## Half-done
-- None; strategy adoption complete
-
-## Exact next action
-Profile checkpoint project (interview per interview.md) and fill in `docs/versions.md` with actual requirements for the checkpoint testers (Go, JS, Rust). Then define current release in `docs/release.md`.
-
-## Running
-- None
-
-## Open sweeps
-- None
-
-## Rules in force
-Run mode economy; core priorities active (core.md); effort policy per procedures/multi-agent.md; all decisions in docs/decisions.md.
-
-## Pointers
-- Strategy library: `/home/abbas/Documents/project_manager/`
-- Load from INDEX.md only what matches checkpoint's profile
-- Always start: AGENTS.md → docs/release.md → docs/status.md → docs/handoff.md
-- Scope test: "Is it in release.md?" before every task
+**Open / for the owner:**
+- Deploy day: approve deploy, live DB merge (`make migrate-merge`), nginx with old-site disable (`LEGACY_DISABLE=1`); clear fake users first.
+- Reference repos have committed env files (status "Needed from the owner").
+- lan_vm1 (checkpoints-1) still holds the three runner images; remove them and send [RELEASE] when V1 checks end.
+- Image tags are `:dev`/`:latest`; choose a production tag before deploy.

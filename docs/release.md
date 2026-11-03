@@ -30,12 +30,12 @@ Where the three references disagree on configuration, Rust's value is the defaul
 | # | Step | Features | State | Result check |
 |---|---|---|---|---|
 | 1 | Monorepo skeleton (Rust reference imported as base) | — | done | 5547614 |
-| 2 | Unified schema, migrations, empty DB, dev-only fake login | 1, 6 | built, integrating | — |
-| 3 | Unified content tree for go/js/rust | 2 | built, integrating | — |
-| 4 | Runner dispatcher, queue, cooldowns | 5 | built, integrating | — |
-| 5 | Go, JS, Rust runners + WebSocket streaming | 4 | built, integrating | — |
-| 6 | Content parity suite (solutions pass, starters fail) | 4 | built, integrating | — |
-| 7 | Web app: sign-in, tree, workbench | 1, 2, 3 | built, integrating | — |
-| 8 | Migration script tested on fake copies | 7 | built, integrating | — |
-| 9 | Deploy kit + redirects (not run) | 8 | built, integrating | — |
+| 2 | Unified schema, migrations, empty DB, dev-only fake login | 1, 6 | done | lan_vm1 2026-11-03 |
+| 3 | Unified content tree for go/js/rust | 2 | done | lan_vm1 2026-11-03 |
+| 4 | Runner dispatcher, queue, cooldowns | 5 | done | lan_vm1 2026-11-03 |
+| 5 | Go, JS, Rust runners + WebSocket streaming | 4 | done | lan_vm1 2026-11-03 |
+| 6 | Content parity suite (solutions pass, starters fail) | 4 | done | parity: rust 40/40, go 60/60, js 29/29 |
+| 7 | Web app: sign-in, tree, workbench | 1, 2, 3 | done | lan_vm1 2026-11-03 |
+| 8 | Migration script tested on fake copies | 7 | done | lan_vm1 2026-11-03 |
+| 9 | Deploy kit + redirects (not run) | 8 | done | lan_vm1 2026-11-03 |
 | 10 | Self-audit, VM test run, release note | all | todo | — |
