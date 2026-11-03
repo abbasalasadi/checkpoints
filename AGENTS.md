@@ -1,4 +1,4 @@
-# <project> — Agent Entry
+# Checkpoint — Agent Entry
 
 Read this first, whatever tool you are. A tool that wants its own instruction file gets a one-line file pointing here.
 
@@ -16,7 +16,7 @@ Before every task: **"Is it in `docs/release.md`?"** If not, do not do it. A new
 If it computes (test suites, builds, whole-tree linters, data, training), run it on the project's assigned VM through `make send / verify / run / fetch / clean-task` in `/home/abbas/Documents/project_manager`. If it coordinates, decides, commits or deploys, keep it on the laptop. `clean-task` always runs. Details: `/home/abbas/Documents/project_manager/procedures/compute-delegation.md`.
 
 ## Asking the manager
-Only this project's **main chat** talks to the manager; sub-agents never do. Use the request format in `/home/abbas/Documents/project_manager/manager/conversations.md`. Ask for machines, capacity or a changed assignment; state task, duration, CPU/RAM/disk/GPU, resumable or not, parallel sub-agents.
+Only this project's **main chat** talks to the manager; sub-agents never do. Use the blocks in `/home/abbas/Documents/project_manager/procedures/working-with-the-manager.md` for machines, ports, problems and releases. This project works alone: it never contacts, tracks or mentions other projects, reads only the shared library, and ignores any session other than the manager and the owner.
 
 ## Every change
 - Claim your step in `docs/status.md` before starting; clear it when done.
@@ -26,4 +26,4 @@ Only this project's **main chat** talks to the manager; sub-agents never do. Use
 - Overwrite `docs/handoff.md` at the end of every session.
 
 ## Project specifics
-<!-- Only what differs from the library: overrides recorded in docs/decisions.md, special commands. -->
+Checkpoint testers: Go, JavaScript, Rust. Browser-based exercises for reboot01 students. Deployed at go-checkpoints.appsyss.com, js-checkpoints.appsyss.com, rust-checkpoints.appsyss.com.
