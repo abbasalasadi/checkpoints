@@ -29,7 +29,7 @@ Where the three references disagree on configuration, Rust's value is the defaul
 ## Steps
 | # | Step | Features | State | Result check |
 |---|---|---|---|---|
-| 1 | Monorepo skeleton (server + web workspaces, Makefile setup/run) | — | todo | — |
+| 1 | Monorepo skeleton (Rust reference imported as base) | — | done | 5547614 |
 | 2 | Unified schema, migrations, empty DB, dev-only fake login | 1, 6 | todo | — |
 | 3 | Unified content tree for go/js/rust | 2 | todo | — |
 | 4 | Runner dispatcher, queue, cooldowns | 5 | todo | — |
