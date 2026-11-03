@@ -34,10 +34,10 @@ export function About({ open, onClose }: Props) {
           </span>
           <div>
             <h2 id="about-title" style={{ margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>
-              Rust Checkpoints
+              Checkpoints
             </h2>
             <p style={{ margin: '.15rem 0 0', color: 'var(--text-dim)', fontSize: '.8rem' }}>
-              A practice environment for the reboot01 Rust piscine
+              A practice environment for the reboot01 Go, JavaScript and Rust checkpoints
             </p>
           </div>
         </header>
