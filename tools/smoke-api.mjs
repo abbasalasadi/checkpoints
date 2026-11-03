@@ -63,9 +63,9 @@ const again = await call('POST', `/api/${lang}/exercises/${slug}/run`, { files: 
 check('run cooldown 429', again.status === 429 && again.json.secondsRemaining > 0, `${again.status} ${again.json.secondsRemaining}`);
 
 if (lang === 'go') {
-  const messy = Object.fromEntries(Object.entries(starter).map(([k, v]) => [k, v.replace(/\n/g, '\n\n\n')]));
+  const messy = Object.fromEntries(Object.entries(starter).map(([k, v]) => [k, v.replace(/\t/g, '        ').replace(/\{\n/g, '{   \n')]));
   const fmt = await call('POST', `/api/go/exercises/${slug}/format`, { files: messy });
-  check('go format', fmt.status === 200 && fmt.json.files, `${fmt.status} changed=${JSON.stringify(fmt.json.changed)}`);
+  check('go format', fmt.status === 200 && fmt.json.files && (fmt.json.changed ?? []).length > 0, `${fmt.status} changed=${JSON.stringify(fmt.json.changed)}`);
 }
 
 // Submit the reference solution through the real route.
