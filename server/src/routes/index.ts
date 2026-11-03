@@ -349,7 +349,9 @@ async function formatCode(req: IncomingMessage, res: ServerResponse, p: Params):
       sendError(res, 400, 'unparseable', result?.error ?? 'The file could not be parsed.');
       return;
     }
-    sendJson(res, 200, { files: result.files, changed: result.changed ?? [] });
+    const formatted = result.files;
+    const changed = result.changed ?? Object.keys(formatted).filter((n) => formatted[n] !== files[n]);
+    sendJson(res, 200, { files: formatted, changed });
   } catch (err) {
     if (runError(res, err, 'run')) return;
     logger.error('format.failed', { userId: caller.user.id, slug: p.slug, error: String(err) });
