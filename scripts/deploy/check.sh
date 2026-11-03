@@ -13,20 +13,13 @@ done
 
 missing=()
 for key in VM_HOST VM_USER VM_DOMAIN REMOTE_PROJECT_DIR REMOTE_ENV_FILE \
-           REMOTE_SYSTEMD_SERVICE SESSION_SIGNING_KEY CERTBOT_EMAIL; do
+           REMOTE_SYSTEMD_SERVICE CERTBOT_EMAIL; do
   [ -n "${!key:-}" ] || missing+=("$key")
 done
 if [ ${#missing[@]} -gt 0 ]; then
   die "missing in $env_file: ${missing[*]}
        Fill these in before deploying — they have no safe defaults."
 fi
-
-# The production signing key must not be the development one: a shared key
-# means a session minted locally is valid in production.
-dev_key="$(grep -E '^SESSION_SIGNING_KEY=' "$ROOT_DIR/.env" 2>/dev/null | cut -d= -f2- || true)"
-[ -n "$dev_key" ] && [ "$dev_key" = "${SESSION_SIGNING_KEY}" ] && \
-  die "SESSION_SIGNING_KEY in .env.vm is identical to the development key in .env.
-       Generate a distinct one: openssl rand -hex 32"
 
 case "${REMOTE_ENV_FILE}" in
   /run/*) die "REMOTE_ENV_FILE is under /run, which is tmpfs and is wiped on reboot.

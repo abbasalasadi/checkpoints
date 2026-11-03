@@ -15,6 +15,7 @@
 import { createServer } from 'node:http';
 import { config, loadSecrets } from './config/index.js';
 import { closeDatabase, migrate, openDatabase } from './db/index.js';
+import { isLanguage, LANGUAGES, type Language } from './languages.js';
 import { logger } from './logger.js';
 import { handle } from './routes/index.js';
 import { createRunSocketServer, RUN_SOCKET_PATTERN } from './routes/run-socket.js';
@@ -55,14 +56,34 @@ async function main() {
     process.stderr.write('\n[FATAL] Run dispatcher (services/runner/index.js) failed to load.\n\n');
     process.exit(1);
   }
-  try {
-    await dispatcher.preflightRunners?.();
-  } catch (err) {
-    logger.error('startup.runner_unavailable', { error: String(err) });
+  // RUNNER_LANGUAGES (comma list, default all) names the backends to check.
+  // Production is strict: any configured backend missing aborts startup.
+  // Elsewhere a missing image is a warning, so a laptop without every runner
+  // image can still serve content; runs for that language fail at run time.
+  const wanted = (process.env.RUNNER_LANGUAGES ?? '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(isLanguage);
+  const runnerLanguages: Language[] = wanted.length ? wanted : [...LANGUAGES];
+  const strict = config.appEnv === 'production';
+  const failures: string[] = [];
+  for (const lang of runnerLanguages) {
+    try {
+      await dispatcher.preflightRunners?.([lang]);
+    } catch (err) {
+      failures.push(String(err instanceof Error ? err.message : err));
+      logger.warn('startup.runner_missing', { language: lang, error: String(err) });
+    }
+  }
+  if (failures.length && strict) {
+    logger.error('startup.runner_unavailable', { error: failures.join('; ') });
     process.stderr.write(
-      `\n[FATAL] Runner unavailable: ${String(err)}\n` + `        Start Docker and build the runner images.\n\n`,
+      `\n[FATAL] Runner unavailable: ${failures.join('; ')}\n` + `        Start Docker and build the runner images.\n\n`,
     );
     process.exit(1);
+  }
+  if (failures.length) {
+    process.stderr.write(`[WARN] Runner preflight failed (continuing, APP_ENV=${config.appEnv}): ${failures.join('; ')}\n`);
   }
   dispatcher.startRunners?.();
 

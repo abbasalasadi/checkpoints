@@ -136,10 +136,10 @@ export const config = {
   runner: {
     image: str('RUNNER_IMAGE', defaults.runnerImage),
     backend: str('RUNNER_BACKEND', defaults.runnerBackend),
-    maxConcurrent: int(first('RUNNER_CONCURRENCY', 'RUNNER_MAX_CONCURRENT')!, defaults.runnerMaxConcurrent),
+    maxConcurrent: int('RUNNER_CONCURRENCY', defaults.runnerMaxConcurrent),
     cooldownRunSeconds: int(first('COOLDOWN_RUN_SEC', 'RUNNER_COOLDOWN_RUN_SECONDS')!, defaults.runnerCooldownRunSeconds),
     cooldownTestSeconds: int(first('COOLDOWN_SUBMIT_SEC', 'RUNNER_COOLDOWN_TEST_SECONDS')!, defaults.runnerCooldownTestSeconds),
-    outputLimitBytes: int('RUNNER_OUTPUT_LIMIT_BYTES', defaults.runnerOutputLimitBytes),
+    outputLimitBytes: int('RUNNER_OUTPUT_LIMIT_KB', defaults.runnerOutputLimitBytes / 1024) * 1024,
     idleSeconds: int('RUNNER_IDLE_SECONDS', defaults.runnerIdleSeconds),
     terminalIdleSeconds: int('RUNNER_TERMINAL_IDLE_SECONDS', defaults.runnerTerminalIdleSeconds),
     memoryMb: int('RUNNER_MEMORY_MB', defaults.runnerMemoryMb),

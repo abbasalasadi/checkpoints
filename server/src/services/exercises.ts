@@ -229,6 +229,10 @@ export function publicView(ex: Exercise) {
     expectedFiles: ex.expectedFiles,
     editorFiles: ex.editorFiles,
     allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? ex.meta.allowedFunctions : undefined,
+    // Go lint input: the package the graded files must declare.
+    studentPackage: typeof ex.meta.studentPackage === 'string' ? ex.meta.studentPackage : undefined,
+    // JS lint input: top-level names the test declares.
+    reservedNames: Array.isArray(ex.meta.reservedNames) ? ex.meta.reservedNames : undefined,
   };
 }
 

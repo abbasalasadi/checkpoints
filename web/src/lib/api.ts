@@ -162,9 +162,9 @@ function saveBody(files: Record<string, string>) {
 }
 
 export const api = {
-  me: () => request<{ identifier?: string; login?: string }>('/api/me'),
+  me: () => request<{ identifier?: string; login?: string }>('/api/auth/me'),
   login: (identifier: string, password: string) =>
-    request<{ identifier?: string; login?: string }>('/api/login', {
+    request<{ identifier?: string; login?: string }>('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ identifier, password }),
     }),
@@ -175,7 +175,7 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ username }),
     }),
-  logout: () => request<{ ok: boolean }>('/api/logout', { method: 'POST' }),
+  logout: () => request<{ ok: boolean }>('/api/auth/logout', { method: 'POST' }),
   exercises: (lang: Language) =>
     request<{ exercises: ExerciseSummary[]; placements: Placement[] }>(`/api/${lang}/exercises`),
   exercise: (lang: Language, slug: string) => request<ExerciseDetail>(ex(lang, slug)),

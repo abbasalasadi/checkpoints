@@ -62,6 +62,11 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if ((path === '/api/auth/logout' || path === '/api/logout') && method === 'POST') return logout(req, res);
   if ((path === '/api/auth/me' || path === '/api/me') && method === 'GET') return me(req, res);
   if (path === '/api/auth/dev-login' && method === 'POST') return devLogin(req, res);
+  // Unauthenticated: the sign-in screen asks before anyone is signed in.
+  if (path === '/api/auth/config' && method === 'GET') {
+    sendJson(res, 200, { devLogin: config.devLoginEnabled });
+    return;
+  }
 
   if (path === '/api/languages' && method === 'GET') return languages(req, res);
 

@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help secrets-push secrets-pull setup run stop dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images maintenance-on maintenance-off
+.PHONY: help secrets-push secrets-pull setup run stop dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -64,6 +64,8 @@ nginx-setup: ## DEPLOY: nginx site + 301s from the old hosts (LEGACY_DISABLE=1 t
 
 runner-images: ## DEPLOY: build go/js/rust runner images on the VM
 	@bash scripts/deploy/runner-image.sh
+
+images: runner-images ## DEPLOY: alias of runner-images (contexts from content/<lang>)
 
 maintenance-on: ## DEPLOY: show the maintenance page
 	@bash scripts/deploy/maintenance-on.sh

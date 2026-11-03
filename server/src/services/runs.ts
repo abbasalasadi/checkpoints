@@ -59,7 +59,7 @@ type RunnerModule = {
   runnerLimits?: Record<string, unknown>;
   cooldownRemaining?: (user: string, mode: RunMode) => number;
   submitFormat?: (input: { user: string | number; language: Language; files: Record<string, string> }) => Promise<unknown>;
-  preflightRunners?: () => Promise<void>;
+  preflightRunners?: (languages?: Language[]) => Promise<void>;
   startRunners?: () => void;
   stopRunners?: () => Promise<void>;
 };
