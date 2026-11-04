@@ -33,10 +33,12 @@ import { canonicalOutcome, diagnoseRun, noticeOutcome, type Diagnosis } from './
 import { lint as lintGo } from './lib/lint/go.js';
 import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
+import { clearDraft, draftDiffers, readDraft, saveDraft, useOnline } from './lib/offline.js';
 import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
 import { Dashboard } from './components/Dashboard.js';
 import { History } from './components/History.js';
 import { Vault } from './components/Vault.js';
+import { Skeleton } from './components/Skeleton.js';
 import { PageHeader } from './components/PageHeader.js';
 
 type Screen = 'loading' | 'login' | 'app';
@@ -122,7 +124,30 @@ export function App() {
     setSignedOutReason(reason ?? null);
     setScreen('login');
   };
-  return <SignedIn identifier={identifier} prefs={prefs} onPrefs={updatePrefs} onSignedOut={signedOut} />;
+  return (
+    <>
+      <OfflineBanner />
+      <SignedIn identifier={identifier} prefs={prefs} onPrefs={updatePrefs} onSignedOut={signedOut} />
+    </>
+  );
+}
+
+/** V2: says so when the connection drops; edits are kept and sent on return. */
+function OfflineBanner() {
+  const online = useOnline();
+  if (online) return null;
+  return (
+    <div
+      role="status"
+      style={{
+        position: 'fixed', left: '50%', bottom: '1rem', transform: 'translateX(-50%)', zIndex: 50,
+        background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--warning, #eab308)', borderRadius: 'var(--radius)',
+        padding: '.45rem .9rem', fontSize: '.82rem', boxShadow: '0 4px 16px rgba(0,0,0,.4)',
+      }}
+    >
+      You are offline. Edits are kept in this browser and saved when the connection returns; Run and Submit wait.
+    </div>
+  );
 }
 
 /**
@@ -411,6 +436,8 @@ function Workbench({
     setSaveState('saving');
     try {
       await api.save(p.language, p.slug, p.files);
+      // A newer edit keeps its own browser draft until it is saved too.
+      if (!pending.current) clearDraft(p.language, p.slug);
       // A first save starts the exercise (the sidebar's "In progress" filter).
       setList((prev) => prev.map((e) => (e.slug === p.slug && e.status !== 'passed' && !e.passed ? { ...e, status: 'in_progress' } : e)));
       setSaveState('saved');
@@ -436,6 +463,7 @@ function Workbench({
     (next: Record<string, string>) => {
       if (!detail || !slug) return;
       pending.current = { language, slug, files: next };
+      saveDraft(language, slug, next);
       setSaveState('unsaved');
     },
     [detail, language, slug],
@@ -535,15 +563,20 @@ function Workbench({
         detach();
         setDetail(d);
         const f = filesOf(d);
-        setFiles(f.files);
+        // An edit that never reached the server (offline, tab closed) wins over
+        // the server copy, and is sent again.
+        const draft = readDraft(lang, slug);
+        const resumed = draft && draftDiffers(draft, f.files) ? { ...f.files, ...Object.fromEntries(Object.entries(draft).filter(([k]) => k in f.files)) } : null;
+        if (!resumed) clearDraft(lang, slug);
+        setFiles(resumed ?? f.files);
         setOrder(f.order);
         setTab(f.order[0] ?? '');
         setPhase('idle');
         setDiagnosis(null);
         setNotice(null);
         setArgs('');
-        pending.current = null;
-        setSaveState('saved');
+        pending.current = resumed ? { language: lang, slug, files: resumed } : null;
+        setSaveState(resumed ? 'unsaved' : 'saved');
         void api.snapshots(lang, slug).then((r) => live && setSnaps(r.snapshots)).catch(() => setSnaps([]));
         // Arriving by link, refresh or Back on a collapsed tree gives no clue where
         // the open exercise sits, so open its first branch.
@@ -579,6 +612,20 @@ function Workbench({
     const id = setTimeout(() => void flush(), AUTOSAVE_MS);
     return () => clearTimeout(id);
   }, [saveState, files, flush]);
+
+  // A failed save retries: soon, and at once when the connection returns.
+  const online = useOnline();
+  useEffect(() => {
+    if (saveState !== 'failed') return;
+    if (online) {
+      const id = setTimeout(() => void flush(), 5000);
+      return () => clearTimeout(id);
+    }
+    return undefined;
+  }, [saveState, online, flush]);
+  useEffect(() => {
+    if (online && pending.current) void flush();
+  }, [online, flush]);
 
   // Leaving the page is the case autosave cannot cover with a timer.
   useEffect(() => {
@@ -959,7 +1006,7 @@ function Workbench({
   // One shared wait (D18): after Run or Submit, both stay blocked until it ends.
   const wait = Math.max(cool.run, cool.test);
   const cooling = wait > 0;
-  const blocked = { run: running || cooling, test: running || cooling };
+  const blocked = { run: running || cooling || !online, test: running || cooling || !online };
   const passingSnap = snaps.find((s) => s.kind === 'passing');
   const manualSnaps = snaps.filter((s) => s.kind === 'manual');
   // Rust shows arguments only where the exercise reads argv; Go and JS
@@ -1042,6 +1089,14 @@ function Workbench({
             <option value="starred">Starred</option>
           </select>
         </div>
+
+        {list.length === 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
+            {[0, 1, 2, 3, 4].map((k) => (
+              <Skeleton key={k} height=".9rem" width={`${85 - k * 9}%`} />
+            ))}
+          </div>
+        )}
 
         {filtered && filtered.length === 0 && <p style={{ color: 'var(--text-dim)', fontSize: '.8rem', margin: '.3rem .2rem' }}>Nothing matches.</p>}
 
@@ -1129,6 +1184,13 @@ function Workbench({
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
               {readme}
             </ReactMarkdown>
+          ) : slug ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
+              <Skeleton height="1.5rem" width="40%" />
+              <Skeleton />
+              <Skeleton width="90%" />
+              <Skeleton width="75%" />
+            </div>
           ) : (
             <p style={{ color: 'var(--text-dim)' }}>Choose an exercise from the list to begin.</p>
           )}
@@ -1174,7 +1236,7 @@ function Workbench({
           <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
             {saveState === 'failed' && (
               <span style={{ color: 'var(--warning)', fontSize: '.76rem' }} role="status">
-                Not saved — retrying
+                {online ? 'Not saved — retrying' : 'Offline — kept in this browser'}
               </span>
             )}
             <Menu
