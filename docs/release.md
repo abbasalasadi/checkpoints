@@ -21,6 +21,7 @@ Where the three references disagree on configuration, Rust's value is the defaul
 - [ ] Every reference solution passes and every starter fails, all three tracks
 - [ ] Tests pass on the assigned VM
 - [ ] Secret scan clean
+- [ ] Cooldowns back to 30 s Run / 90 s Submit (D15): local `.env` has them at 0 for development since 2026-11-04 (owner); `.env.vm` already 30/90
 - [ ] Deployed at checkpoints.appsyss.com after owner approval
 - [ ] Every feature above present and working
 - [ ] Self-audit passed (`docs/audits/`)

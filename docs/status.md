@@ -20,6 +20,8 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 ## Blocked
 - <item> — <cause> — <what unblocks it; sweep state if a result was wrong>
 
+- Dev setting: local `.env` cooldowns set to 0 (owner, 2026-11-04). Restore to 30/90 before release (checklist in release.md); production `.env.vm` unchanged at 30/90.
+
 ## Needed from the owner
 1. **Leaked secrets in the reference repos:** `/home/abbas/Documents/js-checkpoints`, `/home/abbas/Documents/go-checkpoints` and `/home/abbas/Documents/rust` have `.env` and `.env.vm` tracked in git (Go's STATUS.md says the only secret there is `SESSION_SIGNING_KEY`, which the new app does not use). Rotate every key in them, then remove them from git and its history (about 20 minutes). Not touched by this project.
 
