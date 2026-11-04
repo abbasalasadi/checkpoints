@@ -347,6 +347,15 @@ export const attempts = {
     return getDb().prepare('DELETE FROM attempts WHERE id = ? AND user_id = ? AND exam_id IS NULL').run(id, userId).changes > 0;
   },
 
+  /** Delete every practice attempt of one exercise (the history list's delete). */
+  deleteExercise(userId: number, language: Language, slug: string): boolean {
+    return (
+      getDb()
+        .prepare('DELETE FROM attempts WHERE user_id = ? AND language = ? AND exercise_slug = ? AND exam_id IS NULL')
+        .run(userId, language, slug).changes > 0
+    );
+  },
+
   listForExercise(userId: number, language: Language, slug: string, limit = 20) {
     return getDb()
       .prepare(

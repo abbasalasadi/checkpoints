@@ -101,6 +101,11 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (path === '/api/history/exercises' && method === 'GET') return historyByExercise(req, res, url.searchParams);
   const tl = /^\/api\/history\/exercises\/([a-z]+)\/([^/]+)$/.exec(path);
   if (tl?.[1] && tl[2] && method === 'GET') return exerciseTimeline(req, res, tl[1], tl[2]);
+  if (tl?.[1] && tl[2] && method === 'DELETE') {
+    const [, lang, slug] = tl;
+    if (!isLanguage(lang) || !SLUG_PATTERN.test(slug)) return sendError(res, 400, 'invalid_request', 'Invalid exercise.');
+    return deleteOwn(req, res, (u) => attempts.deleteExercise(u, lang, slug));
+  }
   const historyMatch = /^\/api\/history\/(\d{1,12})$/.exec(path);
   if (historyMatch?.[1] && method === 'GET') return historyDetail(req, res, Number(historyMatch[1]));
   if (historyMatch?.[1] && method === 'DELETE') return deleteOwn(req, res, (u) => attempts.delete(u, Number(historyMatch[1])));

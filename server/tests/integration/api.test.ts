@@ -495,3 +495,15 @@ test('deletes (history, solutions, exam reports) touch only the caller\'s own ro
   assert.equal((await call(`/api/exams/${s.json.id}`, { method: 'DELETE', cookie: a })).status, 200);
   assert.equal((await call('/api/exams', { cookie: a })).json.past.length, 0);
 });
+
+test('an exercise\'s whole practice history can be deleted by its owner only', async () => {
+  const a = await devLogin('fake_delx_a');
+  const b = await devLogin('fake_delx_b');
+  const ua = users.upsertOnLogin('fake_delx_a', null, null);
+  const slug = listExercises('go')[0]!.slug;
+  attempts.record({ userId: ua.id, language: 'go', slug, kind: 'run', outcome: 'passed', exitCode: 0, durationMs: 1, files: {}, output: '' } as any);
+  attempts.record({ userId: ua.id, language: 'go', slug, kind: 'test', outcome: 'failed', exitCode: 1, durationMs: 1, files: {}, output: '' } as any);
+  assert.equal((await call(`/api/history/exercises/go/${slug}`, { method: 'DELETE', cookie: b })).status, 404);
+  assert.equal((await call(`/api/history/exercises/go/${slug}`, { method: 'DELETE', cookie: a })).status, 200);
+  assert.equal(attempts.listForExercise(ua.id, 'go', slug).length, 0);
+});

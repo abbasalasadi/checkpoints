@@ -301,6 +301,22 @@ export function History({ onOpen, focus }: Props) {
   const [q, setQ] = useState('');
   const [rows, setRows] = useState<ExerciseHistory[] | null>(null);
   const [selected, setSelected] = useState<ExerciseHistory | null>(null);
+  const { confirm, dialog } = useConfirm();
+  async function removeExercise(e: ExerciseHistory) {
+    const ok = await confirm({
+      title: `Delete the history of ${e.title}?`,
+      body: 'All its runs and submits, with their code and output, are removed. Your saved code and progress stay. This cannot be undone.',
+      confirmLabel: 'Delete',
+      destructive: true,
+    });
+    if (!ok) return;
+    try {
+      await api.deleteExerciseHistory(e.language, e.slug);
+      setRows((prev) => (prev ?? []).filter((x) => !(x.language === e.language && x.slug === e.slug)));
+    } catch (err) {
+      logger.warn('history.delete_failed', { error: String(err) });
+    }
+  }
 
   useEffect(() => {
     let live = true;
@@ -363,6 +379,7 @@ export function History({ onOpen, focus }: Props) {
                       <th style={{ padding: '.4rem .5rem', fontWeight: 500 }}>Submits</th>
                       <th style={{ padding: '.4rem .5rem', fontWeight: 500 }}>Time spent</th>
                       <th style={{ padding: '.4rem .5rem', fontWeight: 500 }}>Last activity</th>
+                      <th aria-label="Actions" />
                     </tr>
                   </thead>
                   <tbody>
@@ -379,6 +396,11 @@ export function History({ onOpen, focus }: Props) {
                         <td style={cell}>{e.submits}</td>
                         <td style={{ ...cell, color: 'var(--text-muted)' }}>{fmtSpent(e.activeMs)}</td>
                         <td style={{ ...cell, color: 'var(--text-muted)' }}>{ago(e.lastAt)}</td>
+                        <td style={{ ...cell, textAlign: 'right' }}>
+                          <button type="button" style={iconBtn} aria-label={`Delete the history of ${e.title}`} title="Delete" onClick={(ev) => { ev.stopPropagation(); void removeExercise(e); }}>
+                            <Icon name="trash" size={13} />
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -389,6 +411,7 @@ export function History({ onOpen, focus }: Props) {
           </>
         )}
       </div>
+      {dialog}
     </main>
   );
 }
