@@ -169,6 +169,7 @@ function SignedIn({
 }) {
   const [loc, setLoc] = useState(() => readLocation());
   const [historyFocus, setHistoryFocus] = useState<{ language: Language; slug: string } | null>(null);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const { confirm, dialog } = useConfirm();
   useEffect(() => onNavigate(setLoc), []);
 
@@ -191,10 +192,6 @@ function SignedIn({
         onPrefs={onPrefs}
         onSignedOut={onSignedOut}
         onDashboard={() => goPage('dashboard')}
-        onHistory={() => {
-          setHistoryFocus(null);
-          goPage('history');
-        }}
       />
     );
   }
@@ -223,8 +220,10 @@ function SignedIn({
           goPage('history');
         }}
         onVault={() => goPage('vault')}
+        onAbout={() => setAboutOpen(true)}
         onSignOut={() => void signOut()}
       />
+      <About open={aboutOpen} onClose={() => setAboutOpen(false)} />
       {page === 'history' ? (
         <History key={historyFocus ? `${historyFocus.language}/${historyFocus.slug}` : 'all'} focus={historyFocus} onOpen={(l, s) => openTrack(l, s)} />
       ) : page === 'vault' ? (
@@ -359,14 +358,12 @@ function Workbench({
   onPrefs,
   onSignedOut,
   onDashboard,
-  onHistory,
 }: {
   identifier: string;
   prefs: Preferences;
   onPrefs: (patch: Partial<Preferences>) => void;
   onSignedOut: (reason?: string) => void;
   onDashboard: () => void;
-  onHistory: () => void;
 }) {
   const initial = useMemo(() => readLocation(), []);
   const [language, setLanguage] = useState<Language>(() => initial.language ?? lastLanguage());
@@ -396,7 +393,6 @@ function Workbench({
   const [limits, setLimits] = useState<RunnerState>({});
   /** Dismissed for THIS run, so the warning cannot nag every second. */
   const [stuckDismissed, setStuckDismissed] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const editorRef = useRef<import('monaco-editor').editor.IStandaloneCodeEditor | null>(null);
   const vimStatus = useRef<HTMLDivElement | null>(null);
@@ -1306,9 +1302,7 @@ function Workbench({
             </button>
             <Menu
               note={savedAt ? `Saved ${timeAgo(savedAt)}` : undefined}
-              /* Per-item rather than a `disabled` menu, so About stays
-                 reachable before any exercise has been opened. The menu drops
-                 disabled items, so with none loaded only About remains. */
+              /* Per-item `disabled`: the menu drops disabled items. */
               groups={[
                 [{ label: 'Save a copy', onSelect: () => void saveCopy(), disabled: !detail }],
                 [
@@ -1334,8 +1328,6 @@ function Workbench({
                         link.click();
                       }),
                   },
-                  { label: 'History', onSelect: () => void flush().then(onHistory) },
-                  { label: 'About', onSelect: () => setAboutOpen(true) },
                 ],
               ]}
             />
@@ -1515,7 +1507,6 @@ function Workbench({
       </section>
 
       {dialog}
-      <About open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
       <StuckDialog
         open={

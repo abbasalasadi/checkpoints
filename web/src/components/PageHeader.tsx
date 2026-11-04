@@ -10,6 +10,7 @@ interface Props {
   onDashboard: () => void;
   onHistory: () => void;
   onVault: () => void;
+  onAbout: () => void;
   onSignOut: () => void;
 }
 
@@ -25,7 +26,7 @@ const link = (active: boolean): React.CSSProperties => ({
   boxShadow: active ? 'inset 0 -2px 0 var(--accent)' : 'none',
 });
 
-export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onSignOut }: Props) {
+export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onAbout, onSignOut }: Props) {
   return (
     <header style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap' }}>
       <span style={{ color: 'var(--accent-text)', display: 'flex' }}>
@@ -43,7 +44,10 @@ export function PageHeader({ identifier, current, onDashboard, onHistory, onVaul
           Solutions
         </button>
       </nav>
-      <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontSize: '.82rem' }}>{identifier}</span>
+      <button type="button" style={{ ...link(false), marginLeft: 'auto' }} onClick={onAbout}>
+        About
+      </button>
+      <span style={{ color: 'var(--text-muted)', fontSize: '.82rem' }}>{identifier}</span>
       <button type="button" style={link(false)} onClick={onSignOut}>
         Sign out
       </button>
