@@ -133,9 +133,10 @@ export const config = {
 
   sessionTtlHours: int('SESSION_TTL_HOURS', defaults.sessionTtlHours),
   platformSigninUrl: str(first('REBOOT01_SIGNIN_URL', 'PLATFORM_SIGNIN_URL')!, defaults.platformSigninUrl),
-  /** D14: dev-login exists only outside production. */
+  /** D17: dev-login is off unless DEV_LOGIN=true, and never in production. */
+  devLoginOptIn: bool('DEV_LOGIN', false),
   get devLoginEnabled(): boolean {
-    return DEV_ENVS.includes(this.appEnv);
+    return this.devLoginOptIn && DEV_ENVS.includes(this.appEnv);
   },
 
   runner: {

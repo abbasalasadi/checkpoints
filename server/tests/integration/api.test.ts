@@ -13,6 +13,8 @@ import type { AddressInfo } from 'node:net';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { config } from '../../src/config/index.ts';
+// Tests sign in with fake users; the app keeps dev-login off unless opted in (D17).
+config.devLoginOptIn = true;
 import { closeDatabase, getDb, migrate, openDatabase } from '../../src/db/index.ts';
 import { hashToken, progress, sessions, users } from '../../src/repositories/index.ts';
 import { handle } from '../../src/routes/index.ts';

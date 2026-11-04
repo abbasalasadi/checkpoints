@@ -32,9 +32,10 @@ test('.env.example names override the defaults (COOLDOWN_*_SEC, RUNNER_CONCURREN
   assert.equal(r.maxConcurrent, 2);
 });
 
-test('dev-login is disabled only in production', () => {
-  assert.equal(configWith({ APP_ENV: 'production' }).devLoginEnabled, false);
-  assert.equal(configWith({ APP_ENV: 'dev' }).devLoginEnabled, true);
+test('dev-login needs DEV_LOGIN=true and is never on in production', () => {
+  assert.equal(configWith({ APP_ENV: 'production', DEV_LOGIN: 'true' }).devLoginEnabled, false);
+  assert.equal(configWith({ APP_ENV: 'dev' }).devLoginEnabled, false);
+  assert.equal(configWith({ APP_ENV: 'dev', DEV_LOGIN: 'true' }).devLoginEnabled, true);
 });
 
 test('config defaults are the values the plan specifies', async () => {

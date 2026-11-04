@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # VM: start the API on a temp DB in dev mode and run the API smoke test for each language.
 set -u
-export APP_ENV=dev API_PORT=18157 DB_PATH="$PWD/var/smoke/app.db" RUNNER_CONCURRENCY=3
+export APP_ENV=dev DEV_LOGIN=true API_PORT=18157 DB_PATH="$PWD/var/smoke/app.db" RUNNER_CONCURRENCY=3
 mkdir -p var/smoke
 [ -f .env ] || : > .env
 [ -d node_modules ] || npm ci --no-audit --no-fund >/dev/null 2>&1
