@@ -1,39 +1,24 @@
-# Checkpoints — Current Release: V2
+# Release — V3 Exam and extras
 
-Copied from `versions.md` when this version started. **The only scope.** Scope test before every task: is it here? If not, do not do it.
+Goal: a student can rehearse a timed checkpoint and get help without being handed the answer.
+No deploy until the owner has tested locally (D20). Old sites are not touched until after V3 (D21).
 
-**Goal:** A student can see and reuse everything they have done across all three tracks.
-
-No deploy until the owner has tested locally (D20). Old sites are not touched (D21).
-
-## Features
-1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics. Track choice lives here; the workbench sidebar loses its Go/JS/Rust selector (D23).
-2. History explorer with filters and attempt detail (code + output).
-3. Solutions vault, and a per-exercise Markdown report export: subject, provided main file(s), student solution, result (D22).
-4. Preferences (font size, tab size, word wrap, keybindings Default/Vim) synced to the account; dark theme only (D24, D25).
-5. Stars (private), sidebar search and status filters, compact sidebar rail.
-6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
-7. Offline indicator with draft re-sync; loading skeletons.
-8. Hardening: Go run containers with a read-only root filesystem (Go cache and temp on tmpfs), then re-run Go parity (audit v1.0 F3).
-
-## Definition of done
-- [x] Every feature above present and working
-- [x] Tests pass on the assigned VM; Go parity re-run after feature 8
-- [x] Secret scan clean
-- [x] Owner tested locally (D20)
-- [x] Deployed at checkpoint.appsyss.com after the owner's test (2026-11-04)
-- [x] Self-audit passed (`docs/audits/`)
-- [x] Tagged `v2.0`, release note written
+## Decisions (2026-11-04, owner)
+- D27 Mock exam results are separate: shown in the exam report and history, never mark practice progress.
+- D28 Exam rules like the real exam: no hints, no Solutions page, no other exercises until the exam ends or is abandoned.
+- D29 Hints (129, one line each, D4) ship as written, no owner review; fixes when reported.
+- Font controls already exist (V2 Preferences); dropped from V3 feature 5.
 
 ## Steps
-| # | Step | Features | State | Result check |
-|---|---|---|---|---|
-| 1 | Preferences: schema, API, settings panel, applied to the editor | 4 | done (awaiting owner test) | server 37/37, web 109/109, browser: light theme, font, Vim, reload keeps them |
-| 2 | Dashboard + track choice moved out of the sidebar | 1 | done (awaiting owner test) | server 38/38, web 110/110, browser: cards, resume, recent activity |
-| 3 | History explorer and attempt detail (regrouped by exercise, D26) | 2 | done (awaiting owner test) | server 41/41, web 121/121, browser: exercise list, folded runs, submit compare diff |
-| 4 | Solutions vault + exercise report export | 3 | done (awaiting owner test) | server 39/39, web 111/111, browser: /vault list, code view, report download (.md) |
-| 5 | Stars, sidebar search/filters, compact rail | 5 | done (awaiting owner test) | server 40/40, web 111/111, browser: star, Starred filter, rail collapse |
-| 6 | Offline indicator, draft re-sync, skeletons | 7 | done (awaiting owner test) | web 114/114, browser: offline banner + Run/Submit wait, browser draft restored and re-saved, skeletons |
-| 7 | Mobile and tablet layouts | 6 | done (awaiting owner test) | web 116/116, browser 375 px: tabs, symbol bar insert + undo, Run → plain-text Output, dashboard stacks |
-| 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | done | lan_vm1: go parity 60/60, run + format ok; server 0 fail, web 116/116 |
-| 9 | Self-audit, VM test run, owner local test, release note | all | waiting for the owner's local test | audit docs/audits/v2.0-2026-11-04.md: pass |
+1. [ ] Mock exam server: exam table + migration, start (one random exercise per level, pristine starters, practice drafts set aside server-side, D7), timer (default 180 min), submit, end/abandon, report; rules enforced server-side (D28)
+2. [ ] Mock exam web: start screen, locked workbench with timer, report page, history entries
+3. [ ] Hints: 129 one-line hints in content, API, 10-second reveal delay, hidden during exams
+4. [ ] Assertion diff card on failed tests (expected vs actual)
+5. [ ] Command palette + keyboard shortcut sheet
+6. [ ] Focus (zen) mode, post-pass "next exercise" prompt, breadcrumbs
+7. [ ] Tests on lan_vm1, self-audit, release note draft
+
+## Done when
+- [ ] All steps done, tests pass, audit pass
+- [ ] Owner tested locally (D20)
+- [ ] Deployed after the owner's test; tagged `v3.0`, release note written

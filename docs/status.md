@@ -1,6 +1,6 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V2 released (deployed + tagged v2.0); next V3 · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V3 planned (docs/release.md), step 1 next · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
