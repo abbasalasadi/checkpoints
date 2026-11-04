@@ -26,6 +26,8 @@ export interface EphemeralSpec {
   tmpfs: string;
   pidsLimit: number;
   readonlyRootfs: boolean;
+  /** More writable mounts beside /tmp (path → options), for a read-only root. */
+  extraTmpfs?: Record<string, string>;
   noNewPrivileges: boolean;
 }
 
@@ -85,7 +87,7 @@ export async function runEphemeral(spec: EphemeralSpec, ctx: JobContext): Promis
         NetworkMode: 'none',
         ReadonlyRootfs: spec.readonlyRootfs,
         Binds: [`${spec.runDir}:${spec.mountAt}:ro`],
-        Tmpfs: { '/tmp': spec.tmpfs },
+        Tmpfs: { '/tmp': spec.tmpfs, ...(spec.extraTmpfs ?? {}) },
         Memory: spec.memoryMb * 1024 * 1024,
         MemorySwap: spec.memoryMb * 1024 * 1024,
         PidsLimit: spec.pidsLimit,

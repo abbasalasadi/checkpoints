@@ -14,11 +14,29 @@ set -e
 : "${EXERCISE:?EXERCISE is required}"
 STUDENT_DIR="${STUDENT_DIR:-/run/student}"
 
+# Read-only root (V2): the warm build cache baked at /gocache cannot take new
+# entries, and a cold cache costs 23x on run time. A farm of symlinks in /tmp
+# keeps every warm entry readable and puts new ones on the tmpfs — no copy, so
+# the 63 MB cache does not count against the container's memory.
+if [ ! -w "$GOCACHE" ]; then
+	RO_CACHE="$GOCACHE"
+	GOCACHE=/tmp/gocache
+	export GOCACHE
+	mkdir -p "$GOCACHE"
+	(cd "$RO_CACHE" && for d in */; do
+		mkdir -p "$GOCACHE/$d"
+		for f in "$d"*; do [ -e "$f" ] && ln -s "$RO_CACHE/$f" "$GOCACHE/$f"; done
+	done)
+	for f in "$RO_CACHE"/*; do [ -f "$f" ] && cp "$f" "$GOCACHE/"; done
+fi
+
 # The submission is copied, never run in place: /run/student is mounted read-only
 # and the toolchain needs somewhere to write. /piscine-go is a sibling of /test-go
 # so that `replace student => ../piscine-go` resolves with no copy of the harness.
-rm -rf /piscine-go
+# With a read-only root (V2 hardening) /piscine-go is its own tmpfs: a mount
+# point cannot be removed, so it is emptied instead.
 mkdir -p /piscine-go
+find /piscine-go -mindepth 1 -delete
 cp -r "$STUDENT_DIR"/. /piscine-go/ 2>/dev/null || true
 cd /piscine-go
 

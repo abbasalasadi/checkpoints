@@ -87,10 +87,13 @@ export class GoBackend implements Backend {
         files: job.files,
         memoryMb: this.settings.memoryMb,
         cpus: this.settings.cpus,
-        // exec: `go run` compiles into $TMPDIR and executes from there.
+        // exec: `go run` compiles into $TMPDIR and executes from there. The
+        // build cache overlay (entrypoint) lives here too.
         tmpfs: `rw,exec,size=${this.settings.tmpfsMb}m,mode=1777`,
+        // V2 (audit v1.0 F3): read-only root; the student's module gets its own tmpfs.
+        extraTmpfs: { '/piscine-go': `rw,exec,size=16m,mode=1777` },
         pidsLimit: 256,
-        readonlyRootfs: false,
+        readonlyRootfs: true,
         noNewPrivileges: this.noNewPrivileges,
       },
       ctx,
