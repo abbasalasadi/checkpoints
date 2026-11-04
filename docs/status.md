@@ -52,3 +52,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-05: exams start blank (student files empty; provided main/runner kept), no 'Restore starting stub' in exams. lan_vm1: server 50/50, web 148/148. Not deployed.
 - 2026-11-05: output panel cleared on every exercise switch (exam pass no longer leaves the previous result). web 148/148 on lan_vm1. Not deployed.
 - 2026-11-05: re-verified on lan_vm1 at d263eb7 (earlier VM runs had tested an older commit): Java Cloud Run gate 0 bad, tsc clean, server 50/50, web 148/148. Not deployed.
+- 2026-11-05: V4 redeployed to production at 4a2462d (backup app-20261104T231116Z-1552677.db.gz, no running exams, rc 0, healthz 200, old sites untouched 200). No data sync. Owner testing.
