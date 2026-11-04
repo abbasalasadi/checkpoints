@@ -25,3 +25,14 @@ describe('browser drafts (V2 offline)', () => {
     expect(draftDiffers({ z: '2' }, { a: '1' })).toBe(false);
   });
 });
+
+test('sign-out clears every draft and nothing else', async () => {
+  const { clearAllDrafts } = await import('../src/lib/offline.js');
+  saveDraft('go', 'a', { x: '1' });
+  saveDraft('js', 'b', { y: '2' });
+  localStorage.setItem('cp.rail', '1');
+  clearAllDrafts();
+  expect(readDraft('go', 'a')).toBeNull();
+  expect(readDraft('js', 'b')).toBeNull();
+  expect(localStorage.getItem('cp.rail')).toBe('1');
+});

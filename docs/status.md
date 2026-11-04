@@ -1,6 +1,6 @@
 # Checkpoints — Status
 
-As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V2 (built, owner testing) · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
@@ -8,6 +8,7 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 | — | — | — | — |
 
 ## Done
+- V2 steps 1-8 built (2026-11-04), step 9 self-audit pass (docs/audits/v2.0-2026-11-04.md). Result check: lan_vm1 build, server 0 fail, web 116/116, Go parity 60/60 with read-only root; laptop server 40/40, web 117/117; browser checks per step in release.md — pass. Waiting for the owner's local test (D20); no deploy before it
 - V1 self-audit (2026-11-03): first pass Fail (F1 blocking: setup needed .env.example); fixed in 8e9c919; re-audit on clean lan_vm1 copy: setup, build, 145 tests pass; F2 fixed; F3 (Go read-only rootfs) moved to V2. Report: docs/audits/v1.0-2026-11-03.md
 - V1 steps 1-9 built and integrated (2026-11-03). Result check: lan_vm1 build + 145 tests (36 server, 109 web) — pass; runner images built (go 546 MB, js 109 MB, rust 1.25 GB); `make parity` — rust 40/40, go 60/60, js 29/29 solutions pass and starters fail, run + Go format ok — correct (matches the references)
 - Browser check on laptop (fake user): sign-in, Go/JS/Rust switcher, checkpoint → level tree, Rust Submit (streamed output, diagnostics, 90 s cooldown), JS Run (streamed, 30 s cooldown) — pass. Go in the browser not yet clicked through (no Go image on laptop; Go runner proven by parity on lan_vm1)
@@ -20,7 +21,7 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 ## Blocked
 - <item> — <cause> — <what unblocks it; sweep state if a result was wrong>
 
-- Dev setting: local `.env` cooldowns set to 0 (owner, 2026-11-04). Restore to 30/90 before release (checklist in release.md); production `.env.vm` unchanged at 30/90.
+- Local `.env` and production `.env.vm`: cooldowns 15/60 (D19). DEV_LOGIN off locally.
 
 ## Needed from the owner
 1. **Leaked secrets in the reference repos:** `/home/abbas/Documents/js-checkpoints`, `/home/abbas/Documents/go-checkpoints` and `/home/abbas/Documents/rust` have `.env` and `.env.vm` tracked in git (Go's STATUS.md says the only secret there is `SESSION_SIGNING_KEY`, which the new app does not use). Rotate every key in them, then remove them from git and its history (about 20 minutes). Not touched by this project.

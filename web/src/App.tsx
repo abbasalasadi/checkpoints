@@ -34,7 +34,7 @@ import { lint as lintGo } from './lib/lint/go.js';
 import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
 import { COMPACT_QUERY, SYMBOLS, useMedia } from './lib/media.js';
-import { clearDraft, draftDiffers, readDraft, saveDraft, useOnline } from './lib/offline.js';
+import { clearAllDrafts, clearDraft, draftDiffers, readDraft, saveDraft, useOnline } from './lib/offline.js';
 import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
 import { Dashboard } from './components/Dashboard.js';
 import { History } from './components/History.js';
@@ -204,6 +204,7 @@ function SignedIn({
     });
     if (!ok) return;
     await api.logout().catch(() => undefined);
+    clearAllDrafts();
     onSignedOut();
   }
 
@@ -971,6 +972,7 @@ function Workbench({
     await flush();
     // Revoke the session even if the request fails.
     await api.logout().catch(() => undefined);
+    clearAllDrafts();
     detach();
     onSignedOut();
   }

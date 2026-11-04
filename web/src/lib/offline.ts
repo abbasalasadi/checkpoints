@@ -56,3 +56,12 @@ export function clearDraft(language: Language, slug: string): void {
 export function draftDiffers(draft: Record<string, string>, server: Record<string, string>): boolean {
   return Object.entries(draft).some(([f, v]) => f in server && server[f] !== v);
 }
+
+/** On sign-out: a shared lab computer must not keep one student's code for the next. */
+export function clearAllDrafts(): void {
+  try {
+    for (const k of Object.keys(localStorage)) if (k.startsWith('cp.draft.')) localStorage.removeItem(k);
+  } catch {
+    /* nothing to clear */
+  }
+}

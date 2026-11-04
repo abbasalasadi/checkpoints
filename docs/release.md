@@ -17,12 +17,12 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 8. Hardening: Go run containers with a read-only root filesystem (Go cache and temp on tmpfs), then re-run Go parity (audit v1.0 F3).
 
 ## Definition of done
-- [ ] Every feature above present and working
-- [ ] Tests pass on the assigned VM; Go parity re-run after feature 8
-- [ ] Secret scan clean
+- [x] Every feature above present and working
+- [x] Tests pass on the assigned VM; Go parity re-run after feature 8
+- [x] Secret scan clean
 - [ ] Owner tested locally (D20)
 - [ ] Deployed at checkpoint.appsyss.com after the owner's test
-- [ ] Self-audit passed (`docs/audits/`)
+- [x] Self-audit passed (`docs/audits/`)
 - [ ] Tagged `v2.0`, release note written
 
 ## Steps
@@ -35,5 +35,5 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 | 5 | Stars, sidebar search/filters, compact rail | 5 | done (awaiting owner test) | server 40/40, web 111/111, browser: star, Starred filter, rail collapse |
 | 6 | Offline indicator, draft re-sync, skeletons | 7 | done (awaiting owner test) | web 114/114, browser: offline banner + Run/Submit wait, browser draft restored and re-saved, skeletons |
 | 7 | Mobile and tablet layouts | 6 | done (awaiting owner test) | web 116/116, browser 375 px: tabs, symbol bar insert + undo, Run → plain-text Output, dashboard stacks |
-| 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | in progress (VM run) | |
-| 9 | Self-audit, VM test run, owner local test, release note | all | todo | |
+| 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | done | lan_vm1: go parity 60/60, run + format ok; server 0 fail, web 116/116 |
+| 9 | Self-audit, VM test run, owner local test, release note | all | waiting for the owner's local test | audit docs/audits/v2.0-2026-11-04.md: pass |
