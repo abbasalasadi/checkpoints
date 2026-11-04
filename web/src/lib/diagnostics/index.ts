@@ -9,6 +9,7 @@ import type { Language, RunOutcome } from '../api.js';
 import { diagnose as diagnoseRust } from './rust.js';
 import { diagnose as diagnoseGo, type Outcome as GoOutcome } from './go.js';
 import { diagnose as diagnoseJs, type Outcome as JsOutcome } from './js.js';
+import { diagnose as diagnoseJava } from './java.js';
 
 export type Tone = 'ok' | 'error' | 'warn' | 'info';
 
@@ -77,6 +78,13 @@ export function diagnoseRun(
     if (stopped) return stopped;
     const d = diagnoseRust(kind, result.exitCode ?? (c === 'passed' ? 0 : 1), result.output);
     return { title: d.title, hint: d.hint, tone: d.tone, canFormat: false };
+  }
+
+  if (language === 'java') {
+    const stopped = STOPPED[c];
+    if (stopped) return stopped;
+    const d = diagnoseJava(kind, c === 'passed', result.output);
+    return { ...d, canFormat: false };
   }
 
   if (language === 'go') {

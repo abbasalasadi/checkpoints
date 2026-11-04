@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const LANGS = ['go', 'js', 'rust'] as const;
+export const LANGS = ['go', 'js', 'rust', 'java'] as const;
 export type Lang = (typeof LANGS)[number];
 
 /** Canonical checkpoint ordering across all three languages. */

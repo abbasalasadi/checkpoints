@@ -16,7 +16,7 @@
  */
 import type { Language } from './api.js';
 
-export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust'];
+export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust', 'java'];
 
 /** A page that is not a track: the dashboard or the history explorer. */
 export type Page = 'dashboard' | 'history' | 'vault' | 'exams';

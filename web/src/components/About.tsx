@@ -37,7 +37,7 @@ export function About({ open, onClose }: Props) {
               Checkpoints
             </h2>
             <p style={{ margin: '.15rem 0 0', color: 'var(--text-dim)', fontSize: '.8rem' }}>
-              A practice environment for the reboot01 Go, JavaScript and Rust checkpoints
+              A practice environment for the reboot01 Go, JavaScript, Rust and Java checkpoints
             </p>
           </div>
         </header>

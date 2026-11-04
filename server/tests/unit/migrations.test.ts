@@ -97,3 +97,27 @@ test('every exercise-keyed table carries a language column', () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('007 accepts java, still rejects unknown languages, and keeps rows whose user is gone', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'rc-migrate-'));
+  try {
+    const db = openDatabase(join(dir, 'app.db'));
+    migrate(db);
+    const now = new Date().toISOString();
+    db.prepare("INSERT INTO users (id, identifier_normalized, created_at, last_login_at) VALUES (1, 'u', ?, ?)").run(now, now);
+    const put = db.prepare('INSERT INTO progress (user_id, language, exercise_slug, updated_at) VALUES (?, ?, ?, ?)');
+    put.run(1, 'java', 'factorial', now);
+    assert.throws(() => put.run(1, 'kotlin', 'x', now), /CHECK/);
+    // An orphan left by an earlier delete made with foreign keys off (seen in a real database).
+    db.pragma('foreign_keys = OFF');
+    put.run(99, 'go', 'orphan', now);
+    db.pragma('foreign_keys = ON');
+    db.prepare("DELETE FROM schema_migrations WHERE version = '007_java'").run();
+    assert.deepEqual(migrate(db), ['007_java']);
+    assert.equal((db.prepare('SELECT count(*) AS n FROM progress').get() as { n: number }).n, 2);
+    assert.equal(db.pragma('foreign_keys', { simple: true }), 1);
+  } finally {
+    closeDatabase();
+    rmSync(dir, { recursive: true, force: true });
+  }
+});

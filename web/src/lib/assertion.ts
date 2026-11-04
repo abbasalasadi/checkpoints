@@ -6,6 +6,7 @@
  *   go    program: "Your program output is not correct :" ... "Expected :" ...
  *         function: "F(x) == got instead of want"
  *   rust  assert_eq!: "left: …" / "right: …" (left is the student's value)
+ *   java  AssertJ: "expected: …" / " but was: …"; JUnit: "expected: <a> but was: <b>"
  *   js    node:assert: "a !== b", or the "+ actual - expected" diff
  */
 import type { Language } from './api.js';
@@ -37,6 +38,14 @@ function rustDiff(out: string): AssertionDiff | null {
   return m?.[1] !== undefined && m[2] !== undefined ? { actual: m[1], expected: m[2] } : null;
 }
 
+function javaDiff(out: string): AssertionDiff | null {
+  const label = /^\s*1\) (\S+?)\(\) ->/m.exec(out)?.[1];
+  const assertj = /AssertionFailedError: ?[^\n]*\n\s*expected: ([\s\S]*?)\n\s*but was: ([\s\S]*?)\n(?=\S|\s+at |$)/.exec(out);
+  if (assertj?.[1] !== undefined && assertj[2] !== undefined) return { label, expected: assertj[1].trim(), actual: assertj[2].trim() };
+  const junit = /expected: <([\s\S]*?)> but was: <([\s\S]*?)>/.exec(out);
+  return junit?.[1] !== undefined && junit[2] !== undefined ? { label, expected: junit[1], actual: junit[2] } : null;
+}
+
 function jsDiff(out: string): AssertionDiff | null {
   const head = /Expected values to be (?:strictly |loosely )?(?:deep-)?equal:?\s*\n/.exec(out);
   if (!head) return null;
@@ -61,7 +70,7 @@ function jsDiff(out: string): AssertionDiff | null {
 
 export function parseAssertion(language: Language, output: string): AssertionDiff | null {
   const out = output.replace(ANSI, '').replace(/\r\n/g, '\n');
-  const d = language === 'go' ? goDiff(out) : language === 'rust' ? rustDiff(out) : jsDiff(out);
+  const d = language === 'go' ? goDiff(out) : language === 'rust' ? rustDiff(out) : language === 'java' ? javaDiff(out) : jsDiff(out);
   if (!d || d.actual === d.expected) return null;
   return d;
 }

@@ -84,11 +84,18 @@ export function migrate(handle: Db = getDb()): string[] {
         .run(version, new Date().toISOString());
     });
 
+    // SQLite's table-rebuild procedure (007): foreign keys off while a table is
+    // copied and swapped, so rows already in the database move over unchanged.
+    // The pragma is a no-op inside a transaction, so it wraps it.
+    const fk = handle.pragma('foreign_keys', { simple: true });
+    handle.pragma('foreign_keys = OFF');
     try {
       run();
     } catch (err) {
       logger.error('db.migration.failed', { version, error: String(err) });
       throw new Error(`migration ${version} failed: ${String(err)}`);
+    } finally {
+      handle.pragma(`foreign_keys = ${fk ? 'ON' : 'OFF'}`);
     }
 
     justApplied.push(version);

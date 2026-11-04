@@ -81,6 +81,7 @@ export function editorLanguage(file: string, track: Language): string {
   if (file.endsWith('.go')) return 'go';
   if (/\.(m|c)?js$/.test(file)) return 'javascript';
   if (file.endsWith('.rs')) return 'rust';
+  if (file.endsWith('.java')) return 'java';
   if (file.endsWith('.json')) return 'json';
   if (file.endsWith('.toml') || file.endsWith('.mod')) return 'plaintext';
   return track === 'js' ? 'javascript' : track;
@@ -91,6 +92,7 @@ function shownCommand(lang: Language, kind: 'run' | 'test', args: string, files:
   const a = args.trim() ? ` ${args.trim()}` : '';
   if (lang === 'rust') return kind === 'test' ? 'cargo test' : `cargo run${a ? ` --${a}` : ''}`;
   if (lang === 'go') return kind === 'test' ? 'go test' : `go run .${a}`;
+  if (lang === 'java') return kind === 'test' ? 'mvn test' : `java ExerciseRunner${a}`;
   const entry = files.includes('main.js') ? 'main.js' : (files[0] ?? 'main.js');
   return kind === 'test' ? 'node test' : `node ${entry}${a}`;
 }
