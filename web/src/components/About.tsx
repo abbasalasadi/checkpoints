@@ -122,6 +122,25 @@ export function About({ open, onClose }: Props) {
           )}
         </section>
 
+        <section
+          style={{
+            marginTop: '.8rem',
+            padding: '.9rem 1rem',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
+          }}
+        >
+          <p style={{ margin: 0, fontSize: '.72rem', letterSpacing: '.04em', textTransform: 'uppercase', color: 'var(--text-dim)' }}>
+            Thanks
+          </p>
+          <p style={{ margin: '.3rem 0 .1rem', fontWeight: 600, fontSize: '.95rem' }}>Ali Alsaroo</p>
+          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '.84rem' }}>@aalsaroo</p>
+          <p style={{ margin: '.5rem 0 0', color: 'var(--text-muted)', fontSize: '.84rem' }}>
+            For taking part and for his suggestions that improved the tester.
+          </p>
+        </section>
+
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.2rem' }}>
           <button type="button" onClick={onClose} className="dlg-btn dlg-btn-quiet">
             Close
