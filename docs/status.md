@@ -47,3 +47,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 
 - 2026-11-04: V1.0 tagged and redeployed (15/60 cooldowns). Result check: live 200, old sites 200, prod env 15/60, service active.
 - 2026-11-05: Go Format broken in prod (no local Go image in cloudrun mode); runner-image.sh now builds go,rust. Redeploy awaits owner approval.
+- 2026-11-05: redeployed (rc 0, backup app-20261104T211950Z-1543074.db.gz); go-checkpoints-runner:v1.0 now on prod VM; healthz 200. Owner to retest Go Format.
