@@ -19,12 +19,13 @@ import {
   RateLimiter,
   readJsonBody,
   requireCaller,
+  resolveCaller,
   sendError,
   sendJson,
   setSessionCookie,
   type Caller,
 } from '../middleware/http.js';
-import { attempts, preferences, progress, sessions, snapshots, stars, users } from '../repositories/index.js';
+import { attempts, exams, preferences, progress, sessions, snapshots, stars, users } from '../repositories/index.js';
 import { normalizePreferences } from '../services/preferences.js';
 import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
 import {
@@ -39,6 +40,8 @@ import {
   type Exercise,
 } from '../services/exercises.js';
 import * as runs from '../services/runs.js';
+import { pickExamItems } from '../services/exams.js';
+import type { Exam } from '../repositories/index.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
 const formatLimiter = new RateLimiter(60, 60_000);
@@ -67,6 +70,21 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   // Unauthenticated: the sign-in screen asks before anyone is signed in.
   if (path === '/api/auth/config' && method === 'GET') {
     sendJson(res, 200, { devLogin: config.devLoginEnabled });
+    return;
+  }
+
+  // ── mock exams (V3)
+  if (path === '/api/exams' && method === 'GET') return listExams(req, res);
+  if (path === '/api/exams' && method === 'POST') return startExam(req, res);
+  const examMatch = /^\/api\/exams\/(\d{1,12})(?:\/(end))?$/.exec(path);
+  if (examMatch?.[1] && !examMatch[2] && method === 'GET') return getExam(req, res, Number(examMatch[1]));
+  if (examMatch?.[1] && examMatch[2] && method === 'POST') return endExam(req, res, Number(examMatch[1]));
+
+  // D28: while an exam is open, only its own exercises and the basics answer.
+  const examCaller = resolveCaller(req);
+  const exam = examCaller ? exams.active(examCaller.user.id) : undefined;
+  if (exam && !examAllows(exam, path, method)) {
+    sendError(res, 403, 'exam_active', 'Not available during a mock exam.');
     return;
   }
 
@@ -102,12 +120,12 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
       const [, group, , action, sub] = m;
 
       if (group === 'exercises') {
-        if (!action && method === 'GET') return getOne(req, res, p);
-        if (action === 'code' && !sub && method === 'PUT') return saveCode(req, res, p);
-        if (action === 'reset' && !sub && method === 'POST') return resetCode(req, res, p);
+        if (!action && method === 'GET') return exam ? examGetOne(req, res, p, exam) : getOne(req, res, p);
+        if (action === 'code' && !sub && method === 'PUT') return exam ? examSave(req, res, p, exam) : saveCode(req, res, p);
+        if (action === 'reset' && !sub && method === 'POST') return exam ? examReset(req, res, p, exam) : resetCode(req, res, p);
         if (action === 'format' && !sub && method === 'POST') return formatCode(req, res, p);
         if ((action === 'run' || action === 'test' || action === 'submit') && !sub && method === 'POST') {
-          return execute(req, res, p, action === 'run' ? 'run' : 'test');
+          return execute(req, res, p, action === 'run' ? 'run' : 'test', exam);
         }
         if (action === 'attempts' && !sub && method === 'GET') return listAttempts(req, res, p);
         if (action === 'report' && !sub && method === 'GET') return report(req, res, p);
@@ -735,7 +753,7 @@ function runError(res: ServerResponse, err: unknown, mode: runs.RunMode): boolea
   return false;
 }
 
-async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mode: runs.RunMode): Promise<void> {
+async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mode: runs.RunMode, exam?: Exam): Promise<void> {
   const caller = requireCaller(req, res);
   if (!caller) return;
   const ex = exerciseFor(res, p);
@@ -751,7 +769,8 @@ async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mod
       sendError(res, 400, 'invalid_files', `Only ${ex.editorFiles.join(' and ')} can be run.`);
       return;
     }
-    progress.save(caller.user.id, p.lang, p.slug, { files: posted });
+    if (exam) exams.saveFiles(exam.id, p.slug, posted);
+    else progress.save(caller.user.id, p.lang, p.slug, { files: posted });
   }
 
   let args: string[] = [];
@@ -771,8 +790,7 @@ async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mod
     }
   }
 
-  const saved = progress.get(caller.user.id, p.lang, p.slug);
-  const files = workingFiles(ex, saved?.files);
+  const files = exam ? examFiles(ex, exam) : workingFiles(ex, progress.get(caller.user.id, p.lang, p.slug)?.files);
 
   let runId: string;
   try {
@@ -793,7 +811,7 @@ async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mod
   }
 
   const run = await runs.getRun(runId);
-  if (run) recordOnDone(caller, p, mode, run, files);
+  if (run) recordOnDone(caller, p, mode, run, files, exam?.id);
 
   sendJson(res, 200, {
     runId,
@@ -806,7 +824,7 @@ async function execute(req: IncomingMessage, res: ServerResponse, p: Params, mod
   });
 }
 
-function recordOnDone(caller: Caller, p: Params, mode: runs.RunMode, run: runs.RunLike, files: Record<string, string>): void {
+function recordOnDone(caller: Caller, p: Params, mode: runs.RunMode, run: runs.RunLike, files: Record<string, string>, examId?: number): void {
   const finish = (d: { outcome?: unknown; exitCode?: unknown; durationMs?: unknown }) => {
     try {
       const outcome = typeof d.outcome === 'string' ? d.outcome : null;
@@ -821,7 +839,13 @@ function recordOnDone(caller: Caller, p: Params, mode: runs.RunMode, run: runs.R
         durationMs: typeof d.durationMs === 'number' ? d.durationMs : null,
         files,
         output: run.output ?? null,
+        examId: examId ?? null,
       });
+      // An exam submit counts for the exam only, never for practice (D27).
+      if (examId !== undefined) {
+        if (mode === 'test') exams.recordSubmit(examId, p.slug, outcome === 'passed');
+        return;
+      }
       // Pass/fail is the dispatcher's verdict, never parsed output.
       if (mode === 'test' && outcome === 'passed') {
         progress.save(caller.user.id, p.lang, p.slug, { status: 'passed' });
@@ -881,4 +905,152 @@ async function runnerState(req: IncomingMessage, res: ServerResponse): Promise<v
     cooldownRemainingRun: (await runs.cooldownRemaining(user, 'run')) ?? 0,
     cooldownRemainingTest: (await runs.cooldownRemaining(user, 'test')) ?? 0,
   });
+}
+
+// ── mock exams (V3, D7, D27, D28) ────────────────────────────────────────────
+
+const EXAM_MINUTES_DEFAULT = 180;
+const EXAM_MINUTES_MIN = 10;
+const EXAM_MINUTES_MAX = 360;
+
+/** D28: the routes still open while an exam runs. Exercise routes are checked against the exam's own exercises. */
+function examAllows(exam: Exam, path: string, method: string): boolean {
+  if (path === '/api/runner' || path === '/api/languages' || path.startsWith('/api/runs/')) return true;
+  if (path === '/api/preferences') return true;
+  const m = /^\/api\/([a-z]+)\/exercises\/([^/]+)(?:\/([a-z]+))?$/.exec(path);
+  if (!m) return false;
+  if (m[1] !== exam.language || !exams.items(exam.id).some((i) => i.exercise_slug === m[2])) return false;
+  const action = m[3];
+  if (!action) return method === 'GET';
+  return ['code', 'reset', 'format', 'run', 'test', 'submit'].includes(action);
+}
+
+function examFiles(ex: Exercise, exam: Exam): Record<string, string> {
+  const item = exams.items(exam.id).find((i) => i.exercise_slug === ex.slug);
+  return workingFiles(ex, item?.files ?? null);
+}
+
+function examView(exam: Exam) {
+  const items = exams.items(exam.id).map((i) => ({
+    level: i.level,
+    slug: i.exercise_slug,
+    title: titleOf(exam.language, i.exercise_slug),
+    submits: i.submits,
+    passed: i.passed_at !== null,
+    passedAt: i.passed_at,
+  }));
+  return {
+    id: exam.id,
+    language: exam.language,
+    checkpoint: exam.checkpoint,
+    minutes: exam.minutes,
+    startedAt: exam.started_at,
+    endsAt: exam.ends_at,
+    endedAt: exam.ended_at,
+    status: exam.status,
+    passed: items.filter((i) => i.passed).length,
+    total: items.length,
+    items,
+  };
+}
+
+function listExams(req: IncomingMessage, res: ServerResponse): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const active = exams.active(caller.user.id);
+  sendJson(res, 200, {
+    active: active ? examView(active) : null,
+    past: exams.list(caller.user.id).filter((e) => e.status !== 'active').map(examView),
+  });
+}
+
+async function startExam(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const b = await body<{ language?: unknown; checkpoint?: unknown; minutes?: unknown }>(req, res);
+  if (!b) return;
+  if (typeof b.language !== 'string' || !isLanguage(b.language) || typeof b.checkpoint !== 'string') {
+    sendError(res, 400, 'invalid_request', 'A track and a checkpoint are required.');
+    return;
+  }
+  const minutes = b.minutes === undefined ? EXAM_MINUTES_DEFAULT : Number(b.minutes);
+  if (!Number.isInteger(minutes) || minutes < EXAM_MINUTES_MIN || minutes > EXAM_MINUTES_MAX) {
+    sendError(res, 400, 'invalid_minutes', `The timer must be ${EXAM_MINUTES_MIN}-${EXAM_MINUTES_MAX} minutes.`);
+    return;
+  }
+  if (exams.active(caller.user.id)) {
+    sendError(res, 409, 'exam_active', 'A mock exam is already running.');
+    return;
+  }
+  const items = pickExamItems(b.language, b.checkpoint);
+  if (items.length === 0) {
+    sendError(res, 404, 'not_found', 'No such checkpoint.');
+    return;
+  }
+  const exam = exams.create(caller.user.id, b.language, b.checkpoint, minutes, items);
+  logger.info('exam.started', { userId: caller.user.id, language: exam.language, checkpoint: exam.checkpoint, examId: exam.id });
+  sendJson(res, 200, examView(exam));
+}
+
+function getExam(req: IncomingMessage, res: ServerResponse, id: number): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  exams.active(caller.user.id); // closes it if its time is up
+  const exam = exams.byId(caller.user.id, id);
+  if (!exam) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  sendJson(res, 200, examView(exam));
+}
+
+async function endExam(req: IncomingMessage, res: ServerResponse, id: number): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const b = await body<{ abandon?: unknown }>(req, res);
+  if (!b) return;
+  const exam = exams.byId(caller.user.id, id);
+  if (!exam) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  if (exam.status === 'active') {
+    exams.close(caller.user.id, id, b.abandon === true ? 'abandoned' : 'finished');
+    exams.active(caller.user.id);
+    logger.info('exam.ended', { userId: caller.user.id, examId: id, abandoned: b.abandon === true });
+  }
+  sendJson(res, 200, examView(exams.byId(caller.user.id, id)!));
+}
+
+function examGetOne(req: IncomingMessage, res: ServerResponse, p: Params, exam: Exam): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  sendJson(res, 200, { ...publicView(ex), files: examFiles(ex, exam), starter: ex.starter, status: 'in_progress', examId: exam.id });
+}
+
+async function examSave(req: IncomingMessage, res: ServerResponse, p: Params, exam: Exam): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  const b = await body<{ files?: unknown; libRs?: unknown; mainRs?: unknown }>(req, res);
+  if (!b) return;
+  const files = filesFrom(ex, b);
+  if (!files) {
+    sendError(res, 400, 'invalid_files', `Only ${ex.editorFiles.join(' and ')} can be saved.`);
+    return;
+  }
+  exams.saveFiles(exam.id, p.slug, files);
+  sendJson(res, 200, { slug: p.slug, updatedAt: new Date().toISOString() });
+}
+
+function examReset(req: IncomingMessage, res: ServerResponse, p: Params, exam: Exam): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const ex = exerciseFor(res, p);
+  if (!ex) return;
+  exams.saveFiles(exam.id, p.slug, ex.starter);
+  sendJson(res, 200, { slug: p.slug, files: ex.starter });
 }

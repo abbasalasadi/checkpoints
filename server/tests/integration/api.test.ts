@@ -30,7 +30,7 @@ let base: string;
 const submitted: SubmitInput[] = [];
 const fakeRuns = new Map<string, { id: string; user: string; state: string; output: string; events: EventEmitter }>();
 
-setRunnerModule({
+const fakeRunner: Parameters<typeof setRunnerModule>[0] = {
   submitRun(input) {
     submitted.push(input);
     const id = `run${submitted.length}`;
@@ -45,7 +45,8 @@ setRunnerModule({
     return id;
   },
   getRun: (id) => fakeRuns.get(id),
-});
+};
+setRunnerModule(fakeRunner);
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -243,7 +244,7 @@ test('a cooldown from the dispatcher is a 429 with Retry-After', async () => {
     assert.equal(r.status, 429);
     assert.equal(r.json.secondsRemaining, 12);
   } finally {
-    setRunnerModule({ submitRun: () => 'x', getRun: (id) => fakeRuns.get(id) });
+    setRunnerModule(fakeRunner);
   }
 });
 
@@ -398,4 +399,55 @@ test('history by exercise: one summary per exercise, timeline oldest first, owne
   assert.equal((await call(`/api/history/exercises/go/${e1!.slug}`, { cookie: b })).json.attempts.length, 0);
   assert.equal((await call('/api/history/exercises?language=cobol', { cookie: a })).status, 400);
   assert.equal((await call('/api/history/exercises/cobol/x', { cookie: a })).status, 404);
+});
+
+test('mock exam: one per level, locked routes, separate from practice, end and report (D27, D28)', async () => {
+  const a = await devLogin('fake_exam_a');
+  const b = await devLogin('fake_exam_b');
+  assert.equal((await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: 'nope' } })).status, 404);
+  assert.equal((await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1', minutes: 5 } })).status, 400);
+  const s = await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1' } });
+  assert.equal(s.status, 200);
+  assert.equal(s.json.minutes, 180);
+  const levels = s.json.items.map((i: any) => i.level);
+  assert.deepEqual(levels, [...new Set(levels)].sort((x: number, y: number) => x - y), 'one exercise per level');
+  assert.equal((await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1' } })).status, 409);
+
+  const slug = s.json.items[0].slug;
+  // Practice draft set aside: the exam starts from the starter, and practice is untouched.
+  const ua = users.upsertOnLogin('fake_exam_a', null, null);
+  progress.save(ua.id, 'go', slug, { files: { practice: 'mine' } as any });
+  const one = await call(`/api/go/exercises/${slug}`, { cookie: a });
+  assert.equal(one.status, 200);
+  assert.equal(one.json.examId, s.json.id);
+  // D28: the rest is closed.
+  assert.equal((await call('/api/vault', { cookie: a })).status, 403);
+  assert.equal((await call('/api/history', { cookie: a })).status, 403);
+  assert.equal((await call(`/api/go/exercises/${slug}/report`, { cookie: a })).status, 403);
+  const other = listExercises('go').find((e) => !s.json.items.some((i: any) => i.slug === e.slug))!;
+  assert.equal((await call(`/api/go/exercises/${other.slug}`, { cookie: a })).status, 403);
+  assert.equal((await call('/api/vault', { cookie: b })).status, 200, 'another student is not locked');
+
+  const files = one.json.files;
+  assert.equal((await call(`/api/go/exercises/${slug}/code`, { method: 'PUT', cookie: a, body: { files } })).status, 200);
+  const sub = await call(`/api/go/exercises/${slug}/test`, { method: 'POST', cookie: a, body: {} });
+  assert.equal(sub.status, 200);
+  await new Promise((r2) => setImmediate(r2));
+  await new Promise((r2) => setImmediate(r2));
+  const v = await call(`/api/exams/${s.json.id}`, { cookie: a });
+  assert.equal(v.json.items[0].passed, true);
+  assert.equal(v.json.items[0].submits, 1);
+  // D27: practice progress did not move, and the practice draft survived.
+  assert.notEqual(progress.get(ua.id, 'go', slug)?.status, 'passed');
+  assert.deepEqual(progress.get(ua.id, 'go', slug)?.files, { practice: 'mine' });
+
+  assert.equal((await call(`/api/exams/${s.json.id}`, { cookie: b })).status, 404);
+  const end = await call(`/api/exams/${s.json.id}/end`, { method: 'POST', cookie: a, body: {} });
+  assert.equal(end.json.status, 'finished');
+  assert.equal((await call('/api/vault', { cookie: a })).status, 200, 'unlocked after the exam');
+  const list = await call('/api/exams', { cookie: a });
+  assert.equal(list.json.active, null);
+  assert.equal(list.json.past[0].passed, 1);
+  // Exam attempts stay out of practice history.
+  assert.equal((await call('/api/history/exercises', { cookie: a })).json.exercises.length, 0);
 });

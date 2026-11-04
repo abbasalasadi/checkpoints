@@ -306,6 +306,7 @@ export interface AttemptInput {
   durationMs: number | null;
   files?: Files | null;
   output?: string | null;
+  examId?: number | null;
 }
 
 export const attempts = {
@@ -313,8 +314,8 @@ export const attempts = {
     getDb()
       .prepare(
         `INSERT INTO attempts
-           (user_id, language, exercise_slug, run_id, kind, outcome, exit_code, duration_ms, files_json, output, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+           (user_id, language, exercise_slug, run_id, kind, outcome, exit_code, duration_ms, files_json, output, created_at, exam_id)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       )
       .run(
         a.userId,
@@ -328,6 +329,7 @@ export const attempts = {
         a.files ? JSON.stringify(a.files) : null,
         a.output == null ? null : capUtf8(a.output, ATTEMPT_OUTPUT_MAX_BYTES),
         now(),
+        a.examId ?? null,
       );
   },
 
@@ -335,7 +337,7 @@ export const attempts = {
     return getDb()
       .prepare(
         `SELECT id, run_id, kind, outcome, exit_code, duration_ms, created_at FROM attempts
-          WHERE user_id = ? AND language = ? AND exercise_slug = ?
+          WHERE user_id = ? AND language = ? AND exercise_slug = ? AND exam_id IS NULL
           ORDER BY created_at DESC, id DESC LIMIT ?`,
       )
       .all(userId, language, slug, limit);
@@ -346,7 +348,7 @@ export const attempts = {
     return getDb()
       .prepare(
         `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
-          WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT ?`,
+          WHERE user_id = ? AND exam_id IS NULL ORDER BY created_at DESC, id DESC LIMIT ?`,
       )
       .all(userId, limit) as AttemptRow[];
   },
@@ -356,7 +358,7 @@ export const attempts = {
     return getDb()
       .prepare(
         `SELECT language, kind, outcome, COUNT(*) AS n FROM attempts
-          WHERE user_id = ? GROUP BY language, kind, outcome`,
+          WHERE user_id = ? AND exam_id IS NULL GROUP BY language, kind, outcome`,
       )
       .all(userId) as { language: Language; kind: string; outcome: string | null; n: number }[];
   },
@@ -375,7 +377,7 @@ export const attempts = {
     return getDb()
       .prepare(
         `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
-          WHERE ${where.join(' AND ')} ORDER BY id ASC LIMIT ?`,
+          WHERE ${where.join(' AND ')} AND exam_id IS NULL ORDER BY id ASC LIMIT ?`,
       )
       .all(...args) as AttemptRow[];
   },
@@ -392,7 +394,7 @@ export const attempts = {
     return getDb()
       .prepare(
         `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
-          WHERE ${where.join(' AND ')} ORDER BY id DESC LIMIT ?`,
+          WHERE ${where.join(' AND ')} AND exam_id IS NULL ORDER BY id DESC LIMIT ?`,
       )
       .all(...args) as AttemptRow[];
   },
@@ -489,5 +491,90 @@ export const stars = {
     } else {
       db.prepare('DELETE FROM stars WHERE user_id = ? AND language = ? AND exercise_slug = ?').run(userId, language, slug);
     }
+  },
+};
+
+// ── mock exams (V3, D7, D27, D28) ────────────────────────────────────────────
+
+export type ExamStatus = 'active' | 'finished' | 'abandoned' | 'expired';
+
+export interface Exam {
+  id: number;
+  user_id: number;
+  language: Language;
+  checkpoint: string;
+  minutes: number;
+  started_at: string;
+  ends_at: string;
+  ended_at: string | null;
+  status: ExamStatus;
+}
+
+export interface ExamItem {
+  level: number;
+  exercise_slug: string;
+  files: Files | null;
+  submits: number;
+  passed_at: string | null;
+}
+
+export const exams = {
+  create(userId: number, language: Language, checkpoint: string, minutes: number, items: { level: number; slug: string }[]): Exam {
+    const db = getDb();
+    const start = new Date();
+    const ends = new Date(start.getTime() + minutes * 60_000);
+    return db.transaction(() => {
+      const id = Number(
+        db
+          .prepare('INSERT INTO exams (user_id, language, checkpoint, minutes, started_at, ends_at) VALUES (?, ?, ?, ?, ?, ?)')
+          .run(userId, language, checkpoint, minutes, start.toISOString(), ends.toISOString()).lastInsertRowid,
+      );
+      const ins = db.prepare('INSERT INTO exam_items (exam_id, level, exercise_slug) VALUES (?, ?, ?)');
+      for (const it of items) ins.run(id, it.level, it.slug);
+      return db.prepare('SELECT * FROM exams WHERE id = ?').get(id) as Exam;
+    })();
+  },
+
+  /** The open exam, closing it first as expired when its time is up. */
+  active(userId: number): Exam | undefined {
+    const e = getDb().prepare("SELECT * FROM exams WHERE user_id = ? AND status = 'active' ORDER BY id DESC LIMIT 1").get(userId) as Exam | undefined;
+    if (e && Date.parse(e.ends_at) <= Date.now()) {
+      this.close(userId, e.id, 'expired');
+      return undefined;
+    }
+    return e;
+  },
+
+  byId(userId: number, id: number): Exam | undefined {
+    return getDb().prepare('SELECT * FROM exams WHERE id = ? AND user_id = ?').get(id, userId) as Exam | undefined;
+  },
+
+  list(userId: number, limit = 50): Exam[] {
+    return getDb().prepare('SELECT * FROM exams WHERE user_id = ? ORDER BY id DESC LIMIT ?').all(userId, limit) as Exam[];
+  },
+
+  close(userId: number, id: number, status: Exclude<ExamStatus, 'active'>): void {
+    getDb()
+      .prepare("UPDATE exams SET status = ?, ended_at = ? WHERE id = ? AND user_id = ? AND status = 'active'")
+      .run(status, status === 'expired' ? null : now(), id, userId);
+    // An expired exam ended at its deadline, not when it was noticed.
+    if (status === 'expired') getDb().prepare('UPDATE exams SET ended_at = ends_at WHERE id = ? AND ended_at IS NULL').run(id);
+  },
+
+  items(examId: number): ExamItem[] {
+    const rows = getDb()
+      .prepare('SELECT level, exercise_slug, files_json, submits, passed_at FROM exam_items WHERE exam_id = ? ORDER BY level, exercise_slug')
+      .all(examId) as (Omit<ExamItem, 'files'> & { files_json: string | null })[];
+    return rows.map(({ files_json, ...r }) => ({ ...r, files: files_json ? (JSON.parse(files_json) as Files) : null }));
+  },
+
+  saveFiles(examId: number, slug: string, files: Files): void {
+    getDb().prepare('UPDATE exam_items SET files_json = ? WHERE exam_id = ? AND exercise_slug = ?').run(JSON.stringify(files), examId, slug);
+  },
+
+  recordSubmit(examId: number, slug: string, passed: boolean): void {
+    getDb()
+      .prepare('UPDATE exam_items SET submits = submits + 1, passed_at = COALESCE(passed_at, CASE WHEN ? THEN ? END) WHERE exam_id = ? AND exercise_slug = ?')
+      .run(passed ? 1 : 0, now(), examId, slug);
   },
 };
