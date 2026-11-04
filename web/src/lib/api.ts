@@ -55,6 +55,9 @@ export interface Placement {
   exercise: string;
   checkpoint: string;
   level: number;
+  /** Percent of its checkpoint (D35); null when unweighted. */
+  value?: number | null;
+  category?: string;
 }
 /**
  * One exercise, in whichever shape the language's service returns.
@@ -196,6 +199,10 @@ export interface TrackSummary {
   started: number;
   resume: { slug: string; title: string; at: string; passed: boolean } | null;
   gates: { checkpoint: string; total: number; passed: number }[];
+  /** Weighted practice progress, percent (D35). */
+  progress: number;
+  /** Best finished exam mark, percent; null before the first. */
+  bestExamMark: number | null;
   runs: number;
   submits: number;
   submitsPassed: number;
@@ -238,7 +245,10 @@ export interface ExamView {
   status: 'active' | 'finished' | 'abandoned' | 'expired';
   passed: number;
   total: number;
-  items: { level: number; slug: string; title: string; submits: number; passed: boolean; passedAt: string | null }[];
+  /** Percent of the checkpoint (D35); optional pushes it above 100. */
+  mark: number;
+  maxMark: number;
+  items: { level: number; slug: string; title: string; value: number | null; submits: number; passed: boolean; passedAt: string | null }[];
 }
 
 /** Same-origin download link for the single-exercise Markdown report (D22). */

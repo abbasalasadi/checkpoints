@@ -10,9 +10,9 @@ No deploy until the owner has tested locally (D20).
 ## Steps
 1. [x] Weights: importer from list.json into placements for go/js/rust/java + `sources/weights.json`; guard
 2. [x] Server: `services/marks.ts` (value % per placement, exam mark/maxMark, track progress, best exam mark); computed on read, no migration; weights stripped from every API response
-3. [ ] Exam result popup (finish, expiry, leave)
-4. [ ] Exam page and exercise page: value % per exercise; running mark
-5. [ ] Dashboard (redesigned donut, 2026-11-04) and history/report in percentages
+3. [x] Exam result popup (finish and expiry; leaving is End exam): ring with the mark, ✓/✗ per level with its value, note above 100%
+4. [x] Exam bar: current level worth % and running mark; exercise list: % per level (optional marked +); breadcrumb: % per checkpoint
+5. [x] Dashboard: ring of weighted progress + best exam mark (%); exam reports show mark % and value per level
 6. [ ] Tests on lan_vm1, self-audit, release note draft
 
 ## Done when

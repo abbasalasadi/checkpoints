@@ -32,6 +32,7 @@ import { keysFor, matchShortcut } from './lib/shortcuts.js';
 import { parseAssertion, type AssertionDiff } from './lib/assertion.js';
 import { fmtCountdown } from './lib/format.js';
 import { Exams } from './components/Exams.js';
+import { fmtPercent } from './components/MarkRing.js';
 import { Settings } from './components/Settings.js';
 import { usePreferences, type Preferences } from './lib/preferences.js';
 import { StuckDialog } from './components/StuckDialog.js';
@@ -184,6 +185,7 @@ function SignedIn({
   /** The running mock exam: it takes over the whole app until it ends (D28). */
   const [exam, setExam] = useState<ExamView | null>(null);
   const [examFocus, setExamFocus] = useState<number | null>(null);
+  const [examResult, setExamResult] = useState<number | null>(null);
   const { confirm, dialog } = useConfirm();
   useEffect(() => onNavigate(setLoc), []);
   // A refresh during an exam returns to it.
@@ -225,6 +227,7 @@ function SignedIn({
         onExamEnded={(id) => {
           setExam(null);
           setExamFocus(id);
+          setExamResult(id);
           goPage('exams');
         }}
       />
@@ -276,7 +279,7 @@ function SignedIn({
       {page === 'history' ? (
         <History key={historyFocus ? `${historyFocus.language}/${historyFocus.slug}` : 'all'} focus={historyFocus} onOpen={(l, s) => openTrack(l, s)} />
       ) : page === 'exams' ? (
-        <Exams key={examFocus ?? 'exams'} focus={examFocus} onStarted={enterExam} />
+        <Exams key={examFocus ?? 'exams'} focus={examFocus} onStarted={enterExam} result={examResult} onResultSeen={() => setExamResult(null)} onDashboard={() => goPage('dashboard')} />
       ) : page === 'vault' ? (
         <Vault onOpen={(l, s) => openTrack(l, s)} />
       ) : (
@@ -1354,6 +1357,14 @@ function Workbench({
                         >
                           <Caret open={levelOpen} />
                           <span style={{ flex: 1 }}>Level {level}</span>
+                          {(() => {
+                            const pl = placements.find((p) => p.checkpoint === checkpoint && p.level === level && typeof p.value === 'number');
+                            return pl ? (
+                              <span title={pl.category === 'optional' ? 'Optional: adds on top of 100%' : 'Share of the checkpoint'} style={{ fontVariantNumeric: 'tabular-nums', color: pl.category === 'optional' ? 'var(--success)' : 'var(--text-dim)', marginRight: '.4rem' }}>
+                                {fmtPercent(pl.value!)}{pl.category === 'optional' ? ' +' : ''}
+                              </span>
+                            ) : null;
+                          })()}
                           <Count done={levelDone} total={slugs.length} />
                         </button>
 
@@ -1997,6 +2008,7 @@ function ExamBar({ exam, onEnd, onExpired }: {
     }
   }, [left, onExpired]);
   const low = left < 10 * 60_000;
+  const current = exam.items.find((i) => !i.passed);
   return (
     <header
       aria-label="Mock exam"
@@ -2007,7 +2019,8 @@ function ExamBar({ exam, onEnd, onExpired }: {
         Mock exam · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
       </strong>
       <span style={{ marginLeft: 'auto', fontSize: '.78rem', color: 'var(--text-muted)' }}>
-        {exam.passed} / {exam.total} passed
+        {current && <>Level {current.level}{current.value !== null ? ` · worth ${fmtPercent(current.value)}` : ''} · </>}
+        Mark {fmtPercent(exam.mark)}
       </span>
       <span
         role="timer"
@@ -2038,6 +2051,26 @@ export function nextInOrder(placements: Placement[], list: ExerciseSummary[], sl
 }
 
 /** Where the open exercise sits (V3): track › checkpoint › level › exercise. */
+/** What the exercise is worth in each checkpoint it belongs to (V4, D35), percent only. */
+function ValueChips({ placements }: { placements: { checkpoint: string; value?: number | null; category?: string }[] }) {
+  const shown = placements.filter((p) => typeof p.value === 'number');
+  if (!shown.length) return null;
+  return (
+    <span style={{ display: 'inline-flex', gap: '.3rem', marginLeft: '.3rem', flexWrap: 'wrap' }}>
+      {shown.map((p) => (
+        <span
+          key={p.checkpoint}
+          title={`Worth ${fmtPercent(p.value!)} of checkpoint ${p.checkpoint}${p.category === 'optional' ? ' (optional: adds on top of 100%)' : ''}`}
+          style={{ border: '1px solid var(--border-strong)', borderRadius: 999, padding: '0 .45rem', color: p.category === 'optional' ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}
+        >
+          CP{p.checkpoint === 'final' ? ' final' : p.checkpoint === 'retest' ? ' retest' : p.checkpoint} · {fmtPercent(p.value!)}
+          {p.category === 'optional' ? ' +' : ''}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 function Breadcrumbs({ language, detail, exam, list }: { language: Language; detail: ExerciseDetail; exam?: ExamView; list: ExerciseSummary[] }) {
   const item = exam?.items.find((i) => i.slug === detail.slug);
   const first = detail.placements?.[0];
@@ -2052,6 +2085,7 @@ function Breadcrumbs({ language, detail, exam, list }: { language: Language; det
         </span>
       ))}
       <span style={{ color: 'var(--text-muted)' }}>{list.find((e) => e.slug === detail.slug)?.title ?? detail.slug}</span>
+      <ValueChips placements={detail.placements ?? []} />
     </nav>
   );
 }

@@ -10,6 +10,8 @@ import { LANGUAGE_LABEL, ago } from '../lib/format.js';
 import { LANGUAGES } from '../lib/route.js';
 import { fmtSpent } from '../lib/timeline.js';
 import { logger } from '../logger.js';
+import { MarkRing, fmtPercent } from './MarkRing.js';
+import { Modal } from './Modal.js';
 import { Skeleton } from './Skeleton.js';
 
 interface Props {
@@ -17,6 +19,10 @@ interface Props {
   onStarted: (exam: ExamView) => void;
   /** The report to open first, e.g. the exam that just ended. */
   focus?: number | null;
+  /** An exam that just ended: its result pops up once (V4). */
+  result?: number | null;
+  onResultSeen?: () => void;
+  onDashboard?: () => void;
 }
 
 const panel: React.CSSProperties = {
@@ -58,8 +64,8 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
         <strong style={{ fontWeight: 600 }}>
           {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
         </strong>
-        <span style={{ color: allPassed ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}>
-          {exam.passed} / {exam.total} passed
+        <span style={{ color: allPassed ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
+          {fmtPercent(exam.mark)}
         </span>
         <span style={{ color: 'var(--text-dim)', fontSize: '.8rem' }}>{STATUS_LABEL[exam.status]}</span>
         <span style={{ marginLeft: 'auto', color: 'var(--text-dim)', fontSize: '.78rem' }}>{ago(exam.startedAt)}</span>
@@ -74,6 +80,7 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
               <tr style={{ color: 'var(--text-dim)', fontSize: '.76rem', textAlign: 'left' }}>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Level</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Exercise</th>
+                <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Value</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Result</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Submits</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Passed after</th>
@@ -84,6 +91,7 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
                 <tr key={i.slug} style={{ borderTop: '1px solid var(--border)' }}>
                   <td style={{ padding: '.35rem .4rem', fontVariantNumeric: 'tabular-nums' }}>{i.level}</td>
                   <td style={{ padding: '.35rem .4rem' }}>{i.title}</td>
+                  <td style={{ padding: '.35rem .4rem', fontVariantNumeric: 'tabular-nums' }}>{i.value !== null ? fmtPercent(i.value) : '—'}</td>
                   <td style={{ padding: '.35rem .4rem', color: i.passed ? 'var(--success)' : 'var(--text-muted)' }}>{i.passed ? 'Passed' : i.submits ? 'Not passed' : 'Not tried'}</td>
                   <td style={{ padding: '.35rem .4rem', fontVariantNumeric: 'tabular-nums' }}>{i.submits}</td>
                   <td style={{ padding: '.35rem .4rem', color: 'var(--text-muted)' }}>{i.passedAt ? fmtSpent(Date.parse(i.passedAt) - Date.parse(exam.startedAt)) : '—'}</td>
@@ -97,7 +105,42 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
   );
 }
 
-export function Exams({ onStarted, focus }: Props) {
+/** The mark of an exam that just ended (V4): shown once, over the exams page. */
+export function ExamResult({ exam, onClose, onDashboard }: { exam: ExamView; onClose: () => void; onDashboard: () => void }) {
+  const bonus = exam.mark > 100;
+  const color = exam.mark >= 100 ? ['var(--accent)', 'var(--success)'] : ['#f5a524', '#e5484d'];
+  return (
+    <Modal open onClose={onClose} labelledBy="exam-result-title" width="min(26rem, 92vw)">
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.8rem', padding: '.4rem' }}>
+        <h2 id="exam-result-title" style={{ margin: 0, fontSize: '1.05rem' }}>
+          {STATUS_LABEL[exam.status]} · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
+        </h2>
+        <MarkRing id={`exam-${exam.id}`} size={168} label={fmtPercent(exam.mark)} caption="your mark" rings={[{ value: exam.mark, from: color[0]!, to: color[1]! }]} />
+        {bonus && <p style={{ margin: 0, color: 'var(--success)', fontSize: '.86rem' }}>Above 100%: the optional level counts on top.</p>}
+        <ul style={{ listStyle: 'none', margin: 0, padding: 0, width: '100%', display: 'flex', flexDirection: 'column', gap: '.3rem', fontSize: '.85rem' }}>
+          {exam.items.map((i) => (
+            <li key={i.slug} style={{ display: 'flex', gap: '.6rem', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '.3rem' }}>
+              <span aria-hidden style={{ color: i.passed ? 'var(--success)' : 'var(--danger)', width: '1rem' }}>{i.passed ? '✓' : '✗'}</span>
+              <span style={{ color: 'var(--text-dim)', width: '3rem' }}>Level {i.level}</span>
+              <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{i.title}</span>
+              <span style={{ fontVariantNumeric: 'tabular-nums', color: i.passed ? 'var(--text)' : 'var(--text-dim)' }}>{i.value !== null ? fmtPercent(i.value) : '—'}</span>
+            </li>
+          ))}
+        </ul>
+        <div style={{ display: 'flex', gap: '.5rem', width: '100%', justifyContent: 'flex-end' }}>
+          <button type="button" onClick={onDashboard} style={{ ...primary, background: 'transparent', color: 'var(--text)', border: '1px solid var(--border-strong)' }}>
+            Dashboard
+          </button>
+          <button type="button" onClick={onClose} style={primary}>
+            Full report
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+export function Exams({ onStarted, focus, result, onResultSeen, onDashboard }: Props) {
   const [past, setPast] = useState<ExamView[] | null>(null);
   const [language, setLanguage] = useState<Language>('go');
   const [checkpoints, setCheckpoints] = useState<{ checkpoint: string; levels: number }[]>([]);
@@ -158,8 +201,10 @@ export function Exams({ onStarted, focus }: Props) {
   }
 
   const chosen = checkpoints.find((c) => c.checkpoint === checkpoint);
+  const ended = result ? past?.find((e) => e.id === result) : undefined;
   return (
     <main style={{ flex: 1, overflowY: 'auto', padding: '1.2rem 1rem 2rem' }}>
+      {ended && <ExamResult exam={ended} onClose={() => onResultSeen?.()} onDashboard={() => { onResultSeen?.(); onDashboard?.(); }} />}
       <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
         <section style={{ ...panel, display: 'flex', flexDirection: 'column', gap: '.8rem' }} aria-label="Start a mock exam">
           <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Mock exam</h2>

@@ -1,13 +1,14 @@
 /**
- * Dashboard: one card per track with a donut of exercises passed and the best
- * exam, the exercise to resume, plus recent activity. The track
+ * Dashboard: one card per track with a ring of weighted progress and the best
+ * exam mark (percent, D35), the exercise to resume, plus recent activity. The track
  * choice lives here (D23).
  */
 import { useEffect, useState } from 'react';
-import { api, type ExamView, type ExerciseHistory, type Language, type TrackSummary } from '../lib/api.js';
+import { api, type ExerciseHistory, type Language, type TrackSummary } from '../lib/api.js';
 import { LANGUAGE_LABEL, ago } from '../lib/format.js';
 import { resultText } from '../lib/timeline.js';
 import { logger } from '../logger.js';
+import { MarkRing, fmtPercent } from './MarkRing.js';
 import { Skeleton } from './Skeleton.js';
 
 interface Props {
@@ -36,62 +37,6 @@ const secondary: React.CSSProperties = {
   padding: '.4rem .8rem', font: 'inherit', fontSize: '.84rem', cursor: 'pointer', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
 };
 
-/** Best finished exam per track: most levels passed, then the most recent. */
-export function bestExams(exams: ExamView[]): Partial<Record<Language, { passed: number; total: number }>> {
-  const best: Partial<Record<Language, { passed: number; total: number }>> = {};
-  for (const e of exams) {
-    if (e.status === 'active') continue;
-    const cur = best[e.language];
-    if (!cur || e.passed > cur.passed || (e.passed === cur.passed && e.total < cur.total)) best[e.language] = { passed: e.passed, total: e.total };
-  }
-  return best;
-}
-
-/** Donut: the outer ring is exercises passed, the inner ring the best exam. */
-function Donut({ id, passed, total, exam }: { id: string; passed: number; total: number; exam?: { passed: number; total: number } }) {
-  const ring = (r: number, frac: number, stroke: string, width: number) => {
-    const c = 2 * Math.PI * r;
-    return (
-      <>
-        <circle cx="60" cy="60" r={r} fill="none" stroke="var(--raised)" strokeWidth={width} />
-        <circle
-          cx="60" cy="60" r={r} fill="none" stroke={stroke} strokeWidth={width} strokeLinecap="round"
-          strokeDasharray={`${Math.max(frac * c, frac > 0 ? 0.01 : 0)} ${c}`}
-          transform="rotate(-90 60 60)"
-          style={{ transition: 'stroke-dasharray .8s ease' }}
-        />
-      </>
-    );
-  };
-  const frac = total ? passed / total : 0;
-  const examFrac = exam && exam.total ? exam.passed / exam.total : 0;
-  const pct = Math.round(frac * 100);
-  return (
-    <svg viewBox="0 0 120 120" width="132" height="132" role="img" aria-label={`${passed} of ${total} exercises passed${exam ? `, best exam ${exam.passed} of ${exam.total}` : ''}`} style={{ flex: 'none' }}>
-      <defs>
-        <linearGradient id={`${id}-a`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--accent)" />
-          <stop offset="100%" stopColor="var(--success)" />
-        </linearGradient>
-        <linearGradient id={`${id}-b`} x1="1" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#f5a524" />
-          <stop offset="100%" stopColor="#e5484d" />
-        </linearGradient>
-        <filter id={`${id}-g`} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="1.6" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-      <g filter={`url(#${id}-g)`}>
-        {ring(50, frac, `url(#${id}-a)`, 10)}
-        {exam && ring(36, examFrac, `url(#${id}-b)`, 7)}
-      </g>
-      <text x="60" y="58" textAnchor="middle" fontSize="20" fontWeight="700" fill="var(--text)" style={{ fontVariantNumeric: 'tabular-nums' }}>{pct}%</text>
-      <text x="60" y="74" textAnchor="middle" fontSize="8.5" fill="var(--text-muted)">passed</text>
-    </svg>
-  );
-}
-
 function Stat({ dot, label, value }: { dot: string; label: string; value: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontSize: '.82rem' }}>
@@ -102,16 +47,24 @@ function Stat({ dot, label, value }: { dot: string; label: string; value: string
   );
 }
 
-function TrackCard({ t, exam, onOpen }: { t: TrackSummary; exam?: { passed: number; total: number }; onOpen: Props['onOpen'] }) {
+function TrackCard({ t, onOpen }: { t: TrackSummary; onOpen: Props['onOpen'] }) {
+  const exam = t.bestExamMark;
   return (
     <section style={card} aria-label={`${LANGUAGE_LABEL[t.language]} track`}>
       <h2 style={{ margin: 0, fontSize: '1.05rem' }}>{LANGUAGE_LABEL[t.language]}</h2>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Donut id={`donut-${t.language}`} passed={t.passed} total={t.total} exam={exam} />
+        <MarkRing
+          id={`donut-${t.language}`}
+          label={fmtPercent(t.progress)}
+          caption="progress"
+          rings={[
+            { value: t.progress, from: 'var(--accent)', to: 'var(--success)' },
+            ...(exam !== null ? [{ value: exam, from: '#f5a524', to: '#e5484d' }] : []),
+          ]}
+        />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem', flex: 1, minWidth: 0 }}>
-          <Stat dot="linear-gradient(135deg, var(--accent), var(--success))" label="Exercises" value={String(t.total)} />
-          <Stat dot="var(--success)" label="Submits passed" value={`${t.passed} / ${t.total}`} />
-          <Stat dot="linear-gradient(135deg, #f5a524, #e5484d)" label="Best exam" value={exam ? `${exam.passed} / ${exam.total}` : '—'} />
+          <Stat dot="linear-gradient(135deg, var(--accent), var(--success))" label="Progress" value={fmtPercent(t.progress)} />
+          <Stat dot="linear-gradient(135deg, #f5a524, #e5484d)" label="Best exam" value={exam !== null ? fmtPercent(exam) : '—'} />
         </div>
       </div>
       <div style={{ display: 'flex', gap: '.5rem', marginTop: 'auto', flexWrap: 'wrap' }}>
@@ -164,7 +117,6 @@ export function Dashboard({ onOpen, onHistory }: Props) {
   const [data, setData] = useState<{ tracks: TrackSummary[] } | null>(null);
   const [recent, setRecent] = useState<ExerciseHistory[] | null>(null);
   const [error, setError] = useState(false);
-  const [exams, setExams] = useState<ReturnType<typeof bestExams>>({});
 
   useEffect(() => {
     let live = true;
@@ -182,10 +134,6 @@ export function Dashboard({ onOpen, onHistory }: Props) {
         logger.warn('dashboard.recent_failed', { error: String(err) });
         if (live) setRecent([]);
       });
-    api
-      .exams()
-      .then((r) => live && setExams(bestExams(r.past)))
-      .catch((err) => logger.warn('dashboard.exams_failed', { error: String(err) }));
     return () => {
       live = false;
     };
@@ -197,7 +145,7 @@ export function Dashboard({ onOpen, onHistory }: Props) {
         {error && <p style={{ color: 'var(--danger)' }}>The dashboard could not load. Reload the page to try again.</p>}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
           {data
-            ? data.tracks.map((t) => <TrackCard key={t.language} t={t} exam={exams[t.language]} onOpen={onOpen} />)
+            ? data.tracks.map((t) => <TrackCard key={t.language} t={t} onOpen={onOpen} />)
             : !error && [0, 1, 2].map((i) => <Skeleton key={i} height="13rem" />)}
         </div>
         <section style={{ ...card, gap: '.3rem' }} aria-label="Recent activity">
