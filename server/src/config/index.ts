@@ -37,8 +37,8 @@ const defaults = {
   // Run and Test throttle independently. Test is the graded action and waits
   // longer; Run is the cheap "does it execute" loop and stays short so checking
   // work is not punished.
-  runnerCooldownRunSeconds: 30,
-  runnerCooldownTestSeconds: 90,
+  runnerCooldownRunSeconds: 15,
+  runnerCooldownTestSeconds: 60,
   runnerIdleSeconds: 60,
   // A container with an open terminal is held far longer: the student is
   // present. 60s killed live sessions while they were reading output.

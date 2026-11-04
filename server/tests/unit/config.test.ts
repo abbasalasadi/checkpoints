@@ -44,8 +44,8 @@ test('config defaults are the values the plan specifies', async () => {
   // Run and Test throttle on separate clocks. Test is the graded action and
   // waits longer; Run stays short so checking your work before submitting is
   // not punished.
-  assert.equal(config.runner.cooldownRunSeconds, 30);
-  assert.equal(config.runner.cooldownTestSeconds, 90);
+  assert.equal(config.runner.cooldownRunSeconds, 15);
+  assert.equal(config.runner.cooldownTestSeconds, 60);
   assert.equal(config.runner.idleSeconds, 60);
   // 384, not 256: measured. brackets_matching_test pulls rand -> zerocopy,
   // which is OOM-killed at 256 MB even with CARGO_BUILD_JOBS=1.

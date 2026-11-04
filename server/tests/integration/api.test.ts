@@ -204,7 +204,7 @@ test('a submit goes to the dispatcher with language, and a pass is recorded', as
   const r = await call(`/api/rust/exercises/${ex.slug}/test`, { method: 'POST', cookie, body: {} });
   assert.equal(r.status, 200);
   assert.ok(r.json.runId);
-  assert.equal(r.json.cooldownSeconds, 90);
+  assert.equal(r.json.cooldownSeconds, 60);
 
   const input = submitted.at(-1)!;
   assert.equal(input.language, 'rust');

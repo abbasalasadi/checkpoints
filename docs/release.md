@@ -11,7 +11,7 @@ Where the three references disagree on configuration, Rust's value is the defaul
 2. Track switcher and routes `/go/:slug`, `/js/:slug`, `/rust/:slug`; per-track checkpoint → level tree with status.
 3. Workbench from the references: subject, Monaco editor, file tabs, args, Run, Submit, Cancel, Format (Go), autosave, reset, snapshots, stuck dialog, diagnostics.
 4. Grading identical to the references; one streaming WebSocket protocol for all three.
-5. One dispatcher: global queue, cooldowns 30 s Run / 90 s Submit from run end (D15).
+5. One dispatcher: global queue, cooldowns 15 s Run / 60 s Submit from run end, shared (D15, D18, D19).
 6. One SQLite schema with `language` in every key; hashed session tokens (D6); attempts store files and output (D5).
 7. Migration script merging the three live databases (fake data only until deployment, D14).
 8. Deployment kit: systemd unit, nginx site with 301 redirects from the old subdomains, backups. Prepared, not run (D13).
@@ -21,7 +21,7 @@ Where the three references disagree on configuration, Rust's value is the defaul
 - [ ] Every reference solution passes and every starter fails, all three tracks
 - [ ] Tests pass on the assigned VM
 - [ ] Secret scan clean
-- [ ] Cooldowns back to 30 s Run / 90 s Submit (D15): local `.env` has them at 0 for development since 2026-11-04 (owner); `.env.vm` already 30/90
+- [x] Cooldowns 15 s Run / 60 s Submit (D19): local `.env` and `.env.vm` both set
 - [ ] Deployed at checkpoints.appsyss.com after owner approval
 - [ ] Every feature above present and working
 - [ ] Self-audit passed (`docs/audits/`)

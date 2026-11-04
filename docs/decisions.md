@@ -59,3 +59,6 @@ Reversals are new rows pointing at the old id. Accepted security risks are recor
 
 ## D18 (2026-11-04) — One shared cooldown for Run and Submit
 Owner: after Run or Submit, both buttons stay blocked until that one wait ends (30 s after Run, 90 s after Submit), and only one timer is shown. Amends D16's per-mode Rust behaviour. Server enforces the same rule.
+
+## D19 (2026-11-04) — Cooldowns 15 s Run / 60 s Submit
+Owner: shorter waits. Defaults, `.env.example`, local `.env` and `.env.vm` all use 15/60. Amends D15.
