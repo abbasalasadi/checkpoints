@@ -5,7 +5,6 @@
  */
 
 export interface Preferences {
-  theme: 'dark' | 'light';
   fontSize: number;
   tabSize: 2 | 4 | 8;
   wordWrap: boolean;
@@ -13,7 +12,6 @@ export interface Preferences {
 }
 
 export const DEFAULT_PREFERENCES: Preferences = {
-  theme: 'dark',
   fontSize: 13,
   tabSize: 4,
   wordWrap: false,
@@ -28,7 +26,6 @@ export function normalizePreferences(input: unknown, base: Preferences = DEFAULT
   const out: Preferences = { ...base };
   if (!input || typeof input !== 'object' || Array.isArray(input)) return out;
   const v = input as Record<string, unknown>;
-  if (v.theme === 'dark' || v.theme === 'light') out.theme = v.theme;
   if (typeof v.fontSize === 'number' && Number.isInteger(v.fontSize) && v.fontSize >= FONT_SIZE_MIN && v.fontSize <= FONT_SIZE_MAX) {
     out.fontSize = v.fontSize;
   }

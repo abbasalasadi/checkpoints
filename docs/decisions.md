@@ -77,3 +77,6 @@ The Go/JS/Rust selector leaves the workbench left sidebar; students pick a track
 
 ## D24 (2026-11-04) — Remaining V2 details as recommended
 Keybindings: Default and Vim. Stars private per student. Preferences per account. Go read-only hardening stays in V2 (affects Docker runs on laptop and VM; live Go uses Cloud Run). UI keeps the current look until the post-V3 redesign. Owner: "i will agree with your recommendations".
+
+## D25 (2026-11-04) — Dark theme only
+The Light theme is removed from Preferences; the app is always dark. Amends D24. Owner: "Dark only".

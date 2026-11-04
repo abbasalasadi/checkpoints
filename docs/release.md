@@ -10,7 +10,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics. Track choice lives here; the workbench sidebar loses its Go/JS/Rust selector (D23).
 2. History explorer with filters and attempt detail (code + output).
 3. Solutions vault, and a per-exercise Markdown report export: subject, provided main file(s), student solution, result (D22).
-4. Preferences (theme, font size, tab size, word wrap, keybindings Default/Vim) synced to the account (D24).
+4. Preferences (font size, tab size, word wrap, keybindings Default/Vim) synced to the account; dark theme only (D24, D25).
 5. Stars (private), sidebar search and status filters, compact sidebar rail.
 6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
 7. Offline indicator with draft re-sync; loading skeletons.

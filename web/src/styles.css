@@ -362,26 +362,3 @@ body[data-resizing] .splitter {
 .dlg-btn-danger:hover {
   background: #bd453c;
 }
-
-/* Light theme (V2 preferences, D24): same tokens, light values. */
-:root[data-theme='light'] {
-  --bg: #f3f5f8;
-  --surface: #ffffff;
-  --raised: #f6f8fb;
-  --hover: #eaeef4;
-  --code-bg: #f6f8fb;
-  --border: #dde3eb;
-  --border-strong: #c6cfdb;
-  --text: #1b2330;
-  --text-muted: #4b5668;
-  --text-dim: #6b768a;
-  --accent: #2f6feb;
-  --accent-text: #1f5bd1;
-  --success: #138a55;
-  --danger: #c2392f;
-  --danger-solid: #b8372e;
-  --warning: #9a6408;
-  --disabled-bg: #e9edf2;
-  --disabled-text: #8a94a6;
-  --shadow: 0 10px 28px rgba(20, 30, 50, 0.18);
-}

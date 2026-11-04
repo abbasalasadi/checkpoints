@@ -24,13 +24,6 @@ export function Settings({ open, onClose, prefs, onChange }: Props) {
         </h2>
         <div style={{ fontSize: '.88rem' }}>
           <label style={row}>
-            Theme
-            <select style={control} value={prefs.theme} onChange={(e) => onChange({ theme: e.target.value as Preferences['theme'] })}>
-              <option value="dark">Dark</option>
-              <option value="light">Light</option>
-            </select>
-          </label>
-          <label style={row}>
             Font size
             <input
               type="number"

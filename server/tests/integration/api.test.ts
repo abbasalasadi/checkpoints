@@ -254,15 +254,16 @@ test('preferences: defaults, partial update, invalid values ignored, per user (D
 
   const first = await call('/api/preferences', { cookie: a });
   assert.equal(first.status, 200);
-  assert.deepEqual(first.json.preferences, { theme: 'dark', fontSize: 13, tabSize: 4, wordWrap: false, keybindings: 'default' });
+  assert.deepEqual(first.json.preferences, { fontSize: 13, tabSize: 4, wordWrap: false, keybindings: 'default' });
 
   const put = await call('/api/preferences', { method: 'PUT', cookie: a, body: { theme: 'light', fontSize: 99, tabSize: 2, evil: 1 } });
   assert.equal(put.status, 200);
-  assert.deepEqual(put.json.preferences, { theme: 'light', fontSize: 13, tabSize: 2, wordWrap: false, keybindings: 'default' });
+  assert.deepEqual(put.json.preferences, { fontSize: 13, tabSize: 2, wordWrap: false, keybindings: 'default' });
 
   const again = await call('/api/preferences', { method: 'PUT', cookie: a, body: { keybindings: 'vim' } });
-  assert.equal(again.json.preferences.theme, 'light');
+  assert.equal(again.json.preferences.tabSize, 2);
+  assert.equal('theme' in again.json.preferences, false); // dark only (D25)
   assert.equal(again.json.preferences.keybindings, 'vim');
 
-  assert.equal((await call('/api/preferences', { cookie: b })).json.preferences.theme, 'dark');
+  assert.equal((await call('/api/preferences', { cookie: b })).json.preferences.keybindings, 'default');
 });

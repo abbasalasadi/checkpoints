@@ -1090,7 +1090,7 @@ function Workbench({
                This is vs-dark with the surfaces swapped for the theme tokens;
                Monaco cannot read CSS variables, so the values are literals. */
             beforeMount={defineEditorTheme}
-            theme={prefs.theme === 'light' ? 'checkpoints-light' : 'checkpoints'}
+            theme="checkpoints"
             onMount={(ed) => {
               editorRef.current = ed;
               setEditorReady(true);
@@ -1373,18 +1373,6 @@ function defineEditorTheme(monaco: typeof import('monaco-editor')): void {
       'editor.selectionBackground': '#264a80',
       'scrollbarSlider.background': '#2a313d80',
       'scrollbarSlider.hoverBackground': '#3a4356b0',
-    },
-  });
-  monaco.editor.defineTheme('checkpoints-light', {
-    base: 'vs',
-    inherit: true,
-    rules: [],
-    colors: {
-      'editor.background': '#ffffff', // --surface (light)
-      'editorGutter.background': '#ffffff',
-      'editor.lineHighlightBackground': '#f6f8fb', // --raised (light)
-      'editorLineNumber.foreground': '#9aa5b8',
-      'editorLineNumber.activeForeground': '#4b5668',
     },
   });
 }

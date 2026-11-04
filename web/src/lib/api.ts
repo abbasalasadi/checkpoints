@@ -163,7 +163,6 @@ function saveBody(files: Record<string, string>) {
 
 /** Account preferences (V2, D24). The server validates; this mirrors its shape. */
 export interface Preferences {
-  theme: 'dark' | 'light';
   fontSize: number;
   tabSize: 2 | 4 | 8;
   wordWrap: boolean;

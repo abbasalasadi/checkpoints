@@ -2,7 +2,7 @@
  * Account preferences (V2 feature 4, D24).
  *
  * The account copy on the server is the truth. A copy in localStorage only
- * avoids a flash of the wrong theme before the first fetch returns; it is a
+ * applies the editor settings before the first fetch returns; it is a
  * per-browser convenience and may be missing.
  */
 import { useCallback, useEffect, useState } from 'react';
@@ -12,7 +12,6 @@ import { logger } from '../logger.js';
 export type { Preferences };
 
 export const DEFAULT_PREFERENCES: Preferences = {
-  theme: 'dark',
   fontSize: 13,
   tabSize: 4,
   wordWrap: false,
@@ -41,16 +40,9 @@ function remember(p: Preferences): void {
   }
 }
 
-/** Theme lives on <html data-theme>, so every token in styles.css follows it. */
-export function applyTheme(theme: Preferences['theme']): void {
-  document.documentElement.dataset.theme = theme;
-}
-
 /** Load once signed in; `update` applies at once and saves in the background. */
 export function usePreferences(signedIn: boolean) {
   const [prefs, setPrefs] = useState<Preferences>(cached);
-
-  useEffect(() => applyTheme(prefs.theme), [prefs.theme]);
 
   useEffect(() => {
     if (!signedIn) return;
