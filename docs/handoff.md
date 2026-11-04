@@ -1,6 +1,6 @@
 # Handoff — 2026-11-04
 
-**Next action:** V3 step 7f — Cloud Run wrapper for the Java runner image (as for Go/JS; min-instances 0, small max cap) and its settings; deploy only with the owner's approval as part of the release. Then step 8 (lan_vm1 full tests, self-audit, remove DEV_LOGIN, delete fake users fake_v3_ui/fake_exam_ui with their exams, release note).
+**Next action:** V3 step 8 — lan_vm1 full tests (with a preflight: create var/, check images, smoke one case first), self-audit, remove DEV_LOGIN, delete fake users fake_v3_ui/fake_exam_ui with their exams, release note. Then the owner's local test; deploy only with approval: DB backup, migrations 006+007, create the Java Cloud Run service from docker/runner-java/cloudrun (min 0, small max, concurrency 1, ~1 GiB) and set RUNNER_JAVA_CLOUDRUN_URL in .env.vm.
 
 **State:** Java 7a-7e committed and pushed. 44 exercises (program list.json, D34). Image gate: `tools/java-image-check.sh` on lan_vm1 (build first: `node scripts/build-runner-images.mjs --only java`, ~3.5 min cold); laptop quick loop: `tools/java-check.sh <slug> [solution|starter]`. Importer: `node --experimental-strip-types tools/java-content.ts` (holds PLACEMENTS, EXPECTED_FILES, RUNNER_FIXES).
 
