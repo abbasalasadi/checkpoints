@@ -10,7 +10,7 @@ npm run serve --workspace server > var/smoke/server.log 2>&1 &
 pid=$!
 for i in $(seq 1 30); do curl -sf http://127.0.0.1:18157/healthz >/dev/null && break; sleep 1; done
 rc=0
-node tools/smoke-api.mjs http://127.0.0.1:18157 go printnbrbase || rc=1
+node tools/smoke-api.mjs http://127.0.0.1:18157 go addprimesum || rc=1
 node tools/smoke-api.mjs http://127.0.0.1:18157 js js-perfect-num || rc=1
 node tools/smoke-api.mjs http://127.0.0.1:18157 rust rot21 || rc=1
 kill "$pid"; wait "$pid" 2>/dev/null

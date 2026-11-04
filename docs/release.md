@@ -8,7 +8,7 @@ No deploy until the owner has tested locally (D20).
 - D35 Weights come from the program list (`baseXp` per checkpoint placement); the UI shows percentages only, never XP. Optional adds above 100%.
 
 ## Steps
-1. [ ] Weights: importer from list.json into placements for go/js/rust/java + `sources/weights.json`; guard
+1. [x] Weights: importer from list.json into placements for go/js/rust/java + `sources/weights.json`; guard
 2. [ ] Server: value % per placement, checkpoint totals; migration 008 `exams.mark` + back-fill; API fields (no XP)
 3. [ ] Exam result popup (finish, expiry, leave)
 4. [ ] Exam page and exercise page: value % per exercise; running mark

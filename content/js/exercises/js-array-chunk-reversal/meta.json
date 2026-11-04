@@ -54,7 +54,7 @@
       "level": 4,
       "index": 7,
       "order": 7,
-      "baseXp": 18400,
+      "baseXp": 4000,
       "category": "required"
     },
     {
@@ -62,7 +62,7 @@
       "level": 2,
       "index": 5,
       "order": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -70,7 +70,7 @@
       "level": 2,
       "index": 5,
       "order": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -78,7 +78,7 @@
       "level": 2,
       "index": 5,
       "order": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     }
   ]

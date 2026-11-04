@@ -23,8 +23,11 @@ content/
       lib/{base,challenge,chars,is,random}/
 ```
 
-**60 exercises, 213 placements** — checkpoint-01 (38), checkpoint-02 (50),
-checkpoint-03 (57), re-test (10) and the final (58).
+**57 exercises, 191 placements** — checkpoint-01 (38), checkpoint-02 (50),
+checkpoint-03 (57) and re-test (46). Since V4 the program list (owner,
+2026-11-04, D35) decides: the final and `brainfuck`, `grouping`,
+`printnbrbase` were removed, the re-test rebuilt; weights in
+`sources/weights.json`, applied by `tools/weights.ts`.
 
 Four of the five are piscine exams under `/bahrain/bh-piscine`; the final is a
 module exam under `/bahrain/bh-module`. `tools/go-exams.py` finds them by
@@ -139,7 +142,6 @@ live in `tools/authored/`:
 | Exercise | Missing upstream |
 |---|---|
 | `cleanstr`, `expandstr`, `searchreplace` | `solutions/<slug>/` — the test exists and calls `challenge.Program`, but there is no reference program to diff against, so these three exercises cannot currently be graded on the platform either |
-| `printnbrbase` | both the solution and the test |
 
 Each authored solution is checked against its own subject's documented console
 output by `tools/verify-content.mjs --usage`.

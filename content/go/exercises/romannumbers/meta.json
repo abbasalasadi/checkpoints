@@ -78,8 +78,8 @@
     {
       "checkpoint": "3",
       "level": 8,
-      "index": 55,
       "order": 52,
+      "index": 55,
       "baseXp": 65600,
       "difficulty": 16,
       "category": "required",
@@ -93,16 +93,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "index": 53,
-      "order": 51,
-      "baseXp": 400,
+      "order": 41,
+      "index": 41,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101289,
+      "platformId": 102336,
       "allowedFunctions": [
         "os.Args",
         "fmt.Printf",

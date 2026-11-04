@@ -7,7 +7,7 @@ import { join } from 'node:path';
 
 const base = process.argv[2] ?? 'http://127.0.0.1:8157';
 const lang = process.argv[3] ?? 'go';
-const slug = process.argv[4] ?? 'printnbrbase';
+const slug = process.argv[4] ?? 'addprimesum';
 let cookie = '';
 let failures = 0;
 

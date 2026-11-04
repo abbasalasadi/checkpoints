@@ -79,8 +79,8 @@
     {
       "checkpoint": "2",
       "level": 6,
-      "index": 43,
       "order": 42,
+      "index": 43,
       "baseXp": 34800,
       "difficulty": 12,
       "category": "required",
@@ -96,8 +96,8 @@
     {
       "checkpoint": "3",
       "level": 6,
-      "index": 46,
       "order": 43,
+      "index": 46,
       "baseXp": 49200,
       "difficulty": 12,
       "category": "required",
@@ -111,16 +111,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 6,
-      "index": 44,
-      "order": 42,
-      "baseXp": 300,
+      "order": 33,
+      "index": 33,
+      "baseXp": 56400,
       "difficulty": 12,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 101283,
+      "platformId": 102327,
       "allowedFunctions": [
         "--allow-builtin",
         "math.Pow",

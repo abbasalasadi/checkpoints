@@ -79,8 +79,8 @@
     {
       "checkpoint": "3",
       "level": 9,
-      "index": 58,
       "order": 55,
+      "index": 58,
       "baseXp": 73800,
       "difficulty": 18,
       "category": "optional",
@@ -96,16 +96,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 9,
-      "index": 56,
-      "order": 54,
-      "baseXp": 450,
+      "order": 44,
+      "index": 44,
+      "baseXp": 84600,
       "difficulty": 18,
-      "category": "required",
-      "status": "available",
+      "category": "optional",
+      "status": null,
       "codeEditor": true,
-      "platformId": 101290,
+      "platformId": 102339,
       "allowedFunctions": [
         "strconv.Atoi",
         "os.*",

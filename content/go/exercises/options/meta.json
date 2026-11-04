@@ -79,8 +79,8 @@
     {
       "checkpoint": "3",
       "level": 8,
-      "index": 54,
       "order": 51,
+      "index": 54,
       "baseXp": 65600,
       "difficulty": 16,
       "category": "required",
@@ -94,16 +94,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "index": 52,
-      "order": 50,
-      "baseXp": 400,
+      "order": 40,
+      "index": 40,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100296,
+      "platformId": 102335,
       "allowedFunctions": [
         "os.*",
         "fmt.*",

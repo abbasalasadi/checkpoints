@@ -79,8 +79,8 @@
     {
       "checkpoint": "3",
       "level": 8,
-      "index": 57,
       "order": 54,
+      "index": 57,
       "baseXp": 65600,
       "difficulty": 16,
       "category": "required",
@@ -92,16 +92,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "index": 55,
-      "order": 53,
-      "baseXp": 400,
+      "order": 43,
+      "index": 43,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
-      "status": "available",
+      "status": null,
       "codeEditor": true,
-      "platformId": 100264,
+      "platformId": 102338,
       "allowedFunctions": [
         "--allow-builtin"
       ]

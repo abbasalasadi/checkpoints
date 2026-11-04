@@ -323,77 +323,6 @@
       }
     },
     {
-      "slug": "brainfuck",
-      "language": "go",
-      "kind": "prog",
-      "argv": true,
-      "dir": "exercises/brainfuck",
-      "title": "brainfuck",
-      "status": "placed",
-      "platformId": 100948,
-      "expectedFiles": [
-        "brainfuck/main.go"
-      ],
-      "editorFiles": [
-        "brainfuck/main.go"
-      ],
-      "studentPackage": "main",
-      "entry": [],
-      "allowedFunctions": [
-        "os.*",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ],
-      "allowedFunctionsVary": false,
-      "aliases": [],
-      "subject": {
-        "repo": "01-edu/public",
-        "path": "subjects/brainfuck/README.md",
-        "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
-        "platformPath": "/markdown/root/public/subjects/brainfuck/README.md",
-        "sha256": "12412a06c2ad2c4903438dac4007e018601d7e416ac8c49d1b0ee7dd374d32a8"
-      },
-      "test": {
-        "image": "ghcr.io/01-edu/module-go",
-        "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
-        "path": "/test-go/tests/brainfuck_test/main.go",
-        "mode": "program",
-        "source": "upstream",
-        "harness": [
-          "challenge",
-          "random"
-        ],
-        "usesSolutions": false,
-        "sha256": "ba68b3e2085faf837e6aefe6f18b1e578ed9df38df28689dd6bc70a046712b7f"
-      },
-      "solution": {
-        "path": "tools/authored/brainfuck/solution.go",
-        "replaces": "/test-go/solutions/brainfuck/main.go",
-        "package": "main",
-        "source": "adapted",
-        "harness": [],
-        "passesRc": true,
-        "rcFindings": [],
-        "gofumptClean": true,
-        "sha256": "cf270bc1855dd04062290105d9f9e7d23dd38b39fea6274b75ebc76e247fb017"
-      },
-      "starterFrom": "generated",
-      "mainFrom": null,
-      "platform": {
-        "cooldownMs": 180000,
-        "difficulty": 20,
-        "codeEditor": true,
-        "testImage": "ghcr.io/01-edu/test-go",
-        "resolvedFields": [
-          "subject",
-          "testImage",
-          "cooldownMs",
-          "difficulty",
-          "baseXp"
-        ]
-      }
-    },
-    {
       "slug": "cameltosnakecase",
       "language": "go",
       "kind": "func",
@@ -1717,78 +1646,6 @@
       }
     },
     {
-      "slug": "grouping",
-      "language": "go",
-      "kind": "prog",
-      "argv": true,
-      "dir": "exercises/grouping",
-      "title": "grouping",
-      "status": "placed",
-      "platformId": 101291,
-      "expectedFiles": [
-        "grouping/main.go"
-      ],
-      "editorFiles": [
-        "grouping/main.go"
-      ],
-      "studentPackage": "main",
-      "entry": [],
-      "allowedFunctions": [
-        "fmt.Printf",
-        "os.Args",
-        "--allow-builtin"
-      ],
-      "allowedFunctionsVary": false,
-      "aliases": [],
-      "subject": {
-        "repo": "01-edu/public",
-        "path": "subjects/grouping/README.md",
-        "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
-        "platformPath": "/markdown/root/public/subjects/grouping/README.md",
-        "sha256": "c9569fec9b2ad18e18ddc54eb39c24a6d63759de012cb5cf93758a819bfdbba8"
-      },
-      "test": {
-        "image": "ghcr.io/01-edu/module-go",
-        "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
-        "path": "/test-go/tests/grouping_test/main.go",
-        "mode": "program",
-        "source": "upstream",
-        "harness": [
-          "challenge",
-          "chars",
-          "random"
-        ],
-        "usesSolutions": false,
-        "sha256": "93f4796dc68b984314240e062d25893ef23338926d52af2cd64d84a06e9e6b8a"
-      },
-      "solution": {
-        "path": "tools/authored/grouping/solution.go",
-        "replaces": "/test-go/solutions/grouping/main.go",
-        "package": "main",
-        "source": "adapted",
-        "harness": [],
-        "passesRc": true,
-        "rcFindings": [],
-        "gofumptClean": true,
-        "sha256": "005f3477274b763570a42ea258968d249a6078800878f2ddfedbd4d1f13f04e8"
-      },
-      "starterFrom": "generated",
-      "mainFrom": null,
-      "platform": {
-        "cooldownMs": 180000,
-        "difficulty": 20,
-        "codeEditor": true,
-        "testImage": "ghcr.io/01-edu/test-go",
-        "resolvedFields": [
-          "subject",
-          "testImage",
-          "cooldownMs",
-          "difficulty",
-          "baseXp"
-        ]
-      }
-    },
-    {
       "slug": "hashcode",
       "language": "go",
       "kind": "func",
@@ -2970,79 +2827,6 @@
       "platform": {
         "cooldownMs": 180000,
         "difficulty": 4,
-        "codeEditor": true,
-        "testImage": "ghcr.io/01-edu/test-go",
-        "resolvedFields": [
-          "subject",
-          "testImage",
-          "cooldownMs",
-          "difficulty",
-          "baseXp"
-        ]
-      }
-    },
-    {
-      "slug": "printnbrbase",
-      "language": "go",
-      "kind": "func",
-      "argv": false,
-      "dir": "exercises/printnbrbase",
-      "title": "printnbrbase",
-      "status": "placed",
-      "platformId": 100941,
-      "expectedFiles": [
-        "printnbrbase.go"
-      ],
-      "editorFiles": [
-        "printnbrbase.go",
-        "main.go"
-      ],
-      "studentPackage": "piscine",
-      "entry": [
-        "PrintNbrBase"
-      ],
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ],
-      "allowedFunctionsVary": false,
-      "aliases": [],
-      "subject": {
-        "repo": "01-edu/public",
-        "path": "subjects/printnbrbase/README.md",
-        "commit": "13cd08c1d25db64e79535a51348c332f7dc83b9f",
-        "platformPath": "/markdown/root/public/subjects/printnbrbase/README.md",
-        "sha256": "e622efffcbaa126977d51b80b6772a0c5081c7ab507f5567f8e3fdf6feadc2b2"
-      },
-      "test": {
-        "image": "ghcr.io/01-edu/module-go",
-        "digest": "sha256:3faef1ddc7446b820513f3607076e3d0f81aea8c6e9dd163ba49593290f71b0e",
-        "path": "tools/authored/printnbrbase/test.go",
-        "mode": "function",
-        "source": "authored",
-        "harness": [
-          "base",
-          "challenge",
-          "random"
-        ],
-        "usesSolutions": true,
-        "sha256": "0a1bd7cef6f4196db9c2b48d3cb0944e20db4298deafd1178ebd3b065411deb1"
-      },
-      "solution": {
-        "path": "tools/authored/printnbrbase/solution.go",
-        "package": "piscine",
-        "source": "authored",
-        "harness": [],
-        "passesRc": true,
-        "rcFindings": [],
-        "gofumptClean": true,
-        "sha256": "2e0dceadab9e2df152a3b8dbac15ae2e7f6107ccbf1582c485aef462ee26d5d5"
-      },
-      "starterFrom": "readme",
-      "mainFrom": "readme",
-      "platform": {
-        "cooldownMs": 180000,
-        "difficulty": 14,
         "codeEditor": true,
         "testImage": "ghcr.io/01-edu/test-go",
         "resolvedFields": [
@@ -6821,184 +6605,12 @@
       "level": 1,
       "order": 0,
       "index": 0,
-      "baseXp": 10300,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100909,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "rectperimeter",
-      "checkpoint": "retest",
-      "level": 2,
-      "order": 1,
-      "index": 1,
-      "baseXp": 20600,
-      "difficulty": 4,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101171,
-      "allowedFunctions": []
-    },
-    {
-      "exercise": "repeatalpha",
-      "checkpoint": "retest",
-      "level": 3,
-      "order": 2,
-      "index": 2,
-      "baseXp": 30900,
-      "difficulty": 6,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101207,
-      "allowedFunctions": [
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "findprevprime",
-      "checkpoint": "retest",
-      "level": 4,
-      "order": 3,
-      "index": 4,
-      "baseXp": 41200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100927,
-      "allowedFunctions": [
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "union",
-      "checkpoint": "retest",
-      "level": 5,
-      "order": 4,
-      "index": 5,
-      "baseXp": 51500,
-      "difficulty": 10,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100970,
-      "allowedFunctions": [
-        "os.Args",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "wdmatch",
-      "checkpoint": "retest",
-      "level": 6,
-      "order": 5,
-      "index": 6,
-      "baseXp": 61800,
-      "difficulty": 12,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100933,
-      "allowedFunctions": [
-        "os.Args",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "printnbrbase",
-      "checkpoint": "retest",
-      "level": 7,
-      "order": 6,
-      "index": 7,
-      "baseXp": 72100,
-      "difficulty": 14,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100941,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "piglatin",
-      "checkpoint": "retest",
-      "level": 8,
-      "order": 7,
-      "index": 8,
-      "baseXp": 82400,
-      "difficulty": 16,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100983,
-      "allowedFunctions": [
-        "os.Args",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "brackets",
-      "checkpoint": "retest",
-      "level": 9,
-      "order": 8,
-      "index": 9,
-      "baseXp": 92700,
-      "difficulty": 18,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100906,
-      "allowedFunctions": [
-        "strconv.Atoi",
-        "os.*",
-        "fmt.*",
-        "strings.Split",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "brainfuck",
-      "checkpoint": "retest",
-      "level": 10,
-      "order": 9,
-      "index": 10,
-      "baseXp": 103000,
-      "difficulty": 20,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100948,
-      "allowedFunctions": [
-        "os.*",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "onlya",
-      "checkpoint": "final",
-      "level": 1,
-      "order": 0,
-      "index": 0,
-      "baseXp": 50,
-      "difficulty": 2,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101250,
+      "platformId": 102288,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune",
         "--allow-builtin"
@@ -7006,16 +6618,16 @@
     },
     {
       "exercise": "onlyz",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 1,
       "order": 1,
       "index": 1,
-      "baseXp": 50,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101251,
+      "platformId": 102289,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune",
         "--allow-builtin"
@@ -7023,363 +6635,264 @@
     },
     {
       "exercise": "onlyf",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 1,
       "order": 2,
       "index": 2,
-      "baseXp": 50,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101252,
+      "platformId": 102290,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune"
       ]
     },
     {
       "exercise": "only1",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 1,
       "order": 3,
       "index": 3,
-      "baseXp": 50,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101253,
+      "platformId": 102291,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune"
       ]
     },
     {
       "exercise": "onlyb",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 1,
       "order": 4,
       "index": 4,
-      "baseXp": 50,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101254,
+      "platformId": 102292,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune"
       ]
     },
     {
       "exercise": "rectperimeter",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 5,
       "index": 5,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101255,
+      "platformId": 102293,
       "allowedFunctions": []
     },
     {
       "exercise": "countcharacter",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 6,
       "index": 6,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101256,
+      "platformId": 102294,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "checknumber",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 7,
       "index": 7,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101257,
+      "platformId": 102295,
       "allowedFunctions": []
     },
     {
       "exercise": "countalpha",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 8,
       "index": 8,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101258,
+      "platformId": 102296,
       "allowedFunctions": []
     },
     {
       "exercise": "printif",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 9,
       "index": 9,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101259,
+      "platformId": 102297,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "printifnot",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
       "order": 10,
       "index": 10,
-      "baseXp": 100,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101260,
+      "platformId": 102298,
       "allowedFunctions": [
         "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "retainfirsthalf",
-      "checkpoint": "final",
-      "level": 2,
-      "order": 11,
-      "index": 11,
-      "baseXp": 100,
-      "difficulty": 4,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101261,
-      "allowedFunctions": [
-        "--allow-builtin",
-        "strings.String"
       ]
     },
     {
       "exercise": "digitlen",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 12,
-      "index": 12,
-      "baseXp": 150,
+      "order": 11,
+      "index": 11,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101262,
+      "platformId": 102300,
       "allowedFunctions": []
-    },
-    {
-      "exercise": "fishandchips",
-      "checkpoint": "final",
-      "level": 3,
-      "order": 13,
-      "index": 13,
-      "baseXp": 150,
-      "difficulty": 6,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101263,
-      "allowedFunctions": []
-    },
-    {
-      "exercise": "cameltosnakecase",
-      "checkpoint": "final",
-      "level": 3,
-      "order": 14,
-      "index": 14,
-      "baseXp": 150,
-      "difficulty": 6,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101264,
-      "allowedFunctions": [
-        "--allow-builtin"
-      ]
     },
     {
       "exercise": "gcd",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 15,
-      "index": 15,
-      "baseXp": 150,
+      "order": 12,
+      "index": 12,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101265,
+      "platformId": 102302,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "hashcode",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 16,
-      "index": 16,
-      "baseXp": 150,
+      "order": 13,
+      "index": 13,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101266,
+      "platformId": 102303,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "lastword",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 17,
-      "index": 17,
-      "baseXp": 150,
+      "order": 14,
+      "index": 14,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101267,
+      "platformId": 102304,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "firstword",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 18,
-      "index": 18,
-      "baseXp": 150,
+      "order": 15,
+      "index": 15,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101268,
+      "platformId": 102305,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "repeatalpha",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 3,
-      "order": 19,
-      "index": 19,
-      "baseXp": 150,
+      "order": 16,
+      "index": 16,
+      "baseXp": 28200,
       "difficulty": 6,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101269,
+      "platformId": 102306,
       "allowedFunctions": [
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "searchreplace",
-      "checkpoint": "final",
-      "level": 3,
-      "order": 20,
-      "index": 20,
-      "baseXp": 150,
-      "difficulty": 6,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100278,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "os.Args",
         "--allow-builtin"
       ]
     },
     {
       "exercise": "findprevprime",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 21,
-      "index": 21,
-      "baseXp": 200,
+      "order": 17,
+      "index": 17,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 100308,
+      "platformId": 102308,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
-      "exercise": "thirdtimeisacharm",
-      "checkpoint": "final",
-      "level": 4,
-      "order": 22,
-      "index": 22,
-      "baseXp": 200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101270,
-      "allowedFunctions": [
-        "--allow-builtin",
-        "strings.String"
-      ]
-    },
-    {
-      "exercise": "printrevcomb",
-      "checkpoint": "final",
-      "level": 4,
-      "order": 23,
-      "index": 23,
-      "baseXp": 200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101271,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "--no-lit=\\d{3},"
-      ]
-    },
-    {
       "exercise": "weareunique",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 24,
-      "index": 25,
-      "baseXp": 200,
+      "order": 18,
+      "index": 18,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101272,
+      "platformId": 102312,
       "allowedFunctions": [
         "--allow-builtin",
         "strings.Contains"
@@ -7387,16 +6900,16 @@
     },
     {
       "exercise": "itoa",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 25,
-      "index": 26,
-      "baseXp": 200,
+      "order": 19,
+      "index": 19,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100263,
+      "platformId": 102286,
       "allowedFunctions": [
         "len",
         "--allow-builtin"
@@ -7404,117 +6917,81 @@
     },
     {
       "exercise": "iscapitalized",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 26,
-      "index": 27,
-      "baseXp": 200,
+      "order": 20,
+      "index": 20,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101273,
+      "platformId": 102313,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "fromto",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 27,
-      "index": 28,
-      "baseXp": 200,
+      "order": 21,
+      "index": 21,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101274,
+      "platformId": 102314,
       "allowedFunctions": [
         "strconv.Itoa"
       ]
     },
     {
       "exercise": "zipstring",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "order": 28,
-      "index": 29,
-      "baseXp": 200,
+      "order": 22,
+      "index": 22,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101275,
+      "platformId": 102315,
       "allowedFunctions": [
         "--allow-builtin",
         "strconv.Itoa"
       ]
     },
     {
-      "exercise": "expandstr",
-      "checkpoint": "final",
-      "level": 4,
-      "order": 29,
-      "index": 30,
-      "baseXp": 200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101276,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "os.*",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "cleanstr",
-      "checkpoint": "final",
-      "level": 4,
-      "order": 30,
-      "index": 31,
-      "baseXp": 200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101277,
-      "allowedFunctions": [
-        "os.*",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
       "exercise": "concatalternate",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 31,
-      "index": 32,
-      "baseXp": 250,
+      "order": 23,
+      "index": 23,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101278,
+      "platformId": 102316,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "reversestrcap",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 32,
-      "index": 33,
-      "baseXp": 250,
+      "order": 24,
+      "index": 24,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 101279,
+      "platformId": 102317,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune",
         "os.*",
@@ -7523,16 +7000,16 @@
     },
     {
       "exercise": "wdmatch",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 33,
-      "index": 34,
-      "baseXp": 250,
+      "order": 25,
+      "index": 25,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
-      "status": "available",
+      "status": null,
       "codeEditor": true,
-      "platformId": 100290,
+      "platformId": 102318,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7541,16 +7018,16 @@
     },
     {
       "exercise": "hiddenp",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 34,
-      "index": 35,
-      "baseXp": 250,
+      "order": 26,
+      "index": 26,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100277,
+      "platformId": 102319,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7558,33 +7035,17 @@
       ]
     },
     {
-      "exercise": "concatslice",
-      "checkpoint": "final",
-      "level": 5,
-      "order": 35,
-      "index": 36,
-      "baseXp": 250,
-      "difficulty": 10,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101280,
-      "allowedFunctions": [
-        "--allow-builtin"
-      ]
-    },
-    {
       "exercise": "inter",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 36,
-      "index": 37,
-      "baseXp": 250,
+      "order": 27,
+      "index": 27,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100295,
+      "platformId": 102321,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune",
         "os.Args",
@@ -7593,16 +7054,16 @@
     },
     {
       "exercise": "union",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 37,
-      "index": 38,
-      "baseXp": 250,
+      "order": 28,
+      "index": 28,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 100303,
+      "platformId": 102322,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7611,67 +7072,49 @@
     },
     {
       "exercise": "saveandmiss",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 38,
-      "index": 39,
-      "baseXp": 250,
+      "order": 29,
+      "index": 29,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 101281,
+      "platformId": 102323,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "chunk",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 39,
-      "index": 40,
-      "baseXp": 250,
+      "order": 30,
+      "index": 30,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 100312,
+      "platformId": 102324,
       "allowedFunctions": [
         "fmt.Println",
         "--allow-builtin"
       ]
     },
     {
-      "exercise": "addprimesum",
-      "checkpoint": "final",
-      "level": 5,
-      "order": 40,
-      "index": 41,
-      "baseXp": 250,
-      "difficulty": 10,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 100286,
-      "allowedFunctions": [
-        "github.com/01-edu/z01.PrintRune",
-        "os.*",
-        "--allow-builtin"
-      ]
-    },
-    {
       "exercise": "fprime",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 5,
-      "order": 41,
-      "index": 42,
-      "baseXp": 250,
+      "order": 31,
+      "index": 31,
+      "baseXp": 47000,
       "difficulty": 10,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100288,
+      "platformId": 102325,
       "allowedFunctions": [
         "strconv.Atoi",
         "os.Args",
@@ -7680,17 +7123,33 @@
       ]
     },
     {
+      "exercise": "canjump",
+      "checkpoint": "retest",
+      "level": 5,
+      "order": 32,
+      "index": 32,
+      "baseXp": 47000,
+      "difficulty": 10,
+      "category": "required",
+      "status": "available",
+      "codeEditor": true,
+      "platformId": 102326,
+      "allowedFunctions": [
+        "--allow-builtin"
+      ]
+    },
+    {
       "exercise": "notdecimal",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 6,
-      "order": 42,
-      "index": 44,
-      "baseXp": 300,
+      "order": 33,
+      "index": 33,
+      "baseXp": 56400,
       "difficulty": 12,
       "category": "required",
-      "status": null,
+      "status": "available",
       "codeEditor": true,
-      "platformId": 101283,
+      "platformId": 102327,
       "allowedFunctions": [
         "--allow-builtin",
         "math.Pow",
@@ -7699,65 +7158,48 @@
     },
     {
       "exercise": "slice",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 6,
-      "order": 43,
-      "index": 45,
-      "baseXp": 300,
+      "order": 34,
+      "index": 34,
+      "baseXp": 56400,
       "difficulty": 12,
       "category": "required",
       "status": "available",
       "codeEditor": true,
-      "platformId": 101284,
+      "platformId": 102328,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
-      "exercise": "fifthandskip",
-      "checkpoint": "final",
-      "level": 6,
-      "order": 44,
-      "index": 46,
-      "baseXp": 300,
-      "difficulty": 12,
-      "category": "required",
-      "status": "available",
-      "codeEditor": true,
-      "platformId": 101285,
-      "allowedFunctions": [
-        "--allow-builtin",
-        "strings.String"
-      ]
-    },
-    {
       "exercise": "revconcatalternate",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 6,
-      "order": 45,
-      "index": 47,
-      "baseXp": 300,
+      "order": 35,
+      "index": 35,
+      "baseXp": 56400,
       "difficulty": 12,
       "category": "required",
-      "status": "available",
+      "status": null,
       "codeEditor": true,
-      "platformId": 101286,
+      "platformId": 102330,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "wordflip",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 7,
-      "order": 46,
-      "index": 48,
-      "baseXp": 350,
+      "order": 36,
+      "index": 36,
+      "baseXp": 65800,
       "difficulty": 14,
       "category": "required",
       "status": "available",
       "codeEditor": true,
-      "platformId": 101287,
+      "platformId": 102331,
       "allowedFunctions": [
         "--allow-builtin",
         "strings.Split",
@@ -7766,16 +7208,16 @@
     },
     {
       "exercise": "revwstr",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 7,
-      "order": 47,
-      "index": 49,
-      "baseXp": 350,
+      "order": 37,
+      "index": 37,
+      "baseXp": 65800,
       "difficulty": 14,
       "category": "required",
       "status": "available",
       "codeEditor": true,
-      "platformId": 100280,
+      "platformId": 102332,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7784,16 +7226,16 @@
     },
     {
       "exercise": "rostring",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 7,
-      "order": 48,
-      "index": 50,
-      "baseXp": 350,
+      "order": 38,
+      "index": 38,
+      "baseXp": 65800,
       "difficulty": 14,
       "category": "required",
       "status": "available",
       "codeEditor": true,
-      "platformId": 100279,
+      "platformId": 102333,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7802,16 +7244,16 @@
     },
     {
       "exercise": "findpairs",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 7,
-      "order": 49,
-      "index": 51,
-      "baseXp": 350,
+      "order": 39,
+      "index": 39,
+      "baseXp": 65800,
       "difficulty": 14,
       "category": "required",
       "status": "available",
       "codeEditor": true,
-      "platformId": 101288,
+      "platformId": 102334,
       "allowedFunctions": [
         "--allow-builtin",
         "fmt.*",
@@ -7822,16 +7264,16 @@
     },
     {
       "exercise": "options",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "order": 50,
-      "index": 52,
-      "baseXp": 400,
+      "order": 40,
+      "index": 40,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100296,
+      "platformId": 102335,
       "allowedFunctions": [
         "os.*",
         "fmt.*",
@@ -7840,16 +7282,16 @@
     },
     {
       "exercise": "romannumbers",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "order": 51,
-      "index": 53,
-      "baseXp": 400,
+      "order": 41,
+      "index": 41,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101289,
+      "platformId": 102336,
       "allowedFunctions": [
         "os.Args",
         "fmt.Printf",
@@ -7858,16 +7300,16 @@
     },
     {
       "exercise": "piglatin",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "order": 52,
-      "index": 54,
-      "baseXp": 400,
+      "order": 42,
+      "index": 42,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 100307,
+      "platformId": 102337,
       "allowedFunctions": [
         "os.Args",
         "github.com/01-edu/z01.PrintRune",
@@ -7876,32 +7318,32 @@
     },
     {
       "exercise": "itoabase",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 8,
-      "order": 53,
-      "index": 55,
-      "baseXp": 400,
+      "order": 43,
+      "index": 43,
+      "baseXp": 75200,
       "difficulty": 16,
       "category": "required",
-      "status": "available",
+      "status": null,
       "codeEditor": true,
-      "platformId": 100264,
+      "platformId": 102338,
       "allowedFunctions": [
         "--allow-builtin"
       ]
     },
     {
       "exercise": "rpncalc",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 9,
-      "order": 54,
-      "index": 56,
-      "baseXp": 450,
+      "order": 44,
+      "index": 44,
+      "baseXp": 84600,
       "difficulty": 18,
-      "category": "required",
-      "status": "available",
+      "category": "optional",
+      "status": null,
       "codeEditor": true,
-      "platformId": 101290,
+      "platformId": 102339,
       "allowedFunctions": [
         "strconv.Atoi",
         "os.*",
@@ -7912,57 +7354,21 @@
     },
     {
       "exercise": "brackets",
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 9,
-      "order": 55,
-      "index": 57,
-      "baseXp": 450,
+      "order": 45,
+      "index": 45,
+      "baseXp": 84600,
       "difficulty": 18,
-      "category": "required",
+      "category": "optional",
       "status": null,
       "codeEditor": true,
-      "platformId": 100282,
+      "platformId": 102340,
       "allowedFunctions": [
         "strconv.Atoi",
         "os.*",
         "fmt.*",
         "strings.Split",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "grouping",
-      "checkpoint": "final",
-      "level": 10,
-      "order": 56,
-      "index": 58,
-      "baseXp": 500,
-      "difficulty": 20,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101291,
-      "allowedFunctions": [
-        "fmt.Printf",
-        "os.Args",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "exercise": "brainfuck",
-      "checkpoint": "final",
-      "level": 10,
-      "order": 57,
-      "index": 59,
-      "baseXp": 500,
-      "difficulty": 20,
-      "category": "required",
-      "status": "available",
-      "codeEditor": true,
-      "platformId": 101292,
-      "allowedFunctions": [
-        "os.*",
-        "github.com/01-edu/z01.PrintRune",
         "--allow-builtin"
       ]
     }

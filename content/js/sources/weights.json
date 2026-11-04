@@ -4,301 +4,447 @@
     "1": {
       "js-factorial": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101905,
+        "difficulty": 2
       },
       "js-fibonacci": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101906,
+        "difficulty": 2
       },
       "js-even-sum": {
         "baseXp": 4600,
-        "category": "required"
+        "category": "required",
+        "id": 101985,
+        "difficulty": 2
       },
       "js-divisor-finder": {
         "baseXp": 9200,
-        "category": "required"
+        "category": "required",
+        "id": 101986,
+        "difficulty": 4
       },
       "js-perfect-num": {
         "baseXp": 9200,
-        "category": "required"
+        "category": "required",
+        "id": 101987,
+        "difficulty": 4
       },
       "js-palindromic-chains": {
         "baseXp": 13800,
-        "category": "required"
+        "category": "required",
+        "id": 101988,
+        "difficulty": 6
       },
       "js-sentence-pyramid": {
         "baseXp": 13800,
-        "category": "required"
+        "category": "required",
+        "id": 101989,
+        "difficulty": 6
       },
       "js-array-chunk-reversal": {
         "baseXp": 18400,
-        "category": "required"
+        "category": "required",
+        "id": 101990,
+        "difficulty": 8
       },
       "js-nested-array-reverser": {
         "baseXp": 18400,
-        "category": "required"
+        "category": "required",
+        "id": 101991,
+        "difficulty": 8
       },
       "js-insertion-sort-analyzer": {
         "baseXp": 23000,
-        "category": "required"
+        "category": "required",
+        "id": 101993,
+        "difficulty": 10
       }
     },
     "2": {
       "js-factorial": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101917,
+        "difficulty": 2
       },
       "js-grid-word-finder": {
         "baseXp": 18300,
-        "category": "required"
+        "category": "required",
+        "id": 101994,
+        "difficulty": 6
       },
       "js-insertion-sort-analyzer": {
         "baseXp": 24400,
-        "category": "required"
+        "category": "required",
+        "id": 101996,
+        "difficulty": 8
       },
       "js-grid-word-finder2": {
         "baseXp": 30500,
-        "category": "required"
+        "category": "required",
+        "id": 101997,
+        "difficulty": 10
       },
       "js-snakepath-validator": {
         "baseXp": 30500,
-        "category": "required"
+        "category": "required",
+        "id": 101998,
+        "difficulty": 10
       },
       "js-pipeline": {
         "baseXp": 30500,
-        "category": "required"
+        "category": "required",
+        "id": 101999,
+        "difficulty": 10
       },
       "js-fibonacci": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101918,
+        "difficulty": 2
       },
       "js-even-sum": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101920,
+        "difficulty": 2
       },
       "js-perfect-num": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101921,
+        "difficulty": 2
       },
       "js-divisor-finder": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101922,
+        "difficulty": 2
       },
       "js-array-chunk-reversal": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101923,
+        "difficulty": 4
       },
       "js-palindromic-chains": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101924,
+        "difficulty": 4
       },
       "js-sentence-pyramid": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101925,
+        "difficulty": 4
       },
       "js-nested-array-reverser": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101927,
+        "difficulty": 4
       }
     },
     "3": {
       "js-factorial": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101933,
+        "difficulty": 2
       },
       "js-deep-clone": {
         "baseXp": 35000,
-        "category": "required"
+        "category": "required",
+        "id": 102000,
+        "difficulty": 10
       },
       "js-deep-equal": {
         "baseXp": 35000,
-        "category": "required"
+        "category": "required",
+        "id": 102001,
+        "difficulty": 10
       },
       "js-deep-find": {
         "baseXp": 35000,
-        "category": "required"
+        "category": "required",
+        "id": 102002,
+        "difficulty": 10
       },
       "js-deep-freeze": {
         "baseXp": 35000,
-        "category": "required"
+        "category": "required",
+        "id": 102003,
+        "difficulty": 10
       },
       "js-fibonacci": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101934,
+        "difficulty": 2
       },
       "js-even-sum": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101938,
+        "difficulty": 2
       },
       "js-perfect-num": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101939,
+        "difficulty": 2
       },
       "js-divisor-finder": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101940,
+        "difficulty": 2
       },
       "js-array-chunk-reversal": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101941,
+        "difficulty": 4
       },
       "js-palindromic-chains": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101942,
+        "difficulty": 4
       },
       "js-sentence-pyramid": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101943,
+        "difficulty": 4
       },
       "js-grid-word-finder": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101944,
+        "difficulty": 4
       },
       "js-nested-array-reverser": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101945,
+        "difficulty": 4
       },
       "js-insertion-sort-analyzer": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101947,
+        "difficulty": 6
       },
       "js-snakepath-validator": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101948,
+        "difficulty": 6
       },
       "js-grid-word-finder2": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101935,
+        "difficulty": 6
       },
       "js-object-lab": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101936,
+        "difficulty": 8
       },
       "js-election-mix": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101937,
+        "difficulty": 8
       },
       "js-flat-object": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101949,
+        "difficulty": 8
       }
     },
     "final": {
       "js-factorial": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101955,
+        "difficulty": 2
       },
       "js-fibonacci": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101956,
+        "difficulty": 2
       },
       "js-even-sum": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101960,
+        "difficulty": 2
       },
       "js-perfect-num": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101961,
+        "difficulty": 2
       },
       "js-divisor-finder": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101962,
+        "difficulty": 2
       },
       "js-array-chunk-reversal": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101963,
+        "difficulty": 4
       },
       "js-palindromic-chains": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101964,
+        "difficulty": 4
       },
       "js-sentence-pyramid": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101965,
+        "difficulty": 4
       },
       "js-grid-word-finder": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101966,
+        "difficulty": 4
       },
       "js-nested-array-reverser": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101967,
+        "difficulty": 4
       },
       "js-insertion-sort-analyzer": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101969,
+        "difficulty": 6
       },
       "js-snakepath-validator": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101970,
+        "difficulty": 6
       },
       "js-grid-word-finder2": {
         "baseXp": 50,
-        "category": "required"
+        "category": "required",
+        "id": 101957,
+        "difficulty": 6
       },
       "js-object-lab": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101958,
+        "difficulty": 8
       },
       "js-election-mix": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101959,
+        "difficulty": 8
       },
       "js-flat-object": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101971,
+        "difficulty": 8
       },
       "js-pipeline": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101972,
+        "difficulty": 8
       },
       "js-sleep-breaker": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101973,
+        "difficulty": 10
       },
       "js-final-attempt": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101974,
+        "difficulty": 10
       },
       "js-exam-grader": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101975,
+        "difficulty": 10
       },
       "js-zoo-race": {
         "baseXp": 50,
-        "category": "optional"
+        "category": "optional",
+        "id": 101976,
+        "difficulty": 10
       },
       "js-deep-clone": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101977,
+        "difficulty": 12
       },
       "js-deep-equal": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101978,
+        "difficulty": 12
       },
       "js-deep-find": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101983,
+        "difficulty": 12
       },
       "js-deep-freeze": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101984,
+        "difficulty": 12
       },
       "js-flatten-object": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101979,
+        "difficulty": 14
       },
       "js-swappable-object": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101980,
+        "difficulty": 14
       },
       "js-transform-keys": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101982,
+        "difficulty": 14
       },
       "js-trap-object": {
         "baseXp": 100,
-        "category": "optional"
+        "category": "optional",
+        "id": 101981,
+        "difficulty": 14
       }
     }
   }

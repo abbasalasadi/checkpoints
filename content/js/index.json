@@ -915,7 +915,7 @@
       "level": 1,
       "order": 0,
       "index": 0,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -924,7 +924,7 @@
       "level": 1,
       "order": 1,
       "index": 1,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -933,7 +933,7 @@
       "level": 1,
       "order": 2,
       "index": 2,
-      "baseXp": 4600,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -942,7 +942,7 @@
       "level": 2,
       "order": 3,
       "index": 3,
-      "baseXp": 9200,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -951,7 +951,7 @@
       "level": 2,
       "order": 4,
       "index": 4,
-      "baseXp": 9200,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -960,7 +960,7 @@
       "level": 3,
       "order": 5,
       "index": 5,
-      "baseXp": 13800,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -969,7 +969,7 @@
       "level": 3,
       "order": 6,
       "index": 6,
-      "baseXp": 13800,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -978,7 +978,7 @@
       "level": 4,
       "order": 7,
       "index": 7,
-      "baseXp": 18400,
+      "baseXp": 4000,
       "category": "required"
     },
     {
@@ -987,7 +987,7 @@
       "level": 4,
       "order": 8,
       "index": 8,
-      "baseXp": 18400,
+      "baseXp": 4000,
       "category": "required"
     },
     {
@@ -996,7 +996,7 @@
       "level": 5,
       "order": 9,
       "index": 10,
-      "baseXp": 23000,
+      "baseXp": 5000,
       "category": "required"
     },
     {
@@ -1005,7 +1005,7 @@
       "level": 1,
       "order": 0,
       "index": 0,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1014,7 +1014,7 @@
       "level": 1,
       "order": 1,
       "index": 1,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1023,7 +1023,7 @@
       "level": 1,
       "order": 2,
       "index": 2,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1032,7 +1032,7 @@
       "level": 1,
       "order": 3,
       "index": 3,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1041,7 +1041,7 @@
       "level": 1,
       "order": 4,
       "index": 4,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1050,7 +1050,7 @@
       "level": 2,
       "order": 5,
       "index": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1059,7 +1059,7 @@
       "level": 2,
       "order": 6,
       "index": 6,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1068,7 +1068,7 @@
       "level": 2,
       "order": 7,
       "index": 7,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1077,7 +1077,7 @@
       "level": 2,
       "order": 8,
       "index": 9,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1086,7 +1086,7 @@
       "level": 3,
       "order": 9,
       "index": null,
-      "baseXp": 18300,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1095,7 +1095,7 @@
       "level": 4,
       "order": 10,
       "index": null,
-      "baseXp": 24400,
+      "baseXp": 4000,
       "category": "required"
     },
     {
@@ -1104,7 +1104,7 @@
       "level": 5,
       "order": 11,
       "index": null,
-      "baseXp": 30500,
+      "baseXp": 5000,
       "category": "required"
     },
     {
@@ -1113,7 +1113,7 @@
       "level": 5,
       "order": 12,
       "index": null,
-      "baseXp": 30500,
+      "baseXp": 5000,
       "category": "required"
     },
     {
@@ -1122,7 +1122,7 @@
       "level": 5,
       "order": 13,
       "index": null,
-      "baseXp": 30500,
+      "baseXp": 5000,
       "category": "required"
     },
     {
@@ -1131,7 +1131,7 @@
       "level": 1,
       "order": 0,
       "index": 0,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1140,7 +1140,7 @@
       "level": 1,
       "order": 1,
       "index": 1,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1149,7 +1149,7 @@
       "level": 1,
       "order": 2,
       "index": 2,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1158,7 +1158,7 @@
       "level": 1,
       "order": 3,
       "index": 3,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1167,7 +1167,7 @@
       "level": 1,
       "order": 4,
       "index": 4,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1176,7 +1176,7 @@
       "level": 2,
       "order": 5,
       "index": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1185,7 +1185,7 @@
       "level": 2,
       "order": 6,
       "index": 6,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1194,7 +1194,7 @@
       "level": 2,
       "order": 7,
       "index": 7,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1203,7 +1203,7 @@
       "level": 2,
       "order": 8,
       "index": 8,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1212,7 +1212,7 @@
       "level": 2,
       "order": 9,
       "index": 9,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1221,7 +1221,7 @@
       "level": 3,
       "order": 10,
       "index": 11,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1230,7 +1230,7 @@
       "level": 3,
       "order": 11,
       "index": 12,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1239,7 +1239,7 @@
       "level": 3,
       "order": 12,
       "index": 13,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1248,8 +1248,8 @@
       "level": 4,
       "order": 13,
       "index": 14,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-election-mix",
@@ -1257,8 +1257,8 @@
       "level": 4,
       "order": 14,
       "index": 15,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-flat-object",
@@ -1266,8 +1266,8 @@
       "level": 4,
       "order": 15,
       "index": 16,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-deep-clone",
@@ -1275,8 +1275,8 @@
       "level": 5,
       "order": 16,
       "index": null,
-      "baseXp": 35000,
-      "category": "required"
+      "baseXp": 5000,
+      "category": "optional"
     },
     {
       "exercise": "js-deep-equal",
@@ -1284,8 +1284,8 @@
       "level": 5,
       "order": 17,
       "index": null,
-      "baseXp": 35000,
-      "category": "required"
+      "baseXp": 5000,
+      "category": "optional"
     },
     {
       "exercise": "js-deep-find",
@@ -1293,8 +1293,8 @@
       "level": 5,
       "order": 18,
       "index": null,
-      "baseXp": 35000,
-      "category": "required"
+      "baseXp": 5000,
+      "category": "optional"
     },
     {
       "exercise": "js-deep-freeze",
@@ -1302,8 +1302,8 @@
       "level": 5,
       "order": 19,
       "index": null,
-      "baseXp": 35000,
-      "category": "required"
+      "baseXp": 5000,
+      "category": "optional"
     },
     {
       "exercise": "js-factorial",
@@ -1311,7 +1311,7 @@
       "level": 1,
       "order": 0,
       "index": 0,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1320,7 +1320,7 @@
       "level": 1,
       "order": 1,
       "index": 1,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1329,7 +1329,7 @@
       "level": 1,
       "order": 2,
       "index": 2,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1338,7 +1338,7 @@
       "level": 1,
       "order": 3,
       "index": 3,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1347,7 +1347,7 @@
       "level": 1,
       "order": 4,
       "index": 4,
-      "baseXp": 50,
+      "baseXp": 1000,
       "category": "required"
     },
     {
@@ -1356,7 +1356,7 @@
       "level": 2,
       "order": 5,
       "index": 5,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1365,7 +1365,7 @@
       "level": 2,
       "order": 6,
       "index": 6,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1374,7 +1374,7 @@
       "level": 2,
       "order": 7,
       "index": 7,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1383,7 +1383,7 @@
       "level": 2,
       "order": 8,
       "index": 8,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1392,7 +1392,7 @@
       "level": 2,
       "order": 9,
       "index": 9,
-      "baseXp": 50,
+      "baseXp": 2000,
       "category": "required"
     },
     {
@@ -1401,7 +1401,7 @@
       "level": 3,
       "order": 10,
       "index": 11,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1410,7 +1410,7 @@
       "level": 3,
       "order": 11,
       "index": 12,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1419,7 +1419,7 @@
       "level": 3,
       "order": 12,
       "index": 13,
-      "baseXp": 50,
+      "baseXp": 3000,
       "category": "required"
     },
     {
@@ -1428,8 +1428,8 @@
       "level": 4,
       "order": 13,
       "index": 14,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-election-mix",
@@ -1437,8 +1437,8 @@
       "level": 4,
       "order": 14,
       "index": 15,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-flat-object",
@@ -1446,8 +1446,8 @@
       "level": 4,
       "order": 15,
       "index": 16,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-pipeline",
@@ -1455,8 +1455,8 @@
       "level": 4,
       "order": 16,
       "index": 17,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "exercise": "js-sleep-breaker",
@@ -1464,8 +1464,8 @@
       "level": 5,
       "order": 17,
       "index": 18,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 5000,
+      "category": "required"
     },
     {
       "exercise": "js-final-attempt",
@@ -1473,8 +1473,8 @@
       "level": 5,
       "order": 18,
       "index": 19,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 5000,
+      "category": "required"
     },
     {
       "exercise": "js-exam-grader",
@@ -1482,8 +1482,8 @@
       "level": 5,
       "order": 19,
       "index": 20,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 5000,
+      "category": "required"
     },
     {
       "exercise": "js-zoo-race",
@@ -1491,8 +1491,8 @@
       "level": 5,
       "order": 20,
       "index": 21,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 5000,
+      "category": "required"
     },
     {
       "exercise": "js-deep-clone",
@@ -1500,8 +1500,8 @@
       "level": 6,
       "order": 21,
       "index": 22,
-      "baseXp": 100,
-      "category": "optional"
+      "baseXp": 6000,
+      "category": "required"
     },
     {
       "exercise": "js-deep-equal",
@@ -1509,8 +1509,8 @@
       "level": 6,
       "order": 22,
       "index": 23,
-      "baseXp": 100,
-      "category": "optional"
+      "baseXp": 6000,
+      "category": "required"
     },
     {
       "exercise": "js-deep-find",
@@ -1518,8 +1518,8 @@
       "level": 6,
       "order": 23,
       "index": 24,
-      "baseXp": 100,
-      "category": "optional"
+      "baseXp": 6000,
+      "category": "required"
     },
     {
       "exercise": "js-deep-freeze",
@@ -1527,8 +1527,8 @@
       "level": 6,
       "order": 24,
       "index": 25,
-      "baseXp": 100,
-      "category": "optional"
+      "baseXp": 6000,
+      "category": "required"
     },
     {
       "exercise": "js-flatten-object",
@@ -1536,7 +1536,7 @@
       "level": 7,
       "order": 25,
       "index": 26,
-      "baseXp": 100,
+      "baseXp": 7000,
       "category": "optional"
     },
     {
@@ -1545,7 +1545,7 @@
       "level": 7,
       "order": 26,
       "index": 27,
-      "baseXp": 100,
+      "baseXp": 7000,
       "category": "optional"
     },
     {
@@ -1554,7 +1554,7 @@
       "level": 7,
       "order": 27,
       "index": 28,
-      "baseXp": 100,
+      "baseXp": 7000,
       "category": "optional"
     },
     {
@@ -1563,7 +1563,7 @@
       "level": 7,
       "order": 28,
       "index": 29,
-      "baseXp": 100,
+      "baseXp": 7000,
       "category": "optional"
     }
   ]

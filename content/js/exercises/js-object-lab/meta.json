@@ -54,16 +54,16 @@
       "level": 4,
       "index": 14,
       "order": 13,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     },
     {
       "checkpoint": "final",
       "level": 4,
       "index": 14,
       "order": 13,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 4000,
+      "category": "required"
     }
   ]
 }

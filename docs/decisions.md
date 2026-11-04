@@ -93,3 +93,4 @@ D34: the program's `list.json` (owner, 2026-11-04) is the source for the Java pl
 
 ## D35 (2026-11-04) — Weighted marks
 Owner: weights (`baseXp`) from the program list decide marks, progress and exam results, per checkpoint placement. Shown only as percentages; optional adds above 100%. Design `docs/01_design/08_marks.md`. V3 closed without a deploy; V4 next.
+- D35a: the list is the program for all four tracks. Go: final checkpoint dropped, re-test rebuilt (9 levels, 46 placements), `brainfuck`, `grouping`, `printnbrbase` deleted (57 exercises). JS weights are balanced like the others (level n = n steps, last level optional when the checkpoint has any optional); the raw list numbers stay in `content/js/sources/weights.json`.

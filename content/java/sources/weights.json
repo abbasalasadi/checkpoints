@@ -4,183 +4,271 @@
     "1": {
       "goodbye-mars": {
         "baseXp": 2800,
-        "category": "required"
+        "category": "required",
+        "id": 101401,
+        "difficulty": 2
       },
       "system-logger": {
         "baseXp": 2800,
-        "category": "required"
+        "category": "required",
+        "id": 101402,
+        "difficulty": 2
       },
       "universal-greeting": {
         "baseXp": 2800,
-        "category": "required"
+        "category": "required",
+        "id": 101403,
+        "difficulty": 2
       },
       "multiplication-table": {
         "baseXp": 5600,
-        "category": "required"
+        "category": "required",
+        "id": 101405,
+        "difficulty": 4
       },
       "average-calc": {
         "baseXp": 2800,
-        "category": "required"
+        "category": "required",
+        "id": 101406,
+        "difficulty": 2
       },
       "unit-converter": {
         "baseXp": 5600,
-        "category": "required"
+        "category": "required",
+        "id": 101404,
+        "difficulty": 4
       },
       "strlen": {
         "baseXp": 8400,
-        "category": "required"
+        "category": "required",
+        "id": 101407,
+        "difficulty": 6
       },
       "count-char": {
         "baseXp": 8400,
-        "category": "required"
+        "category": "required",
+        "id": 101408,
+        "difficulty": 6
       },
       "digitlen": {
         "baseXp": 8400,
-        "category": "required"
+        "category": "required",
+        "id": 101409,
+        "difficulty": 6
       },
       "rotate-array": {
         "baseXp": 11200,
-        "category": "required"
+        "category": "required",
+        "id": 101412,
+        "difficulty": 8
       },
       "reverse-array": {
         "baseXp": 11200,
-        "category": "required"
+        "category": "required",
+        "id": 101411,
+        "difficulty": 8
       },
       "sort-array": {
         "baseXp": 11200,
-        "category": "required"
+        "category": "required",
+        "id": 101410,
+        "difficulty": 8
       },
       "almost-palindrom": {
         "baseXp": 14000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101413,
+        "difficulty": 10
       },
       "factorial": {
         "baseXp": 14000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101414,
+        "difficulty": 10
       },
       "next-prime": {
         "baseXp": 14000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101415,
+        "difficulty": 10
       }
     },
     "2": {
       "todo-list": {
         "baseXp": 3700,
-        "category": "required"
+        "category": "required",
+        "id": 101295,
+        "difficulty": 2
       },
       "time-tracker": {
         "baseXp": 3700,
-        "category": "required"
+        "category": "required",
+        "id": 101296,
+        "difficulty": 2
       },
       "date-formatter": {
         "baseXp": 3700,
-        "category": "required"
+        "category": "required",
+        "id": 101297,
+        "difficulty": 2
       },
       "area-calculator": {
         "baseXp": 7400,
-        "category": "required"
+        "category": "required",
+        "id": 101298,
+        "difficulty": 4
       },
       "factorial-master": {
         "baseXp": 7400,
-        "category": "required"
+        "category": "required",
+        "id": 101299,
+        "difficulty": 4
       },
       "flexisort": {
         "baseXp": 7400,
-        "category": "required"
+        "category": "required",
+        "id": 101300,
+        "difficulty": 4
       },
       "double-linked-list": {
         "baseXp": 11100,
-        "category": "required"
+        "category": "required",
+        "id": 101301,
+        "difficulty": 6
       },
       "circular-linked-list": {
         "baseXp": 11100,
-        "category": "required"
+        "category": "required",
+        "id": 101302,
+        "difficulty": 6
       },
       "single-linked-list": {
         "baseXp": 11100,
-        "category": "required"
+        "category": "required",
+        "id": 101303,
+        "difficulty": 6
       },
       "harmonious-fusion": {
         "baseXp": 14800,
-        "category": "required"
+        "category": "required",
+        "id": 101304,
+        "difficulty": 8
       },
       "distinct-substring-length": {
         "baseXp": 14800,
-        "category": "required"
+        "category": "required",
+        "id": 101305,
+        "difficulty": 8
       },
       "is-anagram": {
         "baseXp": 14800,
-        "category": "required"
+        "category": "required",
+        "id": 101306,
+        "difficulty": 8
       },
       "spiral-matrix": {
         "baseXp": 18500,
-        "category": "optional"
+        "category": "optional",
+        "id": 101307,
+        "difficulty": 10
       },
       "maximal-square": {
         "baseXp": 18500,
-        "category": "optional"
+        "category": "optional",
+        "id": 101308,
+        "difficulty": 10
       },
       "steady-sequence": {
         "baseXp": 18500,
-        "category": "optional"
+        "category": "optional",
+        "id": 101309,
+        "difficulty": 10
       }
     },
     "3": {
       "day-of-week": {
         "baseXp": 4600,
-        "category": "required"
+        "category": "required",
+        "id": 101311,
+        "difficulty": 2
       },
       "monthly-period": {
         "baseXp": 4600,
-        "category": "required"
+        "category": "required",
+        "id": 101312,
+        "difficulty": 2
       },
       "age-finder": {
         "baseXp": 4600,
-        "category": "required"
+        "category": "required",
+        "id": 101313,
+        "difficulty": 2
       },
       "html-validator": {
         "baseXp": 9200,
-        "category": "required"
+        "category": "required",
+        "id": 101314,
+        "difficulty": 4
       },
       "config-protector": {
         "baseXp": 9200,
-        "category": "required"
+        "category": "required",
+        "id": 101316,
+        "difficulty": 4
       },
       "singleton-blueprint": {
         "baseXp": 13800,
-        "category": "required"
+        "category": "required",
+        "id": 101317,
+        "difficulty": 6
       },
       "builder-blueprint": {
         "baseXp": 13800,
-        "category": "required"
+        "category": "required",
+        "id": 101318,
+        "difficulty": 6
       },
       "factory-blueprint": {
         "baseXp": 13800,
-        "category": "required"
+        "category": "required",
+        "id": 101319,
+        "difficulty": 6
       },
       "top-frequents": {
         "baseXp": 18400,
-        "category": "required"
+        "category": "required",
+        "id": 101320,
+        "difficulty": 8
       },
       "longest-common-prefix": {
         "baseXp": 18400,
-        "category": "required"
+        "category": "required",
+        "id": 101321,
+        "difficulty": 8
       },
       "first-unique": {
         "baseXp": 18400,
-        "category": "required"
+        "category": "required",
+        "id": 101322,
+        "difficulty": 8
       },
       "valid-sudoku": {
         "baseXp": 23000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101323,
+        "difficulty": 10
       },
       "armstrong-number": {
         "baseXp": 23000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101324,
+        "difficulty": 10
       },
       "perfect-number": {
         "baseXp": 23000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101325,
+        "difficulty": 10
       }
     }
   }

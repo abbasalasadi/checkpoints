@@ -76,8 +76,8 @@
     {
       "checkpoint": "2",
       "level": 4,
-      "index": 30,
       "order": 29,
+      "index": 30,
       "baseXp": 23200,
       "difficulty": 8,
       "category": "required",
@@ -93,31 +93,14 @@
     {
       "checkpoint": "3",
       "level": 4,
-      "index": 31,
       "order": 30,
+      "index": 31,
       "baseXp": 32800,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
       "platformId": 101213,
-      "allowedFunctions": [
-        "os.*",
-        "github.com/01-edu/z01.PrintRune",
-        "--allow-builtin"
-      ]
-    },
-    {
-      "checkpoint": "final",
-      "level": 4,
-      "index": 31,
-      "order": 30,
-      "baseXp": 200,
-      "difficulty": 8,
-      "category": "required",
-      "status": null,
-      "codeEditor": true,
-      "platformId": 101277,
       "allowedFunctions": [
         "os.*",
         "github.com/01-edu/z01.PrintRune",

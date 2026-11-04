@@ -1,7 +1,6 @@
 {
   "addprimesum": "Parse the argument by hand, then test each number from 2 up with trial division up to its square root; invalid, zero or negative input prints `0`.",
   "brackets": "Push each opening bracket on a stack and pop when you meet a closer; a mismatch or a non-empty stack at the end means `Error`.",
-  "brainfuck": "Keep a 2048-byte array and a pointer; for `[` and `]`, scan forward or back while counting nesting depth to find the matching bracket.",
   "cameltosnakecase": "First validate the camelCase rules (no digits, no two capitals in a row, no capital at the end); only then insert `_` before each capital.",
   "canjump": "Walk from index 0 jumping exactly the value at each step; you succeed only if you land on the last index, and a 0 before that means you are stuck.",
   "checknumber": "Loop over the runes and return true as soon as one falls between '0' and '9'.",
@@ -21,7 +20,6 @@
   "fprime": "Divide by the smallest factor repeatedly starting at 2, printing `*` only between factors; 0, 1 and invalid input print nothing.",
   "fromto": "Validate both bounds first, then count up or down depending on which is larger, padding single digits with a leading `0`.",
   "gcd": "Euclid's algorithm repeatedly replaces the pair with (b, a mod b); return 0 early if either input is 0.",
-  "grouping": "Strip the parentheses, split the pattern on `|`, and check each word of the text for any of the alternatives, numbering matches in order.",
   "hashcode": "Use the string length in the formula for every character, and add 33 when the result lands in the unprintable range (below 32 or 127).",
   "hiddenp": "Use one index into `s1` and advance it whenever the current char of `s2` matches; an empty `s1` is always hidden.",
   "inter": "For each char of the first string, print it if it appears in the second and hasn't been printed yet.",
@@ -39,7 +37,6 @@
   "piglatin": "Find the index of the first vowel (both cases): 0 means just add \"ay\", none means \"No vowels\", otherwise rotate the prefix to the end.",
   "printif": "Compare `len(str)` against 3, and remember the empty string is a special case that also returns `G`.",
   "printifnot": "A single length comparison decides the result; the empty string falls on the `G` side.",
-  "printnbrbase": "Validate the base (length ≥ 2, no duplicates, no `+`/`-`) first, then print digits recursively; watch the most negative int.",
   "printrevcomb": "Three nested loops counting down where each inner digit is strictly smaller than the outer one; only print `, ` between combinations.",
   "rectperimeter": "Reject any negative side with -1 before applying the perimeter formula.",
   "repeatalpha": "A letter's repeat count is its position from 'a' (or 'A') plus one; non-letters are copied once.",

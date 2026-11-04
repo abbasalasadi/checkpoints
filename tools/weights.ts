@@ -12,14 +12,14 @@
  *
  *   node tools/weights.ts [--list list.json]
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const LANGS = ['go', 'js', 'rust', 'java'] as const;
 type Lang = (typeof LANGS)[number];
-type Weight = { baseXp: number; category: string };
+type Weight = { baseXp: number; category: string; id?: number; difficulty?: number };
 type Weights = Record<string, Record<string, Weight>>; // checkpoint → slug → weight
 
 const listArg = process.argv.indexOf('--list');
@@ -74,11 +74,25 @@ function slugOf(lang: Lang, name: string): string {
 }
 
 /**
- * Checkpoints whose exercise set differs from the list: kept with their own
- * weights until the owner decides. Go retest: ours has 10 levels (one exercise
- * each, older snapshot), the list 9 levels and 46 exercises.
+ * JS weights in the list are partly placeholders (50 XP next to thousands).
+ * Balanced like Go/Rust/Java (owner, 2026-11-04): level n weighs n steps; only
+ * the last level is optional, when the checkpoint has any optional at all.
  */
-const KEEP = new Set(['go/retest']);
+const BALANCE = new Set<Lang>(['js']);
+const STEP = 1000;
+
+function balance(placements: any[]): void {
+  const byCp = new Map<string, any[]>();
+  for (const p of placements) byCp.set(p.checkpoint, [...(byCp.get(p.checkpoint) ?? []), p]);
+  for (const ps of byCp.values()) {
+    const top = Math.max(...ps.map((p) => p.level));
+    const optional = ps.some((p) => p.category === 'optional');
+    for (const p of ps) {
+      p.baseXp = p.level * STEP;
+      p.category = optional && p.level === top ? 'optional' : 'required';
+    }
+  }
+}
 
 const json = (v: unknown) => JSON.stringify(v, null, 2) + '\n';
 const weightsFile = (lang: Lang) => join(ROOT, 'content', lang, 'sources', 'weights.json');
@@ -89,11 +103,10 @@ function fromList(path: string): Record<Lang, Weights> {
     for (const exam of nodes(doc)) {
       if (exam.type !== 'exam') continue;
       const { lang, checkpoint } = checkpointOf(exam.name);
-      if (KEEP.has(`${lang}/${checkpoint}`)) continue;
       const into = (out[lang][checkpoint] ??= {});
       for (const ex of nodes(exam.children ?? {})) {
         if (ex.type !== 'exercise' || typeof ex.attrs?.baseXp !== 'number') continue;
-        into[slugOf(lang, ex.name)] = { baseXp: ex.attrs.baseXp, category: ex.attrs.category ?? 'required' };
+        into[slugOf(lang, ex.name)] = { baseXp: ex.attrs.baseXp, category: ex.attrs.category ?? 'required', id: ex.id, difficulty: ex.attrs.difficulty };
       }
     }
   }
@@ -103,6 +116,45 @@ function fromList(path: string): Record<Lang, Weights> {
 const all: Record<Lang, Weights> = LIST
   ? fromList(LIST)
   : (Object.fromEntries(LANGS.map((l) => [l, JSON.parse(readFileSync(weightsFile(l), 'utf8')).checkpoints])) as Record<Lang, Weights>);
+
+/**
+ * The list is the program (owner, 2026-11-04): checkpoints it lacks are
+ * dropped, a checkpoint whose exercise set differs is rebuilt from it (level =
+ * weight ÷ the smallest weight), and exercises left without a placement are
+ * deleted with their hints.
+ */
+function sync(lang: Lang, index: any, weights: Weights): void {
+  index.placements = index.placements.filter((p: any) => weights[p.checkpoint]);
+  for (const [cp, list] of Object.entries(weights)) {
+    const ours = index.placements.filter((p: any) => p.checkpoint === cp);
+    const same = ours.length === Object.keys(list).length && ours.every((p: any) => list[p.exercise]);
+    if (same) continue;
+    const step = Math.min(...Object.values(list).map((w) => w.baseXp));
+    const rebuilt = Object.entries(list).map(([slug, w], i) => {
+      const like = index.placements.find((p: any) => p.exercise === slug) ?? {};
+      const level = w.baseXp / step;
+      if (!Number.isInteger(level)) throw new Error(`${lang} ${cp}/${slug}: weight ${w.baseXp} is not a multiple of ${step}`);
+      return { ...like, exercise: slug, checkpoint: cp, level, order: i, index: i, baseXp: w.baseXp, category: w.category, ...(w.difficulty != null ? { difficulty: w.difficulty } : {}), ...(w.id != null ? { platformId: w.id } : {}) };
+    });
+    rebuilt.sort((a, b) => a.level - b.level || a.index - b.index);
+    const at = index.placements.findIndex((p: any) => p.checkpoint === cp);
+    index.placements = index.placements.filter((p: any) => p.checkpoint !== cp);
+    index.placements.splice(at < 0 ? index.placements.length : at, 0, ...rebuilt);
+    console.log(`${lang} ${cp}: rebuilt from the list (${ours.length} → ${rebuilt.length} placements)`);
+  }
+  const placed = new Set(index.placements.map((p: any) => p.exercise));
+  const gone = index.exercises.filter((e: any) => !placed.has(e.slug)).map((e: any) => e.slug);
+  if (!gone.length) return;
+  index.exercises = index.exercises.filter((e: any) => placed.has(e.slug));
+  for (const slug of gone) rmSync(join(ROOT, 'content', lang, 'exercises', slug), { recursive: true, force: true });
+  const hintsPath = join(ROOT, 'content', lang, 'hints.json');
+  if (existsSync(hintsPath)) {
+    const hints = JSON.parse(readFileSync(hintsPath, 'utf8'));
+    for (const slug of gone) delete hints[slug];
+    writeFileSync(hintsPath, json(hints));
+  }
+  console.log(`${lang}: deleted ${gone.join(', ')} (not in the list)`);
+}
 
 const problems: string[] = [];
 for (const lang of LANGS) {
@@ -118,7 +170,9 @@ for (const lang of LANGS) {
     p.baseXp = w.baseXp;
     p.category = w.category;
   };
+  if (LIST) sync(lang, index, weights);
   for (const p of index.placements) apply(p.exercise, p);
+  if (BALANCE.has(lang)) balance(index.placements);
   for (const [cp, list] of Object.entries(weights))
     for (const slug of Object.keys(list)) if (!seen.has(`${cp}/${slug}`)) problems.push(`${lang} ${cp}/${slug}: listed but no placement`);
   writeFileSync(indexPath, json(index));
@@ -127,10 +181,13 @@ for (const lang of LANGS) {
     if (!existsSync(metaPath)) continue;
     const meta = JSON.parse(readFileSync(metaPath, 'utf8'));
     if (!Array.isArray(meta.placements)) continue;
-    for (const p of meta.placements) {
-      const w = weights[p.checkpoint]?.[e.slug];
-      if (w) { p.baseXp = w.baseXp; p.category = w.category; }
-    }
+    const own = index.placements.filter((p: any) => p.exercise === e.slug);
+    if (lang === 'go') meta.placements = own.map(({ exercise: _e, ...p }: any) => p);
+    else
+      for (const p of meta.placements) {
+        const q = own.find((x: any) => x.checkpoint === p.checkpoint && x.level === p.level);
+        if (q) { p.baseXp = q.baseXp; p.category = q.category; }
+      }
     writeFileSync(metaPath, json(meta));
   }
   if (LIST) mkdirSync(dirname(weightsFile(lang)), { recursive: true });

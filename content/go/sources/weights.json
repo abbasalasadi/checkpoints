@@ -4,587 +4,1155 @@
     "1": {
       "onlya": {
         "baseXp": 3400,
-        "category": "required"
+        "category": "required",
+        "id": 100222,
+        "difficulty": 2
       },
       "onlyz": {
         "baseXp": 3400,
-        "category": "required"
+        "category": "required",
+        "id": 100223,
+        "difficulty": 2
       },
       "onlyf": {
         "baseXp": 3400,
-        "category": "required"
+        "category": "required",
+        "id": 101128,
+        "difficulty": 2
       },
       "only1": {
         "baseXp": 3400,
-        "category": "required"
+        "category": "required",
+        "id": 101129,
+        "difficulty": 2
       },
       "onlyb": {
         "baseXp": 3400,
-        "category": "required"
+        "category": "required",
+        "id": 101130,
+        "difficulty": 2
       },
       "rectperimeter": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101131,
+        "difficulty": 4
       },
       "countcharacter": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101132,
+        "difficulty": 4
       },
       "checknumber": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101133,
+        "difficulty": 4
       },
       "countalpha": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101134,
+        "difficulty": 4
       },
       "printif": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101135,
+        "difficulty": 4
       },
       "printifnot": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101136,
+        "difficulty": 4
       },
       "retainfirsthalf": {
         "baseXp": 6800,
-        "category": "required"
+        "category": "required",
+        "id": 101137,
+        "difficulty": 4
       },
       "digitlen": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101138,
+        "difficulty": 6
       },
       "fishandchips": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 100892,
+        "difficulty": 6
       },
       "gcd": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101140,
+        "difficulty": 6
       },
       "hashcode": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101141,
+        "difficulty": 6
       },
       "lastword": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101142,
+        "difficulty": 6
       },
       "firstword": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101143,
+        "difficulty": 6
       },
       "printrevcomb": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101148,
+        "difficulty": 6
       },
       "repeatalpha": {
         "baseXp": 10200,
-        "category": "required"
+        "category": "required",
+        "id": 101144,
+        "difficulty": 6
       },
       "findprevprime": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101146,
+        "difficulty": 8
       },
       "cameltosnakecase": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101139,
+        "difficulty": 8
       },
       "thirdtimeisacharm": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101147,
+        "difficulty": 8
       },
       "weareunique": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101150,
+        "difficulty": 8
       },
       "itoa": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101151,
+        "difficulty": 8
       },
       "iscapitalized": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101152,
+        "difficulty": 8
       },
       "fromto": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 100894,
+        "difficulty": 8
       },
       "zipstring": {
         "baseXp": 13600,
-        "category": "required"
+        "category": "required",
+        "id": 101153,
+        "difficulty": 8
       },
       "concatalternate": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101158,
+        "difficulty": 10
       },
       "reversestrcap": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101159,
+        "difficulty": 10
       },
       "concatslice": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 100897,
+        "difficulty": 10
       },
       "inter": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101162,
+        "difficulty": 10
       },
       "union": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101163,
+        "difficulty": 10
       },
       "saveandmiss": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 100896,
+        "difficulty": 10
       },
       "chunk": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101164,
+        "difficulty": 10
       },
       "addprimesum": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101165,
+        "difficulty": 10
       },
       "fprime": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101166,
+        "difficulty": 10
       },
       "canjump": {
         "baseXp": 17000,
-        "category": "optional"
+        "category": "optional",
+        "id": 101167,
+        "difficulty": 10
       }
     },
     "2": {
       "onlya": {
         "baseXp": 5800,
-        "category": "required"
+        "category": "required",
+        "id": 100909,
+        "difficulty": 2
       },
       "onlyz": {
         "baseXp": 5800,
-        "category": "required"
+        "category": "required",
+        "id": 100910,
+        "difficulty": 2
       },
       "onlyf": {
         "baseXp": 5800,
-        "category": "required"
+        "category": "required",
+        "id": 101168,
+        "difficulty": 2
       },
       "only1": {
         "baseXp": 5800,
-        "category": "required"
+        "category": "required",
+        "id": 101169,
+        "difficulty": 2
       },
       "onlyb": {
         "baseXp": 5800,
-        "category": "required"
+        "category": "required",
+        "id": 101170,
+        "difficulty": 2
       },
       "rectperimeter": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 101171,
+        "difficulty": 4
       },
       "countcharacter": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 100915,
+        "difficulty": 4
       },
       "checknumber": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 100917,
+        "difficulty": 4
       },
       "countalpha": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 100916,
+        "difficulty": 4
       },
       "printif": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 101172,
+        "difficulty": 4
       },
       "printifnot": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 101173,
+        "difficulty": 4
       },
       "retainfirsthalf": {
         "baseXp": 11600,
-        "category": "required"
+        "category": "required",
+        "id": 101174,
+        "difficulty": 4
       },
       "digitlen": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 100918,
+        "difficulty": 6
       },
       "fishandchips": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 100914,
+        "difficulty": 6
       },
       "gcd": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101176,
+        "difficulty": 6
       },
       "hashcode": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101177,
+        "difficulty": 6
       },
       "lastword": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101178,
+        "difficulty": 6
       },
       "firstword": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101179,
+        "difficulty": 6
       },
       "repeatalpha": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101180,
+        "difficulty": 6
       },
       "searchreplace": {
         "baseXp": 17400,
-        "category": "required"
+        "category": "required",
+        "id": 101181,
+        "difficulty": 6
       },
       "findprevprime": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100927,
+        "difficulty": 8
       },
       "thirdtimeisacharm": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100928,
+        "difficulty": 8
       },
       "printrevcomb": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100924,
+        "difficulty": 8
       },
       "weareunique": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100923,
+        "difficulty": 8
       },
       "itoa": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100922,
+        "difficulty": 8
       },
       "iscapitalized": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100926,
+        "difficulty": 8
       },
       "fromto": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 100920,
+        "difficulty": 8
       },
       "zipstring": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 101183,
+        "difficulty": 8
       },
       "expandstr": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 101184,
+        "difficulty": 8
       },
       "cleanstr": {
         "baseXp": 23200,
-        "category": "required"
+        "category": "required",
+        "id": 101185,
+        "difficulty": 8
       },
       "concatalternate": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 101188,
+        "difficulty": 10
       },
       "reversestrcap": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100932,
+        "difficulty": 10
       },
       "wdmatch": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100933,
+        "difficulty": 10
       },
       "hiddenp": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 101189,
+        "difficulty": 10
       },
       "concatslice": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100930,
+        "difficulty": 10
       },
       "inter": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100133,
+        "difficulty": 10
       },
       "union": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100140,
+        "difficulty": 10
       },
       "saveandmiss": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100929,
+        "difficulty": 10
       },
       "chunk": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 101190,
+        "difficulty": 10
       },
       "addprimesum": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 101191,
+        "difficulty": 10
       },
       "fprime": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 100931,
+        "difficulty": 10
       },
       "canjump": {
         "baseXp": 29000,
-        "category": "required"
+        "category": "required",
+        "id": 101192,
+        "difficulty": 10
       },
       "notdecimal": {
         "baseXp": 34800,
-        "category": "required"
+        "category": "required",
+        "id": 100937,
+        "difficulty": 12
       },
       "slice": {
         "baseXp": 34800,
-        "category": "required"
+        "category": "required",
+        "id": 100935,
+        "difficulty": 12
       },
       "fifthandskip": {
         "baseXp": 34800,
-        "category": "required"
+        "category": "required",
+        "id": 100934,
+        "difficulty": 12
       },
       "revconcatalternate": {
         "baseXp": 34800,
-        "category": "required"
+        "category": "required",
+        "id": 100936,
+        "difficulty": 12
       },
       "wordflip": {
         "baseXp": 40600,
-        "category": "optional"
+        "category": "optional",
+        "id": 100938,
+        "difficulty": 14
       },
       "revwstr": {
         "baseXp": 40600,
-        "category": "optional"
+        "category": "optional",
+        "id": 101193,
+        "difficulty": 14
       },
       "rostring": {
         "baseXp": 40600,
-        "category": "optional"
+        "category": "optional",
+        "id": 100940,
+        "difficulty": 14
       },
       "findpairs": {
         "baseXp": 40600,
-        "category": "optional"
+        "category": "optional",
+        "id": 101194,
+        "difficulty": 14
       }
     },
     "3": {
       "onlya": {
         "baseXp": 8200,
-        "category": "required"
+        "category": "required",
+        "id": 100949,
+        "difficulty": 2
       },
       "onlyz": {
         "baseXp": 8200,
-        "category": "required"
+        "category": "required",
+        "id": 100950,
+        "difficulty": 2
       },
       "onlyf": {
         "baseXp": 8200,
-        "category": "required"
+        "category": "required",
+        "id": 101195,
+        "difficulty": 2
       },
       "only1": {
         "baseXp": 8200,
-        "category": "required"
+        "category": "required",
+        "id": 101196,
+        "difficulty": 2
       },
       "onlyb": {
         "baseXp": 8200,
-        "category": "required"
+        "category": "required",
+        "id": 101197,
+        "difficulty": 2
       },
       "rectperimeter": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 101198,
+        "difficulty": 4
       },
       "countcharacter": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 100956,
+        "difficulty": 4
       },
       "checknumber": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 100958,
+        "difficulty": 4
       },
       "countalpha": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 100957,
+        "difficulty": 4
       },
       "printif": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 101199,
+        "difficulty": 4
       },
       "printifnot": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 101200,
+        "difficulty": 4
       },
       "retainfirsthalf": {
         "baseXp": 16400,
-        "category": "required"
+        "category": "required",
+        "id": 101201,
+        "difficulty": 4
       },
       "digitlen": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 100959,
+        "difficulty": 6
       },
       "fishandchips": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 100955,
+        "difficulty": 6
       },
       "cameltosnakecase": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 101202,
+        "difficulty": 8
       },
       "gcd": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101203,
+        "difficulty": 6
       },
       "hashcode": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101204,
+        "difficulty": 6
       },
       "lastword": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101205,
+        "difficulty": 6
       },
       "firstword": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101206,
+        "difficulty": 6
       },
       "repeatalpha": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101207,
+        "difficulty": 6
       },
       "searchreplace": {
         "baseXp": 24600,
-        "category": "required"
+        "category": "required",
+        "id": 101208,
+        "difficulty": 6
       },
       "findprevprime": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100966,
+        "difficulty": 8
       },
       "thirdtimeisacharm": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100967,
+        "difficulty": 8
       },
       "printrevcomb": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100963,
+        "difficulty": 8
       },
       "weareunique": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100962,
+        "difficulty": 8
       },
       "itoa": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100113,
+        "difficulty": 8
       },
       "iscapitalized": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 100965,
+        "difficulty": 8
       },
       "fromto": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 101210,
+        "difficulty": 8
       },
       "zipstring": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 101211,
+        "difficulty": 8
       },
       "expandstr": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 101212,
+        "difficulty": 8
       },
       "cleanstr": {
         "baseXp": 32800,
-        "category": "required"
+        "category": "required",
+        "id": 101213,
+        "difficulty": 8
       },
       "concatalternate": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 101216,
+        "difficulty": 10
       },
       "reversestrcap": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100230,
+        "difficulty": 10
       },
       "wdmatch": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100972,
+        "difficulty": 10
       },
       "hiddenp": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 101217,
+        "difficulty": 10
       },
       "concatslice": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100969,
+        "difficulty": 10
       },
       "inter": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100971,
+        "difficulty": 10
       },
       "union": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100970,
+        "difficulty": 10
       },
       "saveandmiss": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100968,
+        "difficulty": 10
       },
       "chunk": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 101218,
+        "difficulty": 10
       },
       "addprimesum": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 101219,
+        "difficulty": 10
       },
       "fprime": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 100128,
+        "difficulty": 10
       },
       "canjump": {
         "baseXp": 41000,
-        "category": "required"
+        "category": "required",
+        "id": 101220,
+        "difficulty": 10
       },
       "notdecimal": {
         "baseXp": 49200,
-        "category": "required"
+        "category": "required",
+        "id": 100976,
+        "difficulty": 12
       },
       "slice": {
         "baseXp": 49200,
-        "category": "required"
+        "category": "required",
+        "id": 100974,
+        "difficulty": 12
       },
       "fifthandskip": {
         "baseXp": 49200,
-        "category": "required"
+        "category": "required",
+        "id": 100973,
+        "difficulty": 12
       },
       "revconcatalternate": {
         "baseXp": 49200,
-        "category": "required"
+        "category": "required",
+        "id": 100975,
+        "difficulty": 12
       },
       "wordflip": {
         "baseXp": 57400,
-        "category": "required"
+        "category": "required",
+        "id": 100977,
+        "difficulty": 14
       },
       "revwstr": {
         "baseXp": 57400,
-        "category": "required"
+        "category": "required",
+        "id": 101221,
+        "difficulty": 14
       },
       "rostring": {
         "baseXp": 57400,
-        "category": "required"
+        "category": "required",
+        "id": 100979,
+        "difficulty": 14
       },
       "findpairs": {
         "baseXp": 57400,
-        "category": "required"
+        "category": "required",
+        "id": 101222,
+        "difficulty": 14
       },
       "options": {
         "baseXp": 65600,
-        "category": "required"
+        "category": "required",
+        "id": 100985,
+        "difficulty": 16
       },
       "romannumbers": {
         "baseXp": 65600,
-        "category": "required"
+        "category": "required",
+        "id": 101223,
+        "difficulty": 16
       },
       "piglatin": {
         "baseXp": 65600,
-        "category": "required"
+        "category": "required",
+        "id": 100983,
+        "difficulty": 16
       },
       "itoabase": {
         "baseXp": 65600,
-        "category": "required"
+        "category": "required",
+        "id": 100982,
+        "difficulty": 16
       },
       "rpncalc": {
         "baseXp": 73800,
-        "category": "optional"
+        "category": "optional",
+        "id": 100986,
+        "difficulty": 18
       },
       "brackets": {
         "baseXp": 73800,
-        "category": "optional"
+        "category": "optional",
+        "id": 100987,
+        "difficulty": 18
+      }
+    },
+    "retest": {
+      "onlya": {
+        "baseXp": 9400,
+        "category": "required",
+        "id": 102288,
+        "difficulty": 2
+      },
+      "onlyz": {
+        "baseXp": 9400,
+        "category": "required",
+        "id": 102289,
+        "difficulty": 2
+      },
+      "onlyf": {
+        "baseXp": 9400,
+        "category": "required",
+        "id": 102290,
+        "difficulty": 2
+      },
+      "only1": {
+        "baseXp": 9400,
+        "category": "required",
+        "id": 102291,
+        "difficulty": 2
+      },
+      "onlyb": {
+        "baseXp": 9400,
+        "category": "required",
+        "id": 102292,
+        "difficulty": 2
+      },
+      "rectperimeter": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102293,
+        "difficulty": 4
+      },
+      "countcharacter": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102294,
+        "difficulty": 4
+      },
+      "checknumber": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102295,
+        "difficulty": 4
+      },
+      "countalpha": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102296,
+        "difficulty": 4
+      },
+      "printif": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102297,
+        "difficulty": 4
+      },
+      "printifnot": {
+        "baseXp": 18800,
+        "category": "required",
+        "id": 102298,
+        "difficulty": 4
+      },
+      "digitlen": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102300,
+        "difficulty": 6
+      },
+      "gcd": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102302,
+        "difficulty": 6
+      },
+      "hashcode": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102303,
+        "difficulty": 6
+      },
+      "lastword": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102304,
+        "difficulty": 6
+      },
+      "firstword": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102305,
+        "difficulty": 6
+      },
+      "repeatalpha": {
+        "baseXp": 28200,
+        "category": "required",
+        "id": 102306,
+        "difficulty": 6
+      },
+      "findprevprime": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102308,
+        "difficulty": 8
+      },
+      "weareunique": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102312,
+        "difficulty": 8
+      },
+      "itoa": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102286,
+        "difficulty": 8
+      },
+      "iscapitalized": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102313,
+        "difficulty": 8
+      },
+      "fromto": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102314,
+        "difficulty": 8
+      },
+      "zipstring": {
+        "baseXp": 37600,
+        "category": "required",
+        "id": 102315,
+        "difficulty": 8
+      },
+      "concatalternate": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102316,
+        "difficulty": 10
+      },
+      "reversestrcap": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102317,
+        "difficulty": 10
+      },
+      "wdmatch": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102318,
+        "difficulty": 10
+      },
+      "hiddenp": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102319,
+        "difficulty": 10
+      },
+      "inter": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102321,
+        "difficulty": 10
+      },
+      "union": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102322,
+        "difficulty": 10
+      },
+      "saveandmiss": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102323,
+        "difficulty": 10
+      },
+      "chunk": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102324,
+        "difficulty": 10
+      },
+      "fprime": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102325,
+        "difficulty": 10
+      },
+      "canjump": {
+        "baseXp": 47000,
+        "category": "required",
+        "id": 102326,
+        "difficulty": 10
+      },
+      "notdecimal": {
+        "baseXp": 56400,
+        "category": "required",
+        "id": 102327,
+        "difficulty": 12
+      },
+      "slice": {
+        "baseXp": 56400,
+        "category": "required",
+        "id": 102328,
+        "difficulty": 12
+      },
+      "revconcatalternate": {
+        "baseXp": 56400,
+        "category": "required",
+        "id": 102330,
+        "difficulty": 12
+      },
+      "wordflip": {
+        "baseXp": 65800,
+        "category": "required",
+        "id": 102331,
+        "difficulty": 14
+      },
+      "revwstr": {
+        "baseXp": 65800,
+        "category": "required",
+        "id": 102332,
+        "difficulty": 14
+      },
+      "rostring": {
+        "baseXp": 65800,
+        "category": "required",
+        "id": 102333,
+        "difficulty": 14
+      },
+      "findpairs": {
+        "baseXp": 65800,
+        "category": "required",
+        "id": 102334,
+        "difficulty": 14
+      },
+      "options": {
+        "baseXp": 75200,
+        "category": "required",
+        "id": 102335,
+        "difficulty": 16
+      },
+      "romannumbers": {
+        "baseXp": 75200,
+        "category": "required",
+        "id": 102336,
+        "difficulty": 16
+      },
+      "piglatin": {
+        "baseXp": 75200,
+        "category": "required",
+        "id": 102337,
+        "difficulty": 16
+      },
+      "itoabase": {
+        "baseXp": 75200,
+        "category": "required",
+        "id": 102338,
+        "difficulty": 16
+      },
+      "rpncalc": {
+        "baseXp": 84600,
+        "category": "optional",
+        "id": 102339,
+        "difficulty": 18
+      },
+      "brackets": {
+        "baseXp": 84600,
+        "category": "optional",
+        "id": 102340,
+        "difficulty": 18
       }
     }
   }

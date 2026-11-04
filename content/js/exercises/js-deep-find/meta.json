@@ -53,16 +53,16 @@
       "level": 5,
       "index": null,
       "order": 18,
-      "baseXp": 35000,
-      "category": "required"
+      "baseXp": 5000,
+      "category": "optional"
     },
     {
       "checkpoint": "final",
       "level": 6,
       "index": 24,
       "order": 23,
-      "baseXp": 100,
-      "category": "optional"
+      "baseXp": 6000,
+      "category": "required"
     }
   ]
 }

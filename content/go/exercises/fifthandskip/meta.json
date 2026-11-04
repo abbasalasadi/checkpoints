@@ -78,8 +78,8 @@
     {
       "checkpoint": "2",
       "level": 6,
-      "index": 45,
       "order": 44,
+      "index": 45,
       "baseXp": 34800,
       "difficulty": 12,
       "category": "required",
@@ -94,30 +94,14 @@
     {
       "checkpoint": "3",
       "level": 6,
-      "index": 48,
       "order": 45,
+      "index": 48,
       "baseXp": 49200,
       "difficulty": 12,
       "category": "required",
       "status": null,
       "codeEditor": true,
       "platformId": 100973,
-      "allowedFunctions": [
-        "--allow-builtin",
-        "strings.String"
-      ]
-    },
-    {
-      "checkpoint": "final",
-      "level": 6,
-      "index": 46,
-      "order": 44,
-      "baseXp": 300,
-      "difficulty": 12,
-      "category": "required",
-      "status": "available",
-      "codeEditor": true,
-      "platformId": 101285,
       "allowedFunctions": [
         "--allow-builtin",
         "strings.String"

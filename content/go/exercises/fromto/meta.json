@@ -77,8 +77,8 @@
     {
       "checkpoint": "1",
       "level": 4,
-      "index": 27,
       "order": 26,
+      "index": 27,
       "baseXp": 13600,
       "difficulty": 8,
       "category": "required",
@@ -92,8 +92,8 @@
     {
       "checkpoint": "2",
       "level": 4,
-      "index": 27,
       "order": 26,
+      "index": 27,
       "baseXp": 23200,
       "difficulty": 8,
       "category": "required",
@@ -107,8 +107,8 @@
     {
       "checkpoint": "3",
       "level": 4,
-      "index": 28,
       "order": 27,
+      "index": 28,
       "baseXp": 32800,
       "difficulty": 8,
       "category": "required",
@@ -120,16 +120,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 4,
-      "index": 28,
-      "order": 27,
-      "baseXp": 200,
+      "order": 21,
+      "index": 21,
+      "baseXp": 37600,
       "difficulty": 8,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101274,
+      "platformId": 102314,
       "allowedFunctions": [
         "strconv.Itoa"
       ]

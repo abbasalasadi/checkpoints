@@ -55,8 +55,8 @@
       "level": 5,
       "index": 20,
       "order": 19,
-      "baseXp": 50,
-      "category": "optional"
+      "baseXp": 5000,
+      "category": "required"
     }
   ]
 }

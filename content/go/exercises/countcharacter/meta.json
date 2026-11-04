@@ -77,8 +77,8 @@
     {
       "checkpoint": "1",
       "level": 2,
-      "index": 6,
       "order": 6,
+      "index": 6,
       "baseXp": 6800,
       "difficulty": 4,
       "category": "required",
@@ -92,8 +92,8 @@
     {
       "checkpoint": "2",
       "level": 2,
-      "index": 6,
       "order": 6,
+      "index": 6,
       "baseXp": 11600,
       "difficulty": 4,
       "category": "required",
@@ -107,8 +107,8 @@
     {
       "checkpoint": "3",
       "level": 2,
-      "index": 6,
       "order": 6,
+      "index": 6,
       "baseXp": 16400,
       "difficulty": 4,
       "category": "required",
@@ -120,16 +120,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 2,
-      "index": 6,
       "order": 6,
-      "baseXp": 100,
+      "index": 6,
+      "baseXp": 18800,
       "difficulty": 4,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101256,
+      "platformId": 102294,
       "allowedFunctions": [
         "--allow-builtin"
       ]

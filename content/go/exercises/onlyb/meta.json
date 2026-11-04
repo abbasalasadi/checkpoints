@@ -74,8 +74,8 @@
     {
       "checkpoint": "1",
       "level": 1,
-      "index": 4,
       "order": 4,
+      "index": 4,
       "baseXp": 3400,
       "difficulty": 2,
       "category": "required",
@@ -89,8 +89,8 @@
     {
       "checkpoint": "2",
       "level": 1,
-      "index": 4,
       "order": 4,
+      "index": 4,
       "baseXp": 5800,
       "difficulty": 2,
       "category": "required",
@@ -104,8 +104,8 @@
     {
       "checkpoint": "3",
       "level": 1,
-      "index": 4,
       "order": 4,
+      "index": 4,
       "baseXp": 8200,
       "difficulty": 2,
       "category": "required",
@@ -117,16 +117,16 @@
       ]
     },
     {
-      "checkpoint": "final",
+      "checkpoint": "retest",
       "level": 1,
-      "index": 4,
       "order": 4,
-      "baseXp": 50,
+      "index": 4,
+      "baseXp": 9400,
       "difficulty": 2,
       "category": "required",
       "status": null,
       "codeEditor": true,
-      "platformId": 101254,
+      "platformId": 102292,
       "allowedFunctions": [
         "github.com/01-edu/z01.PrintRune"
       ]
