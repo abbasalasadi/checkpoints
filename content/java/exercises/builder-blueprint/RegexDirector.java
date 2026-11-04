@@ -1,3 +1,4 @@
+// RegexDirector class
 public class RegexDirector {
     private RegexBuilder builder;
 

@@ -1,9 +1,6 @@
-import java.util.HashMap;
-import java.util.Map;
-
 public class DistinctSubstringLength {
     public int maxLength(String s) {
-        Map<Character, Integer> last = new HashMap<>();
+        java.util.Map<Character, Integer> last = new java.util.HashMap<>();
         int best = 0;
         int start = 0;
         for (int i = 0; i < s.length(); i++) {

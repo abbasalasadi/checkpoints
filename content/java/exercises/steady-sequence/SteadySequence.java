@@ -3,7 +3,6 @@ import java.util.Set;
 
 public class SteadySequence {
     public int longestSequence(int[] nums) {
-        // your code here
-        return 0;
+        // Implementation to find the length of the longest consecutive elements sequence
     }
 }

@@ -1,13 +1,8 @@
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class HTMLValidator {
     public boolean validateHTML(String html) {
         if (html == null || html.isEmpty()) return false;
-        Matcher m = Pattern.compile("<(/?)([a-zA-Z][a-zA-Z0-9]*)[^>]*>").matcher(html);
-        Deque<String> stack = new ArrayDeque<>();
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("<(/?)([a-zA-Z][a-zA-Z0-9]*)[^>]*>").matcher(html);
+        java.util.Deque<String> stack = new java.util.ArrayDeque<>();
         boolean any = false;
         while (m.find()) {
             any = true;

@@ -1,6 +1,5 @@
 public class DistinctSubstringLength {
     public int maxLength(String s) {
-        // your code here
-        return 0;
+        // Implementation to find the length of the longest substring without repeating characters
     }
 }

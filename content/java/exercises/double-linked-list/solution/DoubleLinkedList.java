@@ -1,7 +1,6 @@
 public class DoubleLinkedList implements LinkedList {
     private Node head;
     private Node tail;
-    private int size;
 
     private class Node {
         int value;
@@ -13,27 +12,25 @@ public class DoubleLinkedList implements LinkedList {
         }
     }
 
-    private Node find(int index) {
-        if (index <= size - 1 - index) {
-            Node cur = head;
-            for (int i = 0; i < index; i++) {
-                cur = next(cur);
-            }
-            return cur;
-        }
-        Node cur = tail;
-        for (int i = size - 1; i > index; i--) {
-            cur = prev(cur);
-        }
-        return cur;
-    }
-
     @Override
     public int at(int index) {
+        int size = size();
         if (index < 0 || index >= size) {
             return -1;
         }
-        return find(index).value;
+        Node cur;
+        if (index <= size - 1 - index) {
+            cur = head;
+            for (int i = 0; i < index; i++) {
+                cur = next(cur);
+            }
+        } else {
+            cur = tail;
+            for (int i = size - 1; i > index; i--) {
+                cur = prev(cur);
+            }
+        }
+        return cur.value;
     }
 
     @Override
@@ -46,15 +43,26 @@ public class DoubleLinkedList implements LinkedList {
             node.prev = tail;
         }
         tail = node;
-        size++;
     }
 
     @Override
     public void remove(int index) {
+        int size = size();
         if (index < 0 || index >= size) {
             return;
         }
-        Node target = find(index);
+        Node target;
+        if (index <= size - 1 - index) {
+            target = head;
+            for (int i = 0; i < index; i++) {
+                target = next(target);
+            }
+        } else {
+            target = tail;
+            for (int i = size - 1; i > index; i--) {
+                target = prev(target);
+            }
+        }
         if (target.prev != null) {
             target.prev.next = target.next;
         } else {
@@ -65,11 +73,14 @@ public class DoubleLinkedList implements LinkedList {
         } else {
             tail = target.prev;
         }
-        size--;
     }
 
     @Override
     public int size() {
+        int size = 0;
+        for (Node cur = head; cur != null; cur = cur.next) {
+            size++;
+        }
         return size;
     }
 

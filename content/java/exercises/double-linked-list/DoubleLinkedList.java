@@ -6,41 +6,34 @@ public class DoubleLinkedList implements LinkedList {
         int value;
         Node next;
         Node prev;
-
-        Node(int value) {
-            this.value = value;
-        }
+        ...
     }
 
     @Override
     public int at(int index) {
-        // your code here
-        return 0;
+        // Implementation for accessing an element by its index
     }
 
     @Override
     public void add(int value) {
-        // your code here
+        // Implementation for adding an element at the end of the list
     }
 
     @Override
     public void remove(int index) {
-        // your code here
+        // Implementation for removing an element by its index
     }
 
     @Override
     public int size() {
-        // your code here
-        return 0;
+        // Implementation for getting the size of the list
     }
 
     private Node next(Node node) {
-        // your code here
-        return null;
+        // Implementation for going to the next
     }
 
     private Node prev(Node node) {
-        // your code here
-        return null;
+        // Implementation for going to the prev
     }
 }

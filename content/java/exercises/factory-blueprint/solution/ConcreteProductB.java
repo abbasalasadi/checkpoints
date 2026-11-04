@@ -1,3 +1,4 @@
+// ConcreteProductB class
 public class ConcreteProductB implements Product {
     @Override
     public void showDetails() {

@@ -4,7 +4,6 @@ import java.util.regex.Pattern;
 
 public class ConfigProtector {
     public String hideSensitiveData(String configFile, List<String> sensitiveKeys) {
-        // your code here
-        return null;
+        // Implementation to hide sensitive data in the configuration file using regex
     }
 }

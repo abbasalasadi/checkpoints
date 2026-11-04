@@ -1,7 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class ProjectTime {
     private String startTime;
@@ -11,31 +10,26 @@ public class ProjectTime {
     public ProjectTime(String start, String end) {
         this.startTime = start;
         this.endTime = end;
-        update();
     }
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
-        update();
     }
-
     public void setEndTime(String endTime) {
         this.endTime = endTime;
-        update();
     }
 
     public String getStartTime() {
         return startTime;
     }
-
     public String getEndTime() {
         return endTime;
     }
 
-    private void update() {
+    public String getHoursLogged() {
         SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         f.setLenient(false);
-        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
         try {
             Date s = f.parse(startTime);
             Date e = f.parse(endTime);
@@ -44,9 +38,6 @@ public class ProjectTime {
         } catch (ParseException | NullPointerException ex) {
             hoursLogged = -1;
         }
-    }
-
-    public String getHoursLogged() {
         if (hoursLogged < 0) {
             return "-1";
         }

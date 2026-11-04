@@ -4,7 +4,6 @@ import java.time.format.DateTimeFormatter;
 
 public class AgeFinder {
     public int calculateAge(String date) {
-        // your code here
-        return 0;
+        // Implementation to calculate the age from the given date
     }
 }

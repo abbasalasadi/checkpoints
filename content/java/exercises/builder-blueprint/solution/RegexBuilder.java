@@ -1,3 +1,4 @@
+// Builder interface
 public interface RegexBuilder {
     void buildLiteral(String literal);
     void buildAnyCharacter();

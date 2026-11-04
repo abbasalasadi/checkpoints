@@ -1,3 +1,4 @@
+// Factory class
 public class Factory {
     @SuppressWarnings("unchecked")
     public <T extends Product> T createProduct(String type) {

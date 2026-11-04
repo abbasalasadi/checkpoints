@@ -1,13 +1,7 @@
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class DateFormatter {
-    private static final String[] MONTHS = {
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    };
-
     private long date;
     private String formattedDate;
     private String format;
@@ -24,7 +18,6 @@ public class DateFormatter {
         this.date = date;
         this.format = "DD/MM/YYYY";
         setFormat(format);
-        convert();
     }
 
     public long getDate() {
@@ -33,7 +26,6 @@ public class DateFormatter {
 
     public void setDate(long date) {
         this.date = date;
-        convert();
     }
 
     public String getFormat() {
@@ -47,27 +39,22 @@ public class DateFormatter {
         String up = format.toUpperCase();
         if (up.equals("DD/MM/YYYY") || up.equals("DD.MM.YYYY") || up.equals("DD MONTH YYYY")) {
             this.format = format;
-            convert();
         }
     }
 
     public String getFormattedDate() {
-        return formattedDate;
-    }
-
-    private void convert() {
-        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        c.setTime(new Date(date * 1000L));
-        String day = String.format("%02d", c.get(Calendar.DAY_OF_MONTH));
-        String month = String.format("%02d", c.get(Calendar.MONTH) + 1);
-        int year = c.get(Calendar.YEAR);
         String up = format.toUpperCase();
+        String pattern;
         if (up.equals("DD/MM/YYYY")) {
-            formattedDate = day + "/" + month + "/" + year;
+            pattern = "dd/MM/y";
         } else if (up.equals("DD.MM.YYYY")) {
-            formattedDate = day + "." + month + "." + year;
+            pattern = "dd.MM.y";
         } else {
-            formattedDate = day + " " + MONTHS[c.get(Calendar.MONTH)] + " " + year;
+            pattern = "dd MMMM y";
         }
+        SimpleDateFormat f = new SimpleDateFormat(pattern, java.util.Locale.ENGLISH);
+        f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
+        formattedDate = f.format(new Date(date * 1000L));
+        return formattedDate;
     }
 }

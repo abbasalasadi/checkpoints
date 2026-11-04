@@ -1,5 +1,3 @@
-import java.util.Locale;
-
 public class UnitConverter {
     public static String convert(String[] args) {
         if (args == null || args.length != 3) {
@@ -21,6 +19,6 @@ public class UnitConverter {
             case "pounds>kilograms": r = v * 0.45359237; break;
             default: return "ERROR";
         }
-        return String.format(Locale.US, "%.2f", r);
+        return String.format(java.util.Locale.US, "%.2f", r);
     }
 }

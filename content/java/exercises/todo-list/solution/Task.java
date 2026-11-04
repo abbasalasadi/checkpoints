@@ -6,6 +6,10 @@ public class Task {
     private String description;
     private TaskStatus status;
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    // Getters and Setters
     public Task(String description) {
         this.description = description;
         this.status = TaskStatus.NEW;
@@ -13,10 +17,6 @@ public class Task {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public TaskStatus getStatus() {

@@ -1,12 +1,8 @@
-import java.util.ArrayList;
 import java.util.List;
 
+// Regex class
 public class Regex {
     private StringBuilder pattern;
-
-    public Regex() {
-        this(new ArrayList<>());
-    }
 
     public Regex(List<String> component) {
         pattern = new StringBuilder();

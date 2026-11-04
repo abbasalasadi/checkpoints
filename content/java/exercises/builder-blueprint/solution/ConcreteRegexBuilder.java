@@ -1,8 +1,12 @@
-import java.util.ArrayList;
 import java.util.List;
 
+// ConcreteRegexBuilder class
 public class ConcreteRegexBuilder implements RegexBuilder {
-    List<String> component = new ArrayList<>();
+    List<String> component;
+
+    public ConcreteRegexBuilder() {
+        component = new java.util.ArrayList<>();
+    }
 
     @Override
     public void buildLiteral(String literal) {

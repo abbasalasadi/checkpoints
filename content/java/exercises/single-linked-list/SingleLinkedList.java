@@ -14,28 +14,25 @@ public class SingleLinkedList implements LinkedList {
 
     @Override
     public int at(int index) {
-        // your code here
-        return 0;
+        // Implementation for accessing an element by its index
     }
 
     @Override
     public void add(int value) {
-        // your code here
+        // Implementation for adding an element at the end of the list
     }
 
     @Override
     public void remove(int index) {
-        // your code here
+        // Implementation for removing an element by its index
     }
 
     @Override
     public int size() {
-        // your code here
-        return 0;
+        // Implementation for accessing an element by its index
     }
 
     private Node next(Node node) {
-        // your code here
-        return null;
+        // Print the message "Go to next node"
     }
 }

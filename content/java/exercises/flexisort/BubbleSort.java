@@ -1,6 +1,6 @@
 public class BubbleSort extends Sorter {
     @Override
     public void sort() {
-        // your code here
+        // bubble sort algorithm implementation
     }
 }

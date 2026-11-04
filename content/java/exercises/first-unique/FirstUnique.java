@@ -1,6 +1,5 @@
 public class FirstUnique {
     public char findFirstUnique(String s) {
-        // your code here
-        return ' ';
+        // Implementation to find the first non-repeating character
     }
 }

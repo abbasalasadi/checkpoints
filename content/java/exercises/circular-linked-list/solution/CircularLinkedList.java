@@ -1,6 +1,5 @@
 public class CircularLinkedList implements LinkedList {
     private Node head;
-    private int size;
 
     private class Node {
         int value;
@@ -38,7 +37,6 @@ public class CircularLinkedList implements LinkedList {
             cur.next = node;
             node.next = head;
         }
-        size++;
     }
 
     @Override
@@ -46,6 +44,7 @@ public class CircularLinkedList implements LinkedList {
         if (index < 0 || head == null) {
             return;
         }
+        int size = size();
         index = index % size;
         if (size == 1) {
             head = null;
@@ -64,11 +63,17 @@ public class CircularLinkedList implements LinkedList {
             Node target = next(prev);
             prev.next = target.next;
         }
-        size--;
     }
 
     @Override
     public int size() {
+        if (head == null) {
+            return 0;
+        }
+        int size = 1;
+        for (Node cur = head.next; cur != head; cur = cur.next) {
+            size++;
+        }
         return size;
     }
 

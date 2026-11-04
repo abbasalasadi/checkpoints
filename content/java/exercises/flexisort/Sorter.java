@@ -2,12 +2,11 @@ public abstract class Sorter {
     private int[] array;
 
     public int[] getArray() {
-        // your code here
-        return null;
+        // getter method
     }
 
     public void setArray(int[] array) {
-        // your code here
+        // setter method
     }
 
     public abstract void sort();

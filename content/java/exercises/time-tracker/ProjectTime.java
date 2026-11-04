@@ -7,30 +7,13 @@ public class ProjectTime {
     private String endTime;
     private float hoursLogged;
 
-    public ProjectTime(String start, String end) {
-        // your code here
-    }
+    public ProjectTime(String start, String end);
 
-    public void setStartTime(String startTime) {
-        // your code here
-    }
+    public void setStartTime();
+    public void setEndTime();
 
-    public void setEndTime(String endTime) {
-        // your code here
-    }
+    public String getStartTime();
+    public String getEndTime();
 
-    public String getStartTime() {
-        // your code here
-        return null;
-    }
-
-    public String getEndTime() {
-        // your code here
-        return null;
-    }
-
-    public String getHoursLogged() {
-        // your code here
-        return "";
-    }
+    public String getHoursLogged();
 }

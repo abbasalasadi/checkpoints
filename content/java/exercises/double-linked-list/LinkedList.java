@@ -3,4 +3,5 @@ public interface LinkedList {
     void add(int value);
     void remove(int index);
     int size();
+
 }

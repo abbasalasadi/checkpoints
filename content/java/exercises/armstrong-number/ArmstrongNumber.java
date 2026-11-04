@@ -1,6 +1,5 @@
 public class ArmstrongNumber {
     public boolean isArmstrong(int number) {
-        // your code here
-        return false;
+        // Implementation to check if the given number is an Armstrong number
     }
 }

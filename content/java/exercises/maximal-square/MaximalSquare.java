@@ -1,6 +1,5 @@
 public class MaximalSquare {
     public int maximalSquare(char[][] matrix) {
-        // your code here
-        return 0;
+        // Implementation to find the area of the largest square containing only 1's
     }
 }
