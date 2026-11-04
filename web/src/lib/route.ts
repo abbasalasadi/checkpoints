@@ -8,6 +8,7 @@
  *   /                    the dashboard (V2): tracks, resume, recent activity
  *   /history             the history explorer (V2)
  *   /vault               the solutions vault (V2)
+ *   /exams               mock exams: start, reports (V3)
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
  *   /e/min_and_max       legacy Rust link — read as /rust/min_and_max and
@@ -18,7 +19,7 @@ import type { Language } from './api.js';
 export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust'];
 
 /** A page that is not a track: the dashboard or the history explorer. */
-export type Page = 'dashboard' | 'history' | 'vault';
+export type Page = 'dashboard' | 'history' | 'vault' | 'exams';
 
 export interface Location {
   /** Set when the path is a page rather than a track. */
@@ -54,6 +55,7 @@ export function parsePath(pathname: string): Location {
   const home: Location = { page: 'dashboard', language: null, slug: null, legacy: false };
   if (first === 'history' && second === undefined) return { ...home, page: 'history' };
   if (first === 'vault' && second === undefined) return { ...home, page: 'vault' };
+  if (first === 'exams' && second === undefined) return { ...home, page: 'exams' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
     return slug ? { page: null, language: 'rust', slug, legacy: true } : home;

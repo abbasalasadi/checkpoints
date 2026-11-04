@@ -6,10 +6,11 @@ import { Logo } from './Icon.js';
 
 interface Props {
   identifier: string;
-  current: 'dashboard' | 'history' | 'vault';
+  current: 'dashboard' | 'history' | 'vault' | 'exams';
   onDashboard: () => void;
   onHistory: () => void;
   onVault: () => void;
+  onExams: () => void;
   onAbout: () => void;
   onSignOut: () => void;
 }
@@ -26,7 +27,7 @@ const link = (active: boolean): React.CSSProperties => ({
   boxShadow: active ? 'inset 0 -2px 0 var(--accent)' : 'none',
 });
 
-export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onAbout, onSignOut }: Props) {
+export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onExams, onAbout, onSignOut }: Props) {
   return (
     <header style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap' }}>
       <span style={{ color: 'var(--accent-text)', display: 'flex' }}>
@@ -42,6 +43,9 @@ export function PageHeader({ identifier, current, onDashboard, onHistory, onVaul
         </button>
         <button type="button" style={link(current === 'vault')} aria-current={current === 'vault' ? 'page' : undefined} onClick={onVault}>
           Solutions
+        </button>
+        <button type="button" style={link(current === 'exams')} aria-current={current === 'exams' ? 'page' : undefined} onClick={onExams}>
+          Mock exam
         </button>
       </nav>
       <button type="button" style={{ ...link(false), marginLeft: 'auto' }} onClick={onAbout}>

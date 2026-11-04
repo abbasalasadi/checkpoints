@@ -226,6 +226,21 @@ export interface VaultItem {
   files: Record<string, string>;
 }
 
+/** A mock exam (V3): one exercise per level, separate from practice (D27). */
+export interface ExamView {
+  id: number;
+  language: Language;
+  checkpoint: string;
+  minutes: number;
+  startedAt: string;
+  endsAt: string;
+  endedAt: string | null;
+  status: 'active' | 'finished' | 'abandoned' | 'expired';
+  passed: number;
+  total: number;
+  items: { level: number; slug: string; title: string; submits: number; passed: boolean; passedAt: string | null }[];
+}
+
 /** Same-origin download link for the single-exercise Markdown report (D22). */
 export function reportUrl(language: Language, slug: string): string {
   return `/api/${language}/exercises/${encodeURIComponent(slug)}/report`;
@@ -253,6 +268,11 @@ export const api = {
   timeline: (language: Language, slug: string) =>
     request<{ attempts: AttemptSummary[] }>(`/api/history/exercises/${language}/${encodeURIComponent(slug)}`),
   vault: () => request<{ items: VaultItem[] }>('/api/vault'),
+  exams: () => request<{ active: ExamView | null; past: ExamView[] }>('/api/exams'),
+  exam: (id: number) => request<ExamView>(`/api/exams/${id}`),
+  startExam: (language: Language, checkpoint: string, minutes: number) =>
+    request<ExamView>('/api/exams', { method: 'POST', body: JSON.stringify({ language, checkpoint, minutes }) }),
+  endExam: (id: number, abandon: boolean) => request<ExamView>(`/api/exams/${id}/end`, { method: 'POST', body: JSON.stringify({ abandon }) }),
   preferences: () => request<{ preferences: Preferences }>('/api/preferences'),
   savePreferences: (patch: Partial<Preferences>) =>
     request<{ preferences: Preferences }>('/api/preferences', {

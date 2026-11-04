@@ -11,7 +11,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched un
 
 ## Steps
 1. [x] Mock exam server: exam table + migration, start (one random exercise per level, pristine starters, practice drafts set aside server-side, D7), timer (default 180 min), submit, end/abandon, report; rules enforced server-side (D28)
-2. [ ] Mock exam web: start screen, locked workbench with timer, report page, history entries
+2. [x] Mock exam web: start screen, locked workbench with timer, report page, history entries
 3. [ ] Hints: 129 one-line hints in content, API, 10-second reveal delay, hidden during exams
 4. [ ] Assertion diff card on failed tests (expected vs actual)
 5. [ ] Command palette + keyboard shortcut sheet

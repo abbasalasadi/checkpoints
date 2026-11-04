@@ -80,3 +80,9 @@ describe('the solutions vault route (V2)', () => {
     expect(parsePath('/vault')).toMatchObject({ page: 'vault', language: null });
   });
 });
+
+describe('the mock exams route (V3)', () => {
+  test('/exams is its own page', () => {
+    expect(parsePath('/exams')).toMatchObject({ page: 'exams', language: null });
+  });
+});

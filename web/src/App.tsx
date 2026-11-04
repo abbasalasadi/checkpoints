@@ -16,6 +16,7 @@ import {
   type RunMessage,
   type RunnerState,
   type SnapshotMeta,
+  type ExamView,
 } from './lib/api.js';
 import { TerminalPane, type TerminalHandle } from './components/Terminal.js';
 import { useConfirm } from './components/Dialog.js';
@@ -23,6 +24,7 @@ import { Splitter, usePaneSize } from './components/Split.js';
 import { Menu } from './components/Menu.js';
 import { Icon, Logo } from './components/Icon.js';
 import { About } from './components/About.js';
+import { Exams, STATUS_LABEL } from './components/Exams.js';
 import { Settings } from './components/Settings.js';
 import { usePreferences, type Preferences } from './lib/preferences.js';
 import { StuckDialog } from './components/StuckDialog.js';
@@ -170,8 +172,19 @@ function SignedIn({
   const [loc, setLoc] = useState(() => readLocation());
   const [historyFocus, setHistoryFocus] = useState<{ language: Language; slug: string } | null>(null);
   const [aboutOpen, setAboutOpen] = useState(false);
+  /** The running mock exam: it takes over the whole app until it ends (D28). */
+  const [exam, setExam] = useState<ExamView | null>(null);
+  const [examFocus, setExamFocus] = useState<number | null>(null);
   const { confirm, dialog } = useConfirm();
   useEffect(() => onNavigate(setLoc), []);
+  // A refresh during an exam returns to it.
+  useEffect(() => {
+    void api
+      .exams()
+      .then((r) => r.active && enterExam(r.active))
+      .catch(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const goPage = (page: Page) => {
     navigatePage(page);
@@ -182,6 +195,32 @@ function SignedIn({
     navigate(language, slug);
     setLoc(readLocation());
   };
+
+  function enterExam(e: ExamView) {
+    const first = e.items[0]?.slug ?? null;
+    navigate(e.language, first, { replace: true });
+    setLoc(readLocation());
+    setExam(e);
+  }
+
+  if (exam) {
+    return (
+      <Workbench
+        key={`exam-${exam.id}`}
+        identifier={identifier}
+        prefs={prefs}
+        onPrefs={onPrefs}
+        onSignedOut={onSignedOut}
+        onDashboard={() => goPage('exams')}
+        exam={exam}
+        onExamEnded={(id) => {
+          setExam(null);
+          setExamFocus(id);
+          goPage('exams');
+        }}
+      />
+    );
+  }
 
   if (!loc.page && loc.language) {
     return (
@@ -220,12 +259,15 @@ function SignedIn({
           goPage('history');
         }}
         onVault={() => goPage('vault')}
+        onExams={() => goPage('exams')}
         onAbout={() => setAboutOpen(true)}
         onSignOut={() => void signOut()}
       />
       <About open={aboutOpen} onClose={() => setAboutOpen(false)} />
       {page === 'history' ? (
         <History key={historyFocus ? `${historyFocus.language}/${historyFocus.slug}` : 'all'} focus={historyFocus} onOpen={(l, s) => openTrack(l, s)} />
+      ) : page === 'exams' ? (
+        <Exams key={examFocus ?? 'exams'} focus={examFocus} onStarted={enterExam} />
       ) : page === 'vault' ? (
         <Vault onOpen={(l, s) => openTrack(l, s)} />
       ) : (
@@ -358,13 +400,19 @@ function Workbench({
   onPrefs,
   onSignedOut,
   onDashboard,
+  exam: examStart,
+  onExamEnded,
 }: {
   identifier: string;
   prefs: Preferences;
   onPrefs: (patch: Partial<Preferences>) => void;
   onSignedOut: (reason?: string) => void;
   onDashboard: () => void;
+  /** Exam mode (V3): only the exam's exercises, no drafts, copies or reports. */
+  exam?: ExamView;
+  onExamEnded?: (id: number) => void;
 }) {
+  const [exam, setExam] = useState<ExamView | undefined>(examStart);
   const initial = useMemo(() => readLocation(), []);
   const [language, setLanguage] = useState<Language>(() => initial.language ?? lastLanguage());
   const [list, setList] = useState<ExerciseSummary[]>([]);
@@ -471,10 +519,10 @@ function Workbench({
     (next: Record<string, string>) => {
       if (!detail || !slug) return;
       pending.current = { language, slug, files: next };
-      saveDraft(language, slug, next);
+      if (!exam) saveDraft(language, slug, next);
       setSaveState('unsaved');
     },
-    [detail, language, slug],
+    [detail, language, slug, exam],
   );
 
   // Persisted so a layout tuned once survives a reload; clamped so no drag can
@@ -487,6 +535,8 @@ function Workbench({
     let live = true;
     setList([]);
     setPlacements([]);
+    // The exam has its own list; the track's is closed during it (D28).
+    if (exam) return;
     void api
       .exercises(language)
       .then((r) => {
@@ -574,9 +624,10 @@ function Workbench({
         const f = filesOf(d);
         // An edit that never reached the server (offline, tab closed) wins over
         // the server copy, and is sent again.
-        const draft = readDraft(lang, slug);
+        // The exam keeps no browser drafts: a practice draft must not leak in.
+        const draft = exam ? null : readDraft(lang, slug);
         const resumed = draft && draftDiffers(draft, f.files) ? { ...f.files, ...Object.fromEntries(Object.entries(draft).filter(([k]) => k in f.files)) } : null;
-        if (!resumed) clearDraft(lang, slug);
+        if (!resumed && !exam) clearDraft(lang, slug);
         setFiles(resumed ?? f.files);
         setOrder(f.order);
         setTab(f.order[0] ?? '');
@@ -586,7 +637,8 @@ function Workbench({
         setArgs('');
         pending.current = resumed ? { language: lang, slug, files: resumed } : null;
         setSaveState(resumed ? 'unsaved' : 'saved');
-        void api.snapshots(lang, slug).then((r) => live && setSnaps(r.snapshots)).catch(() => setSnaps([]));
+        if (!exam) void api.snapshots(lang, slug).then((r) => live && setSnaps(r.snapshots)).catch(() => setSnaps([]));
+        else setSnaps([]);
         // Arriving by link, refresh or Back on a collapsed tree gives no clue where
         // the open exercise sits, so open its first branch.
         const first = d.placements?.[0];
@@ -696,7 +748,8 @@ function Workbench({
   // V2 sidebar: search and status filter give a flat list; the rail hides it.
   const [query, setQuery] = useState('');
   const [show, setShow] = useState<SidebarFilter>('all');
-  const [rail, setRail] = useState(() => readFlag('cp.rail'));
+  // The exam panel holds the timer, so it never collapses.
+  const [rail, setRail] = useState(() => !examStart && readFlag('cp.rail'));
   // Phones and tablets: one pane at a time, chosen by tabs.
   const compact = useMedia(COMPACT_QUERY);
   const [pane, setPane] = useState<MobilePane>(() => (readLocation().slug ? 'subject' : 'list'));
@@ -929,7 +982,9 @@ function Workbench({
     // The server starts this kind's clock when the run ends; so does the UI.
     setCool((c) => ({ ...c, [kind]: m.cooldownSeconds ?? startCooldown }));
     const didPass = m.passed ?? (kind === 'test' && canonical === 'passed');
-    if (kind === 'test' && didPass && lang === language) {
+    if (exam && kind === 'test') {
+      void api.exam(exam.id).then(setExam).catch(() => undefined);
+    } else if (kind === 'test' && didPass && lang === language) {
       setList((prev) => prev.map((e) => (e.slug === exerciseSlug ? { ...e, passed: true, status: 'passed' } : e)));
       // Submit stores the passing code; pick the new snapshot up.
       void api.snapshots(lang, exerciseSlug).then((r) => setSnaps(r.snapshots)).catch(() => undefined);
@@ -981,6 +1036,26 @@ function Workbench({
     clearAllDrafts();
     detach();
     onSignedOut();
+  }
+
+  /** End the exam (or record that its time ran out) and show the report. */
+  async function endExam(expired = false) {
+    if (!exam) return;
+    if (!expired) {
+      const ok = await confirm({
+        title: 'End the exam?',
+        body: 'Your results go to the exam report. You cannot return to this exam.',
+        confirmLabel: 'End exam',
+      });
+      if (!ok) return;
+    }
+    await flush();
+    try {
+      await (expired ? api.exam(exam.id) : api.endExam(exam.id, false));
+    } catch (err) {
+      logger.warn('exam.end_failed', { error: String(err) });
+    }
+    onExamEnded?.(exam.id);
   }
 
   async function saveCopy() {
@@ -1074,9 +1149,11 @@ function Workbench({
           <button type="button" onClick={toggleRail} aria-label="Expand the exercise list" title="Expand" style={{ ...ghostBtn, fontSize: '1rem' }}>
             »
           </button>
-          <button type="button" onClick={() => void flush().then(onDashboard)} aria-label="Dashboard" title="Dashboard" style={{ ...ghostBtn, fontSize: '1rem' }}>
-            ⌂
-          </button>
+          {!exam && (
+            <button type="button" onClick={() => void flush().then(onDashboard)} aria-label="Dashboard" title="Dashboard" style={{ ...ghostBtn, fontSize: '1rem' }}>
+              ⌂
+            </button>
+          )}
           <span title={LANGUAGE_LABEL[language]} style={{ fontSize: '.7rem', color: 'var(--text-muted)', writingMode: 'vertical-rl' }}>
             {LANGUAGE_LABEL[language]}
           </span>
@@ -1094,6 +1171,17 @@ function Workbench({
           minWidth: 0,
         }}
       >
+        {exam && (
+          <ExamPanel
+            exam={exam}
+            current={slug}
+            onSelect={select}
+            onEnd={() => void endExam()}
+            onExpired={() => void endExam(true)}
+          />
+        )}
+        {!exam && (
+        <>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.6rem' }}>
           <strong style={{ fontSize: '.85rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identifier}</strong>
           <span style={{ display: 'flex', gap: '.2rem' }}>
@@ -1218,6 +1306,8 @@ function Workbench({
             </div>
           );
         })}
+        </>
+        )}
       </aside>
 
       {!rail && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
@@ -1304,7 +1394,7 @@ function Workbench({
               note={savedAt ? `Saved ${timeAgo(savedAt)}` : undefined}
               /* Per-item `disabled`: the menu drops disabled items. */
               groups={[
-                [{ label: 'Save a copy', onSelect: () => void saveCopy(), disabled: !detail }],
+                [{ label: 'Save a copy', onSelect: () => void saveCopy(), disabled: !detail || !!exam }],
                 [
                   { label: 'Restore starting stub', onSelect: () => void resetExercise(), destructive: true, disabled: !detail },
                   ...(passingSnap
@@ -1318,7 +1408,7 @@ function Workbench({
                 [
                   {
                     label: 'Export report',
-                    disabled: !detail || !slug,
+                    disabled: !detail || !slug || !!exam,
                     onSelect: () =>
                       void flush().then(() => {
                         if (!slug) return;
@@ -1788,6 +1878,79 @@ function ExerciseRow({ slug, current, done, star, onSelect, onStar, indent }: {
         style={{ ...ghostBtn, flex: 'none', color: star ? 'var(--warning, #eab308)' : 'var(--text-dim)', padding: '0 .25rem', fontSize: '.85rem' }}
       >
         {star ? '★' : '☆'}
+      </button>
+    </div>
+  );
+}
+
+/** Remaining time as h:mm:ss. */
+export function fmtCountdown(ms: number): string {
+  const t = Math.max(0, Math.ceil(ms / 1000));
+  const h = Math.floor(t / 3600);
+  const m = Math.floor((t % 3600) / 60);
+  const sec = t % 60;
+  return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}
+
+/** The exam's side panel (V3): timer, the exercises by level, End exam. */
+function ExamPanel({ exam, current, onSelect, onEnd, onExpired }: {
+  exam: ExamView; current: string | null; onSelect: (slug: string) => void; onEnd: () => void; onExpired: () => void;
+}) {
+  const [now, setNow] = useState(() => Date.now());
+  const left = Date.parse(exam.endsAt) - now;
+  const fired = useRef(false);
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, []);
+  useEffect(() => {
+    if (left <= 0 && !fired.current) {
+      fired.current = true;
+      onExpired();
+    }
+  }, [left, onExpired]);
+  const low = left < 10 * 60_000;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }} aria-label="Mock exam">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <strong style={{ fontSize: '.85rem' }}>
+          Mock exam · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
+        </strong>
+      </div>
+      <div
+        role="timer"
+        aria-live="off"
+        title={`Ends at ${new Date(exam.endsAt).toLocaleTimeString()}`}
+        style={{ fontSize: '1.6rem', fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: low ? 'var(--danger)' : 'var(--text)' }}
+      >
+        {fmtCountdown(left)}
+      </div>
+      <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>
+        {exam.passed} / {exam.total} passed · {STATUS_LABEL[exam.status]}
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
+        {exam.items.map((i) => (
+          <button
+            key={i.slug}
+            type="button"
+            onClick={() => onSelect(i.slug)}
+            aria-current={current === i.slug ? 'true' : undefined}
+            style={{
+              ...treeRow(current === i.slug ? 'var(--accent-text)' : 'var(--text)', '.8rem'),
+              background: current === i.slug ? 'var(--raised)' : 'transparent',
+            }}
+          >
+            <span style={{ color: 'var(--text-dim)', width: '3.6rem', flex: 'none' }}>Level {i.level}</span>
+            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{i.title}</span>
+            {i.passed && <span style={{ color: 'var(--success)' }}>✓</span>}
+          </button>
+        ))}
+      </div>
+      <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '.74rem', lineHeight: 1.45 }}>
+        Hints, solutions and other exercises are closed until the exam ends. Your practice code is set aside and comes back afterwards.
+      </p>
+      <button type="button" onClick={onEnd} style={{ ...ghostBtn, border: '1px solid var(--border-strong)', padding: '.35rem .6rem', fontSize: '.8rem' }}>
+        End exam
       </button>
     </div>
   );
