@@ -21,5 +21,6 @@ No deploy until the owner has tested locally (D20). Old sites are not touched un
 
 ## Done when
 - [x] All steps done, tests pass, audit pass
+- [ ] Dashboard redesign (owner, 2026-11-04): per track a donut of exercises passed plus best exam (e.g. 3/5); no checkpoint rows, no run counts
 - [x] Owner tested locally (D20), 2026-11-04
 - [ ] Deployed after the owner's test; tagged `v3.0`, release note written
