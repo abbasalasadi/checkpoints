@@ -269,7 +269,8 @@ export function publicView(ex: Exercise) {
     kind: ex.kind,
     argv: ex.argv,
     readme: ex.readme,
-    placements: ex.placements,
+    // Weights stay on the server (D35); routes add each placement's value.
+    placements: ex.placements.map(({ baseXp: _w, ...p }) => p),
     expectedFiles: ex.expectedFiles,
     editorFiles: ex.editorFiles,
     allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? ex.meta.allowedFunctions : undefined,

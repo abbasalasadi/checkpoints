@@ -139,28 +139,6 @@
         "required": 10,
         "optional": 0,
         "levels": 10
-      },
-      {
-        "checkpoint": "final",
-        "key": "checkpoint",
-        "root": "/bahrain/bh-module",
-        "title": "Checkpoint",
-        "label": "Final checkpoint",
-        "id": 100261,
-        "durationMinutes": 180,
-        "expectedXp": 2750,
-        "difficulty": 110,
-        "piscineLevel": 17,
-        "week": null,
-        "startDay": null,
-        "branch": null,
-        "startAfter": 0,
-        "xpIndex": 1,
-        "index": null,
-        "exercises": 58,
-        "required": 58,
-        "optional": 0,
-        "levels": 10
       }
     ],
     "counts": {

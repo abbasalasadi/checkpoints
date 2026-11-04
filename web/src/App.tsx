@@ -593,7 +593,7 @@ function Workbench({
         // D28: an exam holds the page; Back stays on the exam instead of
         // leaving the workbench on a blank route.
         if (examRef.current) {
-          window.history.pushState(null, '', pathFor(examRef.current.language, slugRef.current));
+          window.history.replaceState(null, '', pathFor(examRef.current.language, slugRef.current));
           return;
         }
         if (loc.language) setLanguage(loc.language);
@@ -1026,7 +1026,7 @@ function Workbench({
         .then((e) => {
           setExam(e);
           const next = e.items.find((i) => !i.passed);
-          if (didPass && next && next.slug !== exerciseSlug) select(next.slug);
+          if (didPass && next && next.slug !== exerciseSlug) select(next.slug, cp);
         })
         .catch(() => undefined);
     } else if (kind === 'test' && didPass && lang === language) {
@@ -1688,7 +1688,7 @@ function Workbench({
           <div role="status" style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.45rem .7rem', borderTop: '1px solid var(--border)', fontSize: '.84rem', flexWrap: 'wrap' }}>
             <span style={{ color: 'var(--success)' }}>Passed ✓</span>
             <span style={{ color: 'var(--text-muted)' }}>Next exercise:</span>
-            <button type="button" onClick={() => select(nextUp.slug)} style={{ ...ghostBtn, color: 'var(--accent-text)', padding: 0, fontSize: '.84rem' }}>
+            <button type="button" onClick={() => select(nextUp.slug, cp)} style={{ ...ghostBtn, color: 'var(--accent-text)', padding: 0, fontSize: '.84rem' }}>
               {nextUp.title} →
             </button>
             <button type="button" aria-label="Dismiss" onClick={() => setNextUp(null)} style={{ ...ghostBtn, marginLeft: 'auto', fontSize: '.8rem' }}>

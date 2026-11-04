@@ -115,7 +115,7 @@ export function ExamResult({ exam, onClose, onDashboard }: { exam: ExamView; onC
         <h2 id="exam-result-title" style={{ margin: 0, fontSize: '1.05rem' }}>
           {STATUS_LABEL[exam.status]} · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
         </h2>
-        <MarkRing id={`exam-${exam.id}`} size={168} label={exam.marked === false ? '—' : fmtPercent(exam.mark)} caption="your mark" rings={[{ value: exam.mark, from: color[0]!, to: color[1]! }]} />
+        <MarkRing id={`exam-${exam.id}`} size={168} label={exam.marked === false ? '—' : fmtPercent(exam.mark)} caption="your mark" rings={[{ value: exam.marked === false ? 0 : exam.mark, from: color[0]!, to: color[1]! }]} />
         {bonus && <p style={{ margin: 0, color: 'var(--success)', fontSize: '.86rem' }}>Above 100%: the optional level counts on top.</p>}
         <ul style={{ listStyle: 'none', margin: 0, padding: 0, width: '100%', display: 'flex', flexDirection: 'column', gap: '.3rem', fontSize: '.85rem' }}>
           {exam.items.map((i) => (

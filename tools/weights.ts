@@ -125,6 +125,7 @@ const all: Record<Lang, Weights> = LIST
  */
 function sync(lang: Lang, index: any, weights: Weights): void {
   index.placements = index.placements.filter((p: any) => weights[p.checkpoint]);
+  if (Array.isArray(index.meta?.checkpoints)) index.meta.checkpoints = index.meta.checkpoints.filter((c: any) => weights[c.checkpoint]);
   for (const [cp, list] of Object.entries(weights)) {
     const ours = index.placements.filter((p: any) => p.checkpoint === cp);
     const same = ours.length === Object.keys(list).length && ours.every((p: any) => list[p.exercise]);
@@ -157,6 +158,9 @@ function sync(lang: Lang, index: any, weights: Weights): void {
 }
 
 const problems: string[] = [];
+/** Writes wait for the guard: a failed run changes nothing. */
+const writes: [string, string][] = [];
+const put = (path: string, data: string) => writes.push([path, data]);
 for (const lang of LANGS) {
   const weights = all[lang];
   const indexPath = join(ROOT, 'content', lang, 'index.json');
@@ -175,7 +179,7 @@ for (const lang of LANGS) {
   if (BALANCE.has(lang)) balance(index.placements);
   for (const [cp, list] of Object.entries(weights))
     for (const slug of Object.keys(list)) if (!seen.has(`${cp}/${slug}`)) problems.push(`${lang} ${cp}/${slug}: listed but no placement`);
-  writeFileSync(indexPath, json(index));
+  put(indexPath, json(index));
   for (const e of index.exercises) {
     const metaPath = join(ROOT, 'content', lang, 'exercises', e.slug, 'meta.json');
     if (!existsSync(metaPath)) continue;
@@ -188,14 +192,16 @@ for (const lang of LANGS) {
         const q = own.find((x: any) => x.checkpoint === p.checkpoint && x.level === p.level);
         if (q) { p.baseXp = q.baseXp; p.category = q.category; }
       }
-    writeFileSync(metaPath, json(meta));
+    put(metaPath, json(meta));
   }
   if (LIST) mkdirSync(dirname(weightsFile(lang)), { recursive: true });
-  if (LIST) writeFileSync(weightsFile(lang), json({ source: 'program list (owner, 2026-11-04, D35)', checkpoints: weights }));
+  if (LIST) put(weightsFile(lang), json({ source: 'program list (owner, 2026-11-04, D35)', checkpoints: weights }));
   const n = Object.values(weights).reduce((s, c) => s + Object.keys(c).length, 0);
   console.log(`${lang}: ${Object.keys(weights).length} checkpoints, ${n} weighted placements`);
 }
 if (problems.length) {
   console.error(problems.join('\n'));
+  console.error('nothing written');
   process.exit(1);
 }
+for (const [path, data] of writes) writeFileSync(path, data);
