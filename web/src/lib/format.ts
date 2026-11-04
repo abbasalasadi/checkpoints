@@ -50,3 +50,12 @@ export function ago(iso: string): string {
   if (d < 14) return `${d} day${d === 1 ? '' : 's'} ago`;
   return new Date(t).toLocaleDateString();
 }
+
+/** Remaining time as h:mm:ss. */
+export function fmtCountdown(ms: number): string {
+  const t = Math.max(0, Math.ceil(ms / 1000));
+  const h = Math.floor(t / 3600);
+  const m = Math.floor((t % 3600) / 60);
+  const sec = t % 60;
+  return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+}

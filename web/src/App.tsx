@@ -24,6 +24,10 @@ import { Splitter, usePaneSize } from './components/Split.js';
 import { Menu } from './components/Menu.js';
 import { Icon, Logo } from './components/Icon.js';
 import { About } from './components/About.js';
+import { HintBox } from './components/HintBox.js';
+import { AssertionCard } from './components/AssertionCard.js';
+import { parseAssertion, type AssertionDiff } from './lib/assertion.js';
+import { fmtCountdown } from './lib/format.js';
 import { Exams, STATUS_LABEL } from './components/Exams.js';
 import { Settings } from './components/Settings.js';
 import { usePreferences, type Preferences } from './lib/preferences.js';
@@ -430,6 +434,7 @@ function Workbench({
    */
   const [cool, setCool] = useState<{ run: number; test: number }>({ run: 0, test: 0 });
   const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null);
+  const [assertion, setAssertion] = useState<AssertionDiff | null>(null);
   const [lastKind, setLastKind] = useState<'run' | 'test'>('test');
   const [args, setArgs] = useState('');
   const [notice, setNotice] = useState<NoticeSpec | null>(null);
@@ -633,6 +638,7 @@ function Workbench({
         setTab(f.order[0] ?? '');
         setPhase('idle');
         setDiagnosis(null);
+        setAssertion(null);
         setNotice(null);
         setArgs('');
         pending.current = resumed ? { language: lang, slug, files: resumed } : null;
@@ -954,6 +960,7 @@ function Workbench({
     socket.current = null;
     runId.current = null;
     const canonical = canonicalOutcome(m.outcome, m.exitCode);
+    setAssertion(kind === 'test' && canonical === 'failed' ? parseAssertion(lang, output) : null);
     const d = diagnoseRun(lang, kind, {
       outcome: m.outcome,
       exitCode: m.exitCode,
@@ -1319,6 +1326,11 @@ function Workbench({
         */}
       <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact && pane !== 'subject') }}>
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
+          {detail && slug && !exam && (
+            <div style={{ marginBottom: '.8rem' }}>
+              <HintBox key={`${language}/${slug}`} language={language} slug={slug} />
+            </div>
+          )}
           {detail ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
               {readme}
@@ -1583,6 +1595,7 @@ function Workbench({
 
         {/* E. results */}
         <RunNotice notice={notice} />
+        {assertion && phase === 'done' && <AssertionCard key={JSON.stringify(assertion)} diff={assertion} />}
         <div
           style={{
             height: compact ? undefined : results.size,
@@ -1881,15 +1894,6 @@ function ExerciseRow({ slug, current, done, star, onSelect, onStar, indent }: {
       </button>
     </div>
   );
-}
-
-/** Remaining time as h:mm:ss. */
-export function fmtCountdown(ms: number): string {
-  const t = Math.max(0, Math.ceil(ms / 1000));
-  const h = Math.floor(t / 3600);
-  const m = Math.floor((t % 3600) / 60);
-  const sec = t % 60;
-  return `${h}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 }
 
 /** The exam's side panel (V3): timer, the exercises by level, End exam. */

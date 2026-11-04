@@ -73,6 +73,8 @@ type IndexFile = {
 
 const catalogue = new Map<Language, Map<string, Exercise>>();
 const placementsByLang = new Map<Language, Placement[]>();
+/** One-line hints per exercise (D4), from content/<lang>/hints.json. */
+const hintsByLang = new Map<Language, Record<string, string>>();
 
 function readIf(path: string): string | null {
   return existsSync(path) ? readFileSync(path, 'utf8') : null;
@@ -135,6 +137,7 @@ function loadGeneric(language: Language, dir: string, slug: string, meta: Record
 export function loadContent(root = config.contentDir): void {
   catalogue.clear();
   placementsByLang.clear();
+  hintsByLang.clear();
 
   for (const language of LANGUAGES) {
     const langDir = join(root, language);
@@ -192,11 +195,25 @@ export function loadContent(root = config.contentDir): void {
       : [...exercises.values()].flatMap((e) => e.placements.map((p) => ({ ...p, exercise: e.slug })));
     placementsByLang.set(language, placements);
 
+    const hintsPath = join(langDir, 'hints.json');
+    if (existsSync(hintsPath)) {
+      try {
+        const raw = JSON.parse(readFileSync(hintsPath, 'utf8')) as Record<string, unknown>;
+        hintsByLang.set(language, Object.fromEntries(Object.entries(raw).filter(([k, v]) => exercises.has(k) && typeof v === 'string')) as Record<string, string>);
+      } catch (err) {
+        logger.error('content.hints_unreadable', { language, error: String(err) });
+      }
+    }
+
     logger.info('content.loaded', { language, exercises: exercises.size, placements: placements.length });
   }
 }
 
 loadContent();
+
+export function hintFor(language: Language, slug: string): string | null {
+  return hintsByLang.get(language)?.[slug] ?? null;
+}
 
 export function placementsFor(language: Language): Placement[] {
   return placementsByLang.get(language) ?? [];

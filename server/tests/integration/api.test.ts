@@ -424,6 +424,8 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   assert.equal((await call('/api/vault', { cookie: a })).status, 403);
   assert.equal((await call('/api/history', { cookie: a })).status, 403);
   assert.equal((await call(`/api/go/exercises/${slug}/report`, { cookie: a })).status, 403);
+  assert.equal((await call(`/api/go/exercises/${slug}/hint`, { cookie: a })).status, 403);
+  assert.equal((await call(`/api/go/exercises/${slug}/hint`, { cookie: b })).status, 200);
   const other = listExercises('go').find((e) => !s.json.items.some((i: any) => i.slug === e.slug))!;
   assert.equal((await call(`/api/go/exercises/${other.slug}`, { cookie: a })).status, 403);
   assert.equal((await call('/api/vault', { cookie: b })).status, 200, 'another student is not locked');
@@ -450,4 +452,14 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   assert.equal(list.json.past[0].passed, 1);
   // Exam attempts stay out of practice history.
   assert.equal((await call('/api/history/exercises', { cookie: a })).json.exercises.length, 0);
+});
+
+test('every exercise has a one-line hint (D4)', async () => {
+  const { hintFor } = await import('../../src/services/exercises.ts');
+  for (const lang of ['go', 'js', 'rust'] as const) {
+    for (const e of listExercises(lang)) {
+      const h = hintFor(lang, e.slug);
+      assert.ok(h && h.length > 10 && !h.includes('\n'), `${lang}/${e.slug} has a hint`);
+    }
+  }
 });

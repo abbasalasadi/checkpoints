@@ -30,6 +30,7 @@ import { normalizePreferences } from '../services/preferences.js';
 import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
 import {
   getExercise,
+  hintFor,
   listExercises,
   filesForRunner,
   pickEditorFiles,
@@ -129,6 +130,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
         }
         if (action === 'attempts' && !sub && method === 'GET') return listAttempts(req, res, p);
         if (action === 'report' && !sub && method === 'GET') return report(req, res, p);
+        if (action === 'hint' && !sub && method === 'GET') return hint(req, res, p);
         if (action === 'star' && !sub && (method === 'PUT' || method === 'DELETE')) return star(req, res, p, method === 'PUT');
         if (action === 'snapshots' && !sub && method === 'GET') return listSnapshots(req, res, p);
         if (action === 'snapshots' && !sub && method === 'POST') return createSnapshot(req, res, p);
@@ -500,6 +502,14 @@ function star(req: IncomingMessage, res: ServerResponse, p: Params, on: boolean)
   if (!exerciseFor(res, p)) return;
   stars.set(caller.user.id, p.lang, p.slug, on);
   sendJson(res, 200, { starred: on });
+}
+
+/** The exercise's one-line hint (D4). Closed during an exam (D28). */
+function hint(req: IncomingMessage, res: ServerResponse, p: Params): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!exerciseFor(res, p)) return;
+  sendJson(res, 200, { hint: hintFor(p.lang, p.slug) });
 }
 
 function report(req: IncomingMessage, res: ServerResponse, p: Params): void {

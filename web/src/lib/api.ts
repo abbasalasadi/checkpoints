@@ -268,6 +268,7 @@ export const api = {
   timeline: (language: Language, slug: string) =>
     request<{ attempts: AttemptSummary[] }>(`/api/history/exercises/${language}/${encodeURIComponent(slug)}`),
   vault: () => request<{ items: VaultItem[] }>('/api/vault'),
+  hint: (language: Language, slug: string) => request<{ hint: string | null }>(`/api/${language}/exercises/${encodeURIComponent(slug)}/hint`),
   exams: () => request<{ active: ExamView | null; past: ExamView[] }>('/api/exams'),
   exam: (id: number) => request<ExamView>(`/api/exams/${id}`),
   startExam: (language: Language, checkpoint: string, minutes: number) =>
