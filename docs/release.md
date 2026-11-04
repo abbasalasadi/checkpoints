@@ -20,6 +20,6 @@ No deploy until the owner has tested locally (D20). Old sites are not touched un
 8. [x] Tests on lan_vm1, self-audit, clean-up (DEV_LOGIN, fake users), release note draft (`docs/releases/v3.0.md`)
 
 ## Done when
-- [ ] All steps done, tests pass, audit pass
-- [ ] Owner tested locally (D20)
+- [x] All steps done, tests pass, audit pass
+- [x] Owner tested locally (D20), 2026-11-04
 - [ ] Deployed after the owner's test; tagged `v3.0`, release note written
