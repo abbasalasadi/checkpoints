@@ -49,3 +49,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-05: Go Format broken in prod (no local Go image in cloudrun mode); runner-image.sh now builds go,rust. Redeploy awaits owner approval.
 - 2026-11-05: redeployed (rc 0, backup app-20261104T211950Z-1543074.db.gz); go-checkpoints-runner:v1.0 now on prod VM; healthz 200. Owner to retest Go Format.
 - 2026-11-05: Java starters = README templates exactly; solutions = starter with only bodies filled (24 rewritten). java-image-check on lan_vm1: 132 cases, 0 bad. Not deployed (owner has more local edits).
+- 2026-11-05: exams start blank (student files empty; provided main/runner kept), no 'Restore starting stub' in exams. lan_vm1: server 50/50, web 148/148. Not deployed.

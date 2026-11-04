@@ -300,6 +300,20 @@ export function workingFiles(ex: Exercise, saved: Record<string, string> | null 
   return { ...ex.starter, ...(saved ?? {}) };
 }
 
+/**
+ * An exam starts blank (owner, 2026-11-05): the student's own files are empty;
+ * provided files (a Go/Rust main, Java's ExerciseRunner) stay.
+ */
+export function examStarter(ex: Exercise): Record<string, string> {
+  const out = { ...ex.starter };
+  for (const f of ex.expectedFiles) if (f in out) out[f] = '';
+  return out;
+}
+
+export function examWorkingFiles(ex: Exercise, saved: Record<string, string> | null | undefined): Record<string, string> {
+  return { ...examStarter(ex), ...(saved ?? {}) };
+}
+
 // ── Rust materialisation (kept from the reference for the Rust runner) ───────
 
 function manifest(name: string, edition: string, deps: RustMeta['deps'], pathDep?: string): string {

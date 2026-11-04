@@ -424,6 +424,8 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   const one = await call(`/api/go/exercises/${slug}`, { cookie: a });
   assert.equal(one.status, 200);
   assert.equal(one.json.examId, s.json.id);
+  // An exam starts blank: no starting stub for the student's files.
+  for (const f of one.json.expectedFiles as string[]) assert.equal(one.json.starter[f], '');
   // D28: the rest is closed.
   assert.equal((await call('/api/vault', { cookie: a })).status, 403);
   assert.equal((await call('/api/history', { cookie: a })).status, 403);

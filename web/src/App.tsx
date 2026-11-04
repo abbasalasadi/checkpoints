@@ -1199,7 +1199,7 @@ function Workbench({
     { id: 'prefs', label: 'Editor preferences', run: () => setSettingsOpen(true) },
     { id: 'sheet', label: 'Keyboard shortcuts', keys: keysFor('sheet'), run: actions.sheet },
     ...(!exam && detail ? [{ id: 'copy', label: 'Save a copy', run: () => void saveCopy() }] : []),
-    ...(detail ? [{ id: 'reset', label: 'Restore starting stub', run: () => void resetExercise() }] : []),
+    ...(detail && !exam ? [{ id: 'reset', label: 'Restore starting stub', run: () => void resetExercise() }] : []),
     ...(exam
       ? [
           { id: 'end-exam', label: 'End exam', run: () => void endExam() },
@@ -1497,7 +1497,7 @@ function Workbench({
               groups={[
                 [{ label: 'Save a copy', onSelect: () => void saveCopy(), disabled: !detail || !!exam }],
                 [
-                  { label: 'Restore starting stub', onSelect: () => void resetExercise(), destructive: true, disabled: !detail },
+                  { label: 'Restore starting stub', onSelect: () => void resetExercise(), destructive: true, disabled: !detail || !!exam },
                   ...(passingSnap
                     ? [{ label: 'Restore last passing', onSelect: () => void restore(passingSnap.id, 'the last passing version') }]
                     : []),

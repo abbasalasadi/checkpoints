@@ -38,6 +38,8 @@ import {
   publicView,
   runnerExerciseMeta,
   workingFiles,
+  examStarter,
+  examWorkingFiles,
   type Exercise,
 } from '../services/exercises.js';
 import * as runs from '../services/runs.js';
@@ -949,7 +951,7 @@ function examAllows(exam: Exam, path: string, method: string): boolean {
 
 function examFiles(ex: Exercise, exam: Exam): Record<string, string> {
   const item = exams.items(exam.id).find((i) => i.exercise_slug === ex.slug);
-  return workingFiles(ex, item?.files ?? null);
+  return examWorkingFiles(ex, item?.files ?? null);
 }
 
 /**
@@ -1068,7 +1070,7 @@ function examGetOne(req: IncomingMessage, res: ServerResponse, p: Params, exam: 
   if (!caller) return;
   const ex = exerciseFor(res, p);
   if (!ex) return;
-  sendJson(res, 200, { ...publicView(ex), placements: ex.placements.map((pl) => placementView(ex.language, ex.slug, pl)), files: examFiles(ex, exam), starter: ex.starter, status: 'in_progress', examId: exam.id });
+  sendJson(res, 200, { ...publicView(ex), placements: ex.placements.map((pl) => placementView(ex.language, ex.slug, pl)), files: examFiles(ex, exam), starter: examStarter(ex), status: 'in_progress', examId: exam.id });
 }
 
 async function examSave(req: IncomingMessage, res: ServerResponse, p: Params, exam: Exam): Promise<void> {
@@ -1092,6 +1094,6 @@ function examReset(req: IncomingMessage, res: ServerResponse, p: Params, exam: E
   if (!caller) return;
   const ex = exerciseFor(res, p);
   if (!ex) return;
-  exams.saveFiles(exam.id, p.slug, ex.starter);
-  sendJson(res, 200, { slug: p.slug, files: ex.starter });
+  exams.saveFiles(exam.id, p.slug, examStarter(ex));
+  sendJson(res, 200, { slug: p.slug, files: examStarter(ex) });
 }
