@@ -208,8 +208,12 @@ function SignedIn({
   };
 
   function enterExam(e: ExamView) {
-    const first = e.items[0]?.slug ?? null;
-    navigate(e.language, first, { replace: true });
+    // A refresh stays on the exercise open in the URL when it is one of this
+    // exam's; otherwise the first level not yet passed.
+    const here = readLocation();
+    const inExam = here.language === e.language && e.items.some((i) => i.slug === here.slug);
+    const slug = inExam ? here.slug : (e.items.find((i) => !i.passed) ?? e.items[0])?.slug ?? null;
+    navigate(e.language, slug, { replace: true });
     setLoc(readLocation());
     setExam(e);
   }
@@ -1073,21 +1077,6 @@ function Workbench({
     }
   }
 
-  async function signOut() {
-    const ok = await confirm({
-      title: 'Sign out?',
-      body: 'Your saved code stays on the server — you can sign back in and pick up where you left off.',
-      confirmLabel: 'Sign out',
-    });
-    if (!ok) return;
-    await flush();
-    // Revoke the session even if the request fails.
-    await api.logout().catch(() => undefined);
-    clearAllDrafts();
-    detach();
-    onSignedOut();
-  }
-
   /** End the exam (or record that its time ran out) and show the report. */
   async function endExam(expired = false) {
     if (!exam) return;
@@ -1275,9 +1264,6 @@ function Workbench({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.6rem' }}>
           <strong style={{ fontSize: '.85rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identifier}</strong>
           <span style={{ display: 'flex', gap: '.2rem' }}>
-            <button type="button" onClick={() => void signOut()} style={{ ...ghostBtn, fontSize: '.75rem' }}>
-              Sign out
-            </button>
             <button type="button" onClick={toggleRail} aria-label="Collapse the exercise list" title="Collapse" style={{ ...ghostBtn, fontSize: '.85rem' }}>
               «
             </button>
