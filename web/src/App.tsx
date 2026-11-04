@@ -45,7 +45,7 @@ import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
 import { COMPACT_QUERY, SYMBOLS, useMedia } from './lib/media.js';
 import { clearAllDrafts, clearDraft, draftDiffers, readDraft, saveDraft, useOnline } from './lib/offline.js';
-import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
+import { isLanguage, navigate, navigatePage, onNavigate, pathFor, readLocation, type Page } from './lib/route.js';
 import { Dashboard } from './components/Dashboard.js';
 import { History } from './components/History.js';
 import { Vault } from './components/Vault.js';
@@ -433,6 +433,10 @@ function Workbench({
   const [slug, setSlug] = useState<string | null>(initial.slug);
   /** The checkpoint the exercise was opened from (V4): decides the value shown. */
   const [cp, setCp] = useState<string | null>(initial.checkpoint);
+  const examRef = useRef(exam);
+  examRef.current = exam;
+  const slugRef = useRef(slug);
+  slugRef.current = slug;
   const [detail, setDetail] = useState<ExerciseDetail | null>(null);
   const [files, setFiles] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<string[]>([]);
@@ -586,6 +590,12 @@ function Workbench({
   useEffect(
     () =>
       onNavigate((loc) => {
+        // D28: an exam holds the page; Back stays on the exam instead of
+        // leaving the workbench on a blank route.
+        if (examRef.current) {
+          window.history.pushState(null, '', pathFor(examRef.current.language, slugRef.current));
+          return;
+        }
         if (loc.language) setLanguage(loc.language);
         setSlug(loc.slug);
         setCp(loc.checkpoint);

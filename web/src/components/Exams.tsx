@@ -53,12 +53,12 @@ export function examSpent(e: ExamView): number {
 export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boolean; onToggle: () => void }) {
   const allPassed = exam.total > 0 && exam.passed === exam.total;
   return (
-    <li style={{ ...panel, listStyle: 'none', padding: '.7rem 1rem' }}>
+    <li style={{ ...panel, listStyle: 'none', padding: '.55rem .9rem' }}>
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        style={{ display: 'flex', alignItems: 'center', gap: '.8rem', width: '100%', background: 'transparent', border: 'none', color: 'var(--text)', font: 'inherit', textAlign: 'left', padding: 0, cursor: 'pointer', flexWrap: 'wrap' }}
+        style={{ display: 'flex', alignItems: 'center', gap: '.8rem', width: '100%', background: 'transparent', border: 'none', color: 'var(--text)', font: 'inherit', fontSize: '.84rem', textAlign: 'left', padding: 0, cursor: 'pointer', flexWrap: 'wrap' }}
       >
         <span>{open ? '▾' : '▸'}</span>
         <strong style={{ fontWeight: 600 }}>
@@ -71,13 +71,13 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
         <span style={{ marginLeft: 'auto', color: 'var(--text-dim)', fontSize: '.78rem' }}>{ago(exam.startedAt)}</span>
       </button>
       {open && (
-        <div style={{ marginTop: '.7rem', display: 'flex', flexDirection: 'column', gap: '.5rem', fontSize: '.84rem' }}>
+        <div style={{ marginTop: '.6rem', display: 'flex', flexDirection: 'column', gap: '.45rem', fontSize: '.78rem' }}>
           <div style={{ color: 'var(--text-muted)', fontSize: '.8rem' }}>
             Took {fmtSpent(examSpent(exam))} of {fmtHours(exam.minutes)} · started {new Date(exam.startedAt).toLocaleString()}
           </div>
           <table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
-              <tr style={{ color: 'var(--text-dim)', fontSize: '.76rem', textAlign: 'left' }}>
+              <tr style={{ color: 'var(--text-dim)', fontSize: '.72rem', textAlign: 'left' }}>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Level</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Exercise</th>
                 <th style={{ padding: '.25rem .4rem', fontWeight: 500 }}>Value</th>
