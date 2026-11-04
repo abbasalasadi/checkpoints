@@ -208,11 +208,9 @@ function SignedIn({
   };
 
   function enterExam(e: ExamView) {
-    // A refresh stays on the exercise open in the URL when it is one of this
-    // exam's; otherwise the first level not yet passed.
-    const here = readLocation();
-    const inExam = here.language === e.language && e.items.some((i) => i.slug === here.slug);
-    const slug = inExam ? here.slug : (e.items.find((i) => !i.passed) ?? e.items[0])?.slug ?? null;
+    // A refresh returns to the level being worked on (the first not passed),
+    // never to a passed one.
+    const slug = (e.items.find((i) => !i.passed) ?? e.items[e.items.length - 1])?.slug ?? null;
     navigate(e.language, slug, { replace: true });
     setLoc(readLocation());
     setExam(e);
@@ -596,8 +594,10 @@ function Workbench({
       onNavigate((loc) => {
         // D28: an exam holds the page; Back stays on the exam instead of
         // leaving the workbench on a blank route.
+        // Back and Forward do nothing at all: the entry is pushed again, so a
+        // passed level cannot be reached by walking the history.
         if (examRef.current) {
-          window.history.replaceState(null, '', pathFor(examRef.current.language, slugRef.current));
+          window.history.pushState(null, '', pathFor(examRef.current.language, slugRef.current));
           return;
         }
         if (loc.language) setLanguage(loc.language);
@@ -629,7 +629,8 @@ function Workbench({
         return next;
       });
       setCp(checkpoint);
-      navigate(language, next, { checkpoint });
+      // An exam moves forward only, without leaving entries to go Back to.
+      navigate(language, next, { checkpoint, replace: !!examRef.current });
       setPane('subject');
     },
     [language],
@@ -1195,7 +1196,7 @@ function Workbench({
     ...(exam
       ? [
           { id: 'end-exam', label: 'End exam', run: () => void endExam() },
-          ...exam.items.map((i) => ({ id: `open:${i.slug}`, label: `Open: Level ${i.level} · ${i.title}`, run: () => select(i.slug) })),
+          ...exam.items.filter((i) => !i.passed).map((i) => ({ id: `open:${i.slug}`, label: `Open: Level ${i.level} · ${i.title}`, run: () => select(i.slug) })),
         ]
       : [
           { id: 'dashboard', label: 'Go to Dashboard', run: () => void flush().then(onDashboard) },
