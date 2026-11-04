@@ -63,7 +63,6 @@
       ],
       [
         "html-validator",
-        "breakdown-url",
         "config-protector"
       ],
       [

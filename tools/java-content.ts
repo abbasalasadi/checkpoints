@@ -28,7 +28,7 @@ const ZIP = arg('--zip', join(BACKUP, 'public-master.zip'));
 const OUT = join(ROOT, 'content', 'java');
 const SUBJECTS = 'public/subjects/java/checkpoints';
 
-/** The owner's list (2026-11-04, D30): checkpoint → level → slugs, in the given order. */
+/** The program's checkpoints (list.json, owner, 2026-11-04; D30): checkpoint → level → slugs. */
 const PLACEMENTS: Record<string, string[][]> = {
   '1': [
     ['goodbye-mars', 'system-logger', 'universal-greeting', 'average-calc'],
@@ -46,7 +46,7 @@ const PLACEMENTS: Record<string, string[][]> = {
   ],
   '3': [
     ['day-of-week', 'monthly-period', 'age-finder'],
-    ['html-validator', 'breakdown-url', 'config-protector'],
+    ['html-validator', 'config-protector'],
     ['singleton-blueprint', 'builder-blueprint', 'factory-blueprint'],
     ['top-frequents', 'longest-common-prefix', 'first-unique'],
     ['valid-sudoku', 'armstrong-number', 'perfect-number'],
@@ -109,7 +109,7 @@ for (const [checkpoint, levels] of Object.entries(PLACEMENTS)) {
   });
 }
 const allSlugs = Object.values(PLACEMENTS).flat(2);
-if (allSlugs.length !== 45 || new Set(allSlugs).size !== 45) throw new Error('expected 45 distinct exercises');
+if (allSlugs.length !== 44 || new Set(allSlugs).size !== 44) throw new Error('expected 44 distinct exercises');
 
 for (const slug of allSlugs) {
   const cls = classFor(slug);

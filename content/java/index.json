@@ -324,15 +324,6 @@
       "className": "HTMLValidator"
     },
     {
-      "slug": "breakdown-url",
-      "language": "java",
-      "kind": "class",
-      "argv": false,
-      "dir": "exercises/breakdown-url",
-      "title": "Breakdown URL",
-      "className": "BreakdownURL"
-    },
-    {
       "slug": "config-protector",
       "language": "java",
       "kind": "class",
@@ -697,19 +688,11 @@
       "category": "required"
     },
     {
-      "exercise": "breakdown-url",
+      "exercise": "config-protector",
       "checkpoint": "3",
       "level": 2,
       "index": 1,
       "order": 1,
-      "category": "required"
-    },
-    {
-      "exercise": "config-protector",
-      "checkpoint": "3",
-      "level": 2,
-      "index": 2,
-      "order": 2,
       "category": "required"
     },
     {

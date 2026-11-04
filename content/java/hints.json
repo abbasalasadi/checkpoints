@@ -33,7 +33,6 @@
   "monthly-period": "Period.between gives years and months; put the dates in order first, then build the text with singular/plural words and 'and' only when both parts exist.",
   "age-finder": "Parse with yyyy-MM-dd and measure the years between that date and today; any parse failure or a date in the future means -1.",
   "html-validator": "Find every opening and closing tag in order and keep a stack: push on open, pop and compare on close; at the end the stack must be empty.",
-  "breakdown-url": "Write one regex with groups for protocol, domain, optional port, optional path and optional query; add only the parts that matched, path defaults to '/'.",
   "config-protector": "Per sensitive key, match whole lines that start with exactly that key and '=', and swap the value for as many stars as it has characters.",
   "singleton-blueprint": "The class must control its own creation: hide the constructor, keep one shared private instance, and hand it out lazily from a static method.",
   "builder-blueprint": "RegexBuilder should be an interface; the concrete builder collects pieces in its list and getResult turns that list into a Regex.",

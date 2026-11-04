@@ -1,7 +1,11 @@
-# Handoff
+# Handoff — 2026-11-04
 
-**Next action:** V3 step 7a — write `tools/java-content.ts` and generate `content/java/` per `docs/01_design/07_java_track.md` §3 (sources: the exported image `/media/abbas/Data D/00. Backup/Reboot/Master-Repos/Checkpoints/module-java-docker/app` and `public-master.zip`). Then 7b-7f in order, one commit each.
+**Next action:** V3 step 7f — Cloud Run wrapper for the Java runner image (as for Go/JS; min-instances 0, small max cap) and its settings; deploy only with the owner's approval as part of the release. Then step 8 (lan_vm1 full tests, self-audit, remove DEV_LOGIN, delete fake users fake_v3_ui/fake_exam_ui with their exams, release note).
 
-**State:** V3 steps 1-6 done and committed; owner is happy with the app. Owner deferred the full tests and clean-up (now step 8) until Java is in.
-DEV_LOGIN=true is in local `.env`; fake users fake_v3_ui and fake_exam_ui exist locally (with exams) — remove both in step 8.
-No deploy before the owner tests locally (D20); the deploy will carry migrations 006 and 007 and the Java Cloud Run service (approval needed).
+**State:** Java 7a-7e committed and pushed. 44 exercises (program list.json, D34). Image gate: `tools/java-image-check.sh` on lan_vm1 (build first: `node scripts/build-runner-images.mjs --only java`, ~3.5 min cold); laptop quick loop: `tools/java-check.sh <slug> [solution|starter]`. Importer: `node --experimental-strip-types tools/java-content.ts` (holds PLACEMENTS, EXPECTED_FILES, RUNNER_FIXES).
+
+**Notes:**
+- Local DB backup before migration 007: var/db/app.pre007.bak (local only).
+- Local laptop has no Java image, so Run/Submit for Java work only on lan_vm1 / Cloud Run.
+- Production needs migrations 006 and 007 at the next deploy (back up the DB first).
+- list.json (owner's program export) is in the repo root, untracked.

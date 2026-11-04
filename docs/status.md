@@ -1,13 +1,14 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V3 in progress, steps 1-6 done, step 7 (Java) designed, 7a next · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V3 in progress, steps 1-6 done, step 7 (Java) 7a-7e built, 7f next · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
 |---|---|---|---|
-| V3 7a Java content | main chat | 2026-11-04 | main |
+| V3 7f Java Cloud Run wrapper | main chat | 2026-11-04 | main |
 
 ## Done
+- V3 7a-7e Java (2026-11-04): 44 exercises per the program's list.json (D34: breakdown-url removed; todo-list expects Task.java + TodoList.java). Starters, solutions, hints 44/44. Runner image (Temurin 21, Maven 3.9.12 offline) built on lan_vm1; JavaBackend; migration 007 (runner now applies migrations with foreign keys off, SQLite rebuild procedure: every row kept, orphans included); web /java route, Monaco, AssertJ/JUnit diff, javac/Maven diagnostics. Result check: image gate 135/135 on lan_vm1 (then 45 exercises; solutions pass, starters fail, Run prints), submit median 9.0 s, run ~1.7 s; laptop java-check 45/45 both ways; server 44/44, web 141/141; browser: /java tree 3 checkpoints, editor tabs — pass. Parity with the official image not run: only its exported filesystem exists; verdicts come from its harness and tests, verbatim. Two README runner examples did not compile (digitlen, singleton-blueprint) and are fixed on import
 - V3 steps 1-6 built (2026-11-04): mock exam (levels open one at a time, top bar, reports show only seen levels), hints 129/129, assertion card, palette, shortcuts, focus mode, breadcrumbs, next-exercise prompt; About thanks card. Result check: server 43/43, web 136/136, browser checks of exam flow (pass moves to next level) — pass. Owner: happy with the app (2026-11-04)
 - V3 step 7 Java designed: docs/01_design/07_java_track.md, D30-D33. 45/45 exercises matched to subjects and tests
 - V2 deployed 2026-11-04 to checkpoint.appsyss.com after owner approval: prod DB backup, migrations 004/005 applied, service healthy, old sites 200 (untouched). Result check: deploy rc 0, health ok, /api/vault 401 unauthenticated as expected, migrations logged — pass. Tagged v2.0

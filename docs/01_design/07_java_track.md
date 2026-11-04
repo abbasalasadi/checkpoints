@@ -22,12 +22,12 @@ Facts established from the image:
 - JDK: Eclipse Temurin **21.0.10+7** (Alpine). Compiler flags in `pom.xml`: source/target 15.
 - `app/tests/<Class>_test/<Class>_test.java` + shared `app/tests/TestRunnerMain.java`, `StopAfterFailureExtension.java`.
 - `app/tests_utility/` = offline Maven repository (33 MB): JUnit Jupiter 5.10.2, platform launcher 1.10.2, AssertJ 3.22.0, exec-maven-plugin.
-- 111 test directories: the 45 checkpoint exercises below + 66 piscine exercises (**out of scope**, D31).
-- Test fixtures: none for the 45 checkpoint exercises (only piscine `Capitalize` has files). Tests that do read files use absolute `/app/tests/...` paths, so the image keeps that layout anyway.
+- 111 test directories: the 45 (now 44) checkpoint exercises below + 66 piscine exercises (**out of scope**, D31).
+- Test fixtures: none for the 44 checkpoint exercises (only piscine `Capitalize` has files). Tests that do read files use absolute `/app/tests/...` paths, so the image keeps that layout anyway.
 
 ## 2. Exercises and placements (D30)
 
-45 exercises, 3 checkpoints × 5 levels, **every exercise in exactly one placement**. Level 5 is "optional" on the
+44 exercises, 3 checkpoints × 5 levels, **every exercise in exactly one placement**. Level 5 is "optional" on the
 platform (a student who passed levels 1–4 is already through); **we treat it as a normal level** everywhere:
 practice, dashboard counts, and the mock exam (which therefore has 5 levels for Java, like the other tracks).
 
@@ -35,11 +35,11 @@ practice, dashboard counts, and the mock exam (which therefore has 5 levels for 
 |---|---|---|---|---|---|
 | 1 | goodbye-mars, system-logger, universal-greeting, average-calc | multiplication-table, unit-converter | strlen, count-char, digitlen | rotate-array, reverse-array, sort-array | almost-palindrom, factorial, next-prime |
 | 2 | todo-list, time-tracker, date-formatter | area-calculator, factorial-master, flexisort | double-linked-list, circular-linked-list, single-linked-list | harmonious-fusion, distinct-substring-length, is-anagram | spiral-matrix, maximal-square, steady-sequence |
-| 3 | day-of-week, monthly-period, age-finder | html-validator, breakdown-url, config-protector | singleton-blueprint, builder-blueprint, factory-blueprint | top-frequents, longest-common-prefix, first-unique | valid-sudoku, armstrong-number, perfect-number |
+| 3 | day-of-week, monthly-period, age-finder | html-validator, config-protector | singleton-blueprint, builder-blueprint, factory-blueprint | top-frequents, longest-common-prefix, first-unique | valid-sudoku, armstrong-number, perfect-number |
 
-Checked 2026-11-04: all 45 have a subject and a test; the subject folder holds exactly these 45.
+Checked 2026-11-04: all have a subject and a test. **Update 2026-11-04 (D34):** the program's `list.json` is the source; it drops breakdown-url (CP3 level 2 has two exercises), so the track has **44**. todo-list expects `Task.java` + `TodoList.java` (TaskStatus inside Task.java). The program names is-anagram's subject `check-anagram`/`AnagramChecker.java`, which exist neither in the subjects nor in the image; is-anagram is kept.
 
-**Slug** = the upstream subject folder name (kebab-case, e.g. `almost-palindrom`, `breakdown-url`) — matches
+**Slug** = the upstream subject folder name (kebab-case, e.g. `almost-palindrom`) — matches
 `SLUG_PATTERN`, stays stable with the 01-edu URL. **Test class** = the image's directory name minus `_test`
 (`AlmostPalindrome`, `HTMLValidator`, `BreakdownURL`), stored in `meta.json` as `test.className`; never derived at runtime.
 
@@ -50,7 +50,7 @@ Same shape as `content/js` / `content/rust`:
 ```
 content/java/
   index.json                         every exercise + every placement (schema 1, language "java")
-  hints.json                         45 one-line hints (D29 rules: no code, no answer)
+  hints.json                         44 one-line hints (D29 rules: no code, no answer)
   sources/
     module-java-image.json           provenance: image path, JDK version, sha256 of every copied file
     placements.json                  the owner's list, verbatim structure
@@ -98,7 +98,7 @@ diff summary). It is a one-off importer like the existing ones; the app never re
 ## 4. Runner image (`docker/runner-java/`)
 
 - Base `eclipse-temurin:21-jdk-alpine` (same JDK major as upstream; minor pinned by digest, recorded in provenance).
-- `/app`: `pom.xml`, `entrypoint.sh`, `tests/` (the 45 test dirs + the two harness files), `tests_utility/` (offline Maven repo), and Maven itself (`/usr/share/maven`, same version as the image).
+- `/app`: `pom.xml`, `entrypoint.sh`, `tests/` (the 44 test dirs + the two harness files), `tests_utility/` (offline Maven repo), and Maven itself (`/usr/share/maven`, same version as the image).
 - Built from a context assembled from `content/java/` by `scripts/build-runner-images.mjs` (new `java` target), like JS. Never built from the raw export.
 - Hardened like the others: `USER nobody`, read-only rootfs, `/tmp` tmpfs, no network, CPU/memory/pids limits.
 - **Writable paths**: upstream writes `project/` in its cwd and Maven may write resolver metadata into the local repo.
@@ -152,9 +152,9 @@ path, so it needs owner approval) is calling `javac` + the JUnit launcher direct
 
 ## 8. Verification (same bar as Go/JS/Rust)
 
-1. `tools/verify/java.ts`: for every exercise, **solution passes** the official test and **starter fails** (but compiles) — 45/45 both ways. Run in the runner image (on lan_vm1 via `make send/run`).
-2. Parity: the same 45 solutions + 45 starters through our image vs. the exported official image → identical verdicts.
-3. Content checks: README/test sha256 match provenance; every placement resolves; hints 45/45.
+1. `tools/verify/java.ts`: for every exercise, **solution passes** the official test and **starter fails** (but compiles) — 44/44 both ways. Run in the runner image (on lan_vm1 via `make send/run`).
+2. Parity: the same 44 solutions + 44 starters through our image vs. the exported official image → identical verdicts.
+3. Content checks: README/test sha256 match provenance; every placement resolves; hints 44/44.
 4. Unit/integration tests: migration 007 (CHECK widened, data intact), runner outcome mapping, assertion and diagnostics parsers, exam on a Java checkpoint.
 5. Browser check: a fake user runs and submits one exercise per checkpoint, starts and passes a Java mock-exam level.
 6. Measure Run/Submit latency on Cloud Run; record in this document.
@@ -162,8 +162,8 @@ path, so it needs owner approval) is calling `javac` + the JUnit launcher direct
 ## 9. Implementation order (V3 step 7; each sub-step committed separately)
 
 - **7a** Content importer + `content/java/` (README, tests, harness, starters, ExerciseRunner, placements, provenance).
-- **7b** Reference solutions (45) + hints (45).
-- **7c** Runner image + build script target; local Docker backend; verify 45/45 both ways; parity with the official image.
+- **7b** Reference solutions (44) + hints (44).
+- **7c** Runner image + build script target; local Docker backend; verify 44/44 both ways; parity with the official image.
 - **7d** Server: language, migration 007, exercises loader, `java.ts` runner, settings; tests.
 - **7e** Web: language list, Monaco, assertion + diagnostics parsers; tests; browser check.
 - **7f** Cloud Run wrapper + service (deploy of the service is part of the release deploy, with approval).
