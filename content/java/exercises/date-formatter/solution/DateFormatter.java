@@ -1,4 +1,3 @@
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateFormatter {
@@ -43,18 +42,23 @@ public class DateFormatter {
     }
 
     public String getFormattedDate() {
+        String[] months = {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+        java.util.Calendar c = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
+        c.setTime(new Date(date * 1000L));
+        String day = String.format("%02d", c.get(java.util.Calendar.DAY_OF_MONTH));
+        String month = String.format("%02d", c.get(java.util.Calendar.MONTH) + 1);
+        int year = c.get(java.util.Calendar.YEAR);
         String up = format.toUpperCase();
-        String pattern;
         if (up.equals("DD/MM/YYYY")) {
-            pattern = "dd/MM/y";
+            formattedDate = day + "/" + month + "/" + year;
         } else if (up.equals("DD.MM.YYYY")) {
-            pattern = "dd.MM.y";
+            formattedDate = day + "." + month + "." + year;
         } else {
-            pattern = "dd MMMM y";
+            formattedDate = day + " " + months[c.get(java.util.Calendar.MONTH)] + " " + year;
         }
-        SimpleDateFormat f = new SimpleDateFormat(pattern, java.util.Locale.ENGLISH);
-        f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
-        formattedDate = f.format(new Date(date * 1000L));
         return formattedDate;
     }
 }

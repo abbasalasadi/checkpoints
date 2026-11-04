@@ -4,6 +4,10 @@ import java.util.List;
 public class Regex {
     private StringBuilder pattern;
 
+    public Regex() {
+        this(new java.util.ArrayList<>());
+    }
+
     public Regex(List<String> component) {
         pattern = new StringBuilder();
         for (String c : component) {
