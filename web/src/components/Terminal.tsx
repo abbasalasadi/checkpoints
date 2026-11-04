@@ -14,7 +14,7 @@
  * session cookie is httpOnly.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Terminal as XTerm } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import '@xterm/xterm/css/xterm.css';
@@ -29,9 +29,54 @@ export interface TerminalHandle {
 
 interface Props {
   onReady?: (handle: TerminalHandle) => void;
+  /** V2 phones and tablets: plain selectable text instead of the emulator. */
+  plain?: boolean;
 }
 
-export function TerminalPane({ onReady }: Props) {
+export function TerminalPane({ onReady, plain }: Props) {
+  return plain ? <PlainPane onReady={onReady} /> : <XtermPane onReady={onReady} />;
+}
+
+/** ANSI colour and cursor codes, dropped for plain text; \r\n becomes \n. */
+// eslint-disable-next-line no-control-regex
+const ANSI = /\x1b\[[0-9;?]*[A-Za-z]|\x1b\][^\x07]*\x07/g;
+
+export function toPlain(data: string): string {
+  return data.replace(ANSI, '').replace(/\r\n/g, '\n').replace(/\r/g, '');
+}
+
+const PLAIN_MAX = 1024 * 1024;
+
+function PlainPane({ onReady }: { onReady?: Props['onReady'] }) {
+  const [text, setText] = useState('');
+  const ref = useRef<HTMLPreElement | null>(null);
+  useEffect(() => {
+    onReady?.({
+      write: (data) => setText((t) => (t + toPlain(data)).slice(-PLAIN_MAX)),
+      clear: () => setText(''),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    const el = ref.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [text]);
+  return (
+    <pre
+      ref={ref}
+      aria-live="polite"
+      style={{
+        height: '100%', width: '100%', margin: 0, boxSizing: 'border-box', overflow: 'auto', background: 'var(--code-bg)',
+        color: text ? 'var(--text)' : 'var(--text-dim)', padding: '.5rem .6rem', fontSize: '.78rem', lineHeight: 1.45,
+        whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+      }}
+    >
+      {text || 'Your run and submit results will appear here.'}
+    </pre>
+  );
+}
+
+function XtermPane({ onReady }: { onReady?: Props['onReady'] }) {
   const hostRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

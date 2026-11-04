@@ -34,6 +34,6 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 | 4 | Solutions vault + exercise report export | 3 | done (awaiting owner test) | server 39/39, web 111/111, browser: /vault list, code view, report download (.md) |
 | 5 | Stars, sidebar search/filters, compact rail | 5 | done (awaiting owner test) | server 40/40, web 111/111, browser: star, Starred filter, rail collapse |
 | 6 | Offline indicator, draft re-sync, skeletons | 7 | done (awaiting owner test) | web 114/114, browser: offline banner + Run/Submit wait, browser draft restored and re-saved, skeletons |
-| 7 | Mobile and tablet layouts | 6 | todo | |
+| 7 | Mobile and tablet layouts | 6 | done (awaiting owner test) | web 116/116, browser 375 px: tabs, symbol bar insert + undo, Run → plain-text Output, dashboard stacks |
 | 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | todo | |
 | 9 | Self-audit, VM test run, owner local test, release note | all | todo | |

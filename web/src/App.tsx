@@ -33,6 +33,7 @@ import { canonicalOutcome, diagnoseRun, noticeOutcome, type Diagnosis } from './
 import { lint as lintGo } from './lib/lint/go.js';
 import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
+import { COMPACT_QUERY, SYMBOLS, useMedia } from './lib/media.js';
 import { clearDraft, draftDiffers, readDraft, saveDraft, useOnline } from './lib/offline.js';
 import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
 import { Dashboard } from './components/Dashboard.js';
@@ -534,6 +535,7 @@ function Workbench({
         return next;
       });
       navigate(language, next);
+      setPane('subject');
     },
     [language],
   );
@@ -688,6 +690,25 @@ function Workbench({
   const [query, setQuery] = useState('');
   const [show, setShow] = useState<SidebarFilter>('all');
   const [rail, setRail] = useState(() => readFlag('cp.rail'));
+  // Phones and tablets: one pane at a time, chosen by tabs.
+  const compact = useMedia(COMPACT_QUERY);
+  const [pane, setPane] = useState<MobilePane>(() => (readLocation().slug ? 'subject' : 'list'));
+  const hideIf = (cond: boolean): React.CSSProperties => (cond ? { display: 'none' } : {});
+  const typeText = (text: string) => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    const sel = ed.getSelection();
+    if (!sel) return;
+    ed.focus();
+    ed.executeEdits('symbol-bar', [{ range: sel, text, forceMoveMarkers: true }]);
+    ed.pushUndoStop();
+  };
+  const editorCommand = (id: 'undo' | 'redo') => {
+    const ed = editorRef.current;
+    if (!ed) return;
+    ed.focus();
+    ed.trigger('symbol-bar', id, null);
+  };
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle && show === 'all') return null;
@@ -750,6 +771,7 @@ function Workbench({
 
   async function execute(kind: 'run' | 'test') {
     if (!detail || !slug) return;
+    if (compact) setPane('output');
     const lang = language;
     const exerciseSlug = slug;
     // The runner must grade what is on screen. If the save did not land, the
@@ -1015,9 +1037,28 @@ function Workbench({
   const readme = detail?.readme ?? detail?.subject ?? '';
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: compact ? 'column' : 'row', height: '100dvh', width: '100vw', overflow: 'hidden' }}>
+      {compact && (
+        <nav aria-label="Workbench panes" role="tablist" style={{ display: 'flex', borderBottom: '1px solid var(--border)', flex: '0 0 auto', background: 'var(--surface)' }}>
+          {MOBILE_PANES.map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={pane === id}
+              onClick={() => setPane(id)}
+              style={{
+                ...ghostBtn, flex: 1, padding: '.6rem .2rem', fontSize: '.82rem', borderRadius: 0,
+                color: pane === id ? 'var(--accent-text)' : 'var(--text-muted)', boxShadow: pane === id ? 'inset 0 -2px 0 var(--accent)' : 'none',
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+      )}
       {/* ── left: exercise tree, or the compact rail (V2) ─────────────────── */}
-      {rail && (
+      {rail && !compact && (
         <nav
           aria-label="Compact sidebar"
           style={{ width: '2.6rem', flex: '0 0 auto', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.6rem 0' }}
@@ -1034,11 +1075,11 @@ function Workbench({
         </nav>
       )}
       <aside
-        hidden={rail}
+        hidden={compact ? pane !== 'list' : rail}
         style={{
-          display: rail ? 'none' : undefined,
-          width: left.size,
-          flex: '0 0 auto',
+          display: (compact ? pane !== 'list' : rail) ? 'none' : undefined,
+          width: compact ? '100%' : left.size,
+          flex: compact ? '1 1 0' : '0 0 auto',
           borderRight: '1px solid var(--border)',
           overflowY: 'auto',
           padding: '.6rem',
@@ -1171,14 +1212,14 @@ function Workbench({
         })}
       </aside>
 
-      {!rail && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
+      {!rail && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
 
       {/* ── centre: instructions ─────────────────────────────────────────
         * No title bar: every README opens with the exercise's own heading, so a
         * separate one would repeat it. Progress and placement are already in the
         * sidebar — the checkmark and the tree position say both.
         */}
-      <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact && pane !== 'subject') }}>
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
           {detail ? (
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
@@ -1197,22 +1238,24 @@ function Workbench({
         </div>
       </section>
 
-      <Splitter axis="x" label="Resize the instructions" onDelta={(d) => right.nudge(-d)} onCommit={right.persist} />
+      {!compact && <Splitter axis="x" label="Resize the instructions" onDelta={(d) => right.nudge(-d)} onCommit={right.persist} />}
 
       {/* ── right: editor, arguments, actions, results ──────────────────── */}
       <section
         style={{
-          width: right.size,
-          flex: '0 0 auto',
+          width: compact ? '100%' : right.size,
+          flex: compact ? '1 1 0' : '0 0 auto',
           display: 'flex',
           flexDirection: 'column',
-          borderLeft: '1px solid var(--border)',
+          borderLeft: compact ? 'none' : '1px solid var(--border)',
           minWidth: 0,
+          minHeight: 0,
           position: 'relative',
+          ...hideIf(compact && pane !== 'code' && pane !== 'output'),
         }}
       >
         {/* A. file buttons */}
-        <div style={{ display: 'flex', gap: '.3rem', padding: '.45rem .6rem', borderBottom: '1px solid var(--border)', flex: '0 0 auto' }}>
+        <div style={{ display: 'flex', gap: '.3rem', padding: '.45rem .6rem', borderBottom: '1px solid var(--border)', flex: '0 0 auto', ...hideIf(compact && pane === 'output') }}>
           {order.map((f) => (
             <button
               key={f}
@@ -1287,7 +1330,7 @@ function Workbench({
         )}
 
         {/* B. editor */}
-        <div style={{ flex: '1 1 0', minHeight: 0 }}>
+        <div style={{ flex: '1 1 0', minHeight: 0, ...hideIf(compact && pane === 'output') }}>
           <Editor
             height="100%"
             /* Monaco's built-in vs-dark sits at #1e1e1e, several stops lighter
@@ -1336,8 +1379,31 @@ function Workbench({
           }}
         />
 
+        {/* Phones: the symbols a touch keyboard hides, and undo/redo. */}
+        {compact && pane === 'code' && (
+          <div
+            aria-label="Symbols"
+            style={{ display: 'flex', gap: '.25rem', padding: '.3rem .4rem', overflowX: 'auto', borderTop: '1px solid var(--border)', flex: '0 0 auto', background: 'var(--surface)' }}
+          >
+            <button type="button" aria-label="Undo" onMouseDown={(e) => e.preventDefault()} onClick={() => editorCommand('undo')} style={symbolBtn}>
+              ↶
+            </button>
+            <button type="button" aria-label="Redo" onMouseDown={(e) => e.preventDefault()} onClick={() => editorCommand('redo')} style={symbolBtn}>
+              ↷
+            </button>
+            <button type="button" aria-label="Tab" onMouseDown={(e) => e.preventDefault()} onClick={() => typeText('\t')} style={symbolBtn}>
+              ⇥
+            </button>
+            {SYMBOLS.map((c) => (
+              <button key={c} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => typeText(c)} style={symbolBtn}>
+                {c}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* C. arguments — only where the exercise reads argv */}
-        {showArgs && (
+        {showArgs && !(compact && pane === 'output') && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', padding: '.45rem .6rem', borderTop: '1px solid var(--border)', flex: '0 0 auto' }}>
             <label htmlFor="args" style={{ color: 'var(--text-muted)', fontSize: '.78rem', flex: '0 0 auto' }}>
               Arguments
@@ -1406,14 +1472,22 @@ function Workbench({
           </span>
         </div>
 
-        <Splitter axis="y" label="Resize the results" onDelta={(d) => results.nudge(-d)} onCommit={results.persist} />
+        {!compact && <Splitter axis="y" label="Resize the results" onDelta={(d) => results.nudge(-d)} onCommit={results.persist} />}
 
         {toast}
 
         {/* E. results */}
         <RunNotice notice={notice} />
-        <div style={{ height: results.size, flex: '0 0 auto', borderTop: '1px solid var(--border)', minHeight: 0 }}>
-          <TerminalPane onReady={(h) => (term.current = h)} />
+        <div
+          style={{
+            height: compact ? undefined : results.size,
+            flex: compact ? '1 1 0' : '0 0 auto',
+            borderTop: '1px solid var(--border)',
+            minHeight: 0,
+            ...hideIf(compact && pane !== 'output'),
+          }}
+        >
+          <TerminalPane key={compact ? 'plain' : 'xterm'} plain={compact} onReady={(h) => (term.current = h)} />
         </div>
       </section>
 
@@ -1628,6 +1702,19 @@ function outlineBtn(disabled: boolean): React.CSSProperties {
     fontSize: '.78rem',
   };
 }
+const symbolBtn: React.CSSProperties = {
+  flex: 'none', minWidth: '2.1rem', padding: '.35rem .4rem', background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--border)',
+  borderRadius: 'var(--radius)', font: 'inherit', fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', fontSize: '.9rem', cursor: 'pointer',
+};
+
+type MobilePane = 'list' | 'subject' | 'code' | 'output';
+const MOBILE_PANES: [MobilePane, string][] = [
+  ['list', 'Exercises'],
+  ['subject', 'Subject'],
+  ['code', 'Code'],
+  ['output', 'Output'],
+];
+
 const sideInput: React.CSSProperties = {
   width: '100%', boxSizing: 'border-box', background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--border-strong)',
   borderRadius: 'var(--radius)', padding: '.28rem .45rem', font: 'inherit', fontSize: '.8rem',
