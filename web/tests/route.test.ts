@@ -17,7 +17,7 @@ beforeEach(() => at('/'));
 
 describe('reading the location', () => {
   test('the root selects no track (it is the dashboard)', () => {
-    expect(readLocation()).toEqual({ page: 'dashboard', language: null, slug: null, legacy: false });
+    expect(readLocation()).toEqual({ page: 'dashboard', language: null, slug: null, checkpoint: null, legacy: false });
   });
 
   test.each([
@@ -32,11 +32,11 @@ describe('reading the location', () => {
   });
 
   test('a bare track selects the track only', () => {
-    expect(parsePath('/go')).toEqual({ page: null, language: 'go', slug: null, legacy: false });
+    expect(parsePath('/go')).toEqual({ page: null, language: 'go', slug: null, checkpoint: null, legacy: false });
   });
 
   test('a legacy /e/ path is read as Rust and flagged for rewriting', () => {
-    expect(parsePath('/e/min_and_max')).toEqual({ page: null, language: 'rust', slug: 'min_and_max', legacy: true });
+    expect(parsePath('/e/min_and_max')).toEqual({ page: null, language: 'rust', slug: 'min_and_max', checkpoint: null, legacy: true });
   });
 
   test('an unrelated path selects nothing rather than guessing', () => {
@@ -84,5 +84,15 @@ describe('the solutions vault route (V2)', () => {
 describe('the mock exams route (V3)', () => {
   test('/exams is its own page', () => {
     expect(parsePath('/exams')).toMatchObject({ page: 'exams', language: null });
+  });
+});
+
+describe('checkpoint in the URL (V4)', () => {
+  test('reads ?cp= on an exercise and writes it back', () => {
+    expect(parsePath('/go/digitlen', '?cp=2')).toMatchObject({ language: 'go', slug: 'digitlen', checkpoint: '2' });
+    expect(parsePath('/go/digitlen', '?cp=../x').checkpoint).toBeNull();
+    expect(parsePath('/go', '?cp=2').checkpoint).toBeNull();
+    expect(pathFor('go', 'digitlen', 'retest')).toBe('/go/digitlen?cp=retest');
+    expect(pathFor('go', 'digitlen')).toBe('/go/digitlen');
   });
 });

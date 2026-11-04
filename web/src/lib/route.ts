@@ -11,6 +11,8 @@
  *   /exams               mock exams: start, reports (V3)
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
+ *   /go/hello?cp=2       the same exercise, opened from checkpoint 2 (V4):
+ *                        progress is shared, the value shown is that checkpoint's
  *   /e/min_and_max       legacy Rust link — read as /rust/min_and_max and
  *                        rewritten in place
  */
@@ -26,6 +28,8 @@ export interface Location {
   page: Page | null;
   language: Language | null;
   slug: string | null;
+  /** The checkpoint the exercise was opened from (`?cp=`), or null. */
+  checkpoint: string | null;
   /** The path was a legacy shape and should be replaced with pathFor(). */
   legacy: boolean;
 }
@@ -49,27 +53,33 @@ function cleanSlug(raw: string | undefined): string | null {
   return SLUG.test(slug) ? slug : null;
 }
 
-export function parsePath(pathname: string): Location {
+const CHECKPOINT = /^[a-z0-9]{1,16}$/;
+function cleanCheckpoint(search: string): string | null {
+  const cp = new URLSearchParams(search).get('cp');
+  return cp && CHECKPOINT.test(cp) ? cp : null;
+}
+
+export function parsePath(pathname: string, search = ''): Location {
   const parts = pathname.replace(/\/+$/, '').split('/').filter(Boolean);
   const [first, second, ...rest] = parts;
-  const home: Location = { page: 'dashboard', language: null, slug: null, legacy: false };
+  const home: Location = { page: 'dashboard', language: null, slug: null, checkpoint: null, legacy: false };
   if (first === 'history' && second === undefined) return { ...home, page: 'history' };
   if (first === 'vault' && second === undefined) return { ...home, page: 'vault' };
   if (first === 'exams' && second === undefined) return { ...home, page: 'exams' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
-    return slug ? { page: null, language: 'rust', slug, legacy: true } : home;
+    return slug ? { page: null, language: 'rust', slug, checkpoint: null, legacy: true } : home;
   }
   if (isLanguage(first)) {
-    if (second === undefined) return { page: null, language: first, slug: null, legacy: false };
+    if (second === undefined) return { page: null, language: first, slug: null, checkpoint: null, legacy: false };
     const slug = rest.length ? null : cleanSlug(second);
-    return { page: null, language: first, slug, legacy: false };
+    return { page: null, language: first, slug, checkpoint: slug ? cleanCheckpoint(search) : null, legacy: false };
   }
   return home;
 }
 
 export function readLocation(): Location {
-  return parsePath(window.location.pathname);
+  return parsePath(window.location.pathname, window.location.search);
 }
 
 /** The slug in the current URL, or null. */
@@ -77,9 +87,10 @@ export function slugFromLocation(): string | null {
   return readLocation().slug;
 }
 
-export function pathFor(language: Language | null, slug: string | null = null): string {
+export function pathFor(language: Language | null, slug: string | null = null, checkpoint: string | null = null): string {
   if (!language) return '/';
-  return slug ? `/${language}/${slug}` : `/${language}`;
+  if (!slug) return `/${language}`;
+  return checkpoint ? `/${language}/${slug}?cp=${encodeURIComponent(checkpoint)}` : `/${language}/${slug}`;
 }
 
 /**
@@ -88,9 +99,9 @@ export function pathFor(language: Language | null, slug: string | null = null): 
  * `replace` is for corrections — an unknown slug, a legacy path — which should
  * not leave a broken entry in the history for Back to return to.
  */
-export function navigate(language: Language | null, slug: string | null, { replace = false } = {}): void {
-  const next = pathFor(language, slug);
-  if (next === window.location.pathname) return;
+export function navigate(language: Language | null, slug: string | null, { replace = false, checkpoint = null }: { replace?: boolean; checkpoint?: string | null } = {}): void {
+  const next = pathFor(language, slug, checkpoint);
+  if (next === window.location.pathname + window.location.search) return;
   if (replace) window.history.replaceState({ language, slug }, '', next);
   else window.history.pushState({ language, slug }, '', next);
 }

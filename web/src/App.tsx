@@ -431,6 +431,8 @@ function Workbench({
   const [placements, setPlacements] = useState<Placement[]>([]);
   // Seeded from the URL, so a refresh or a shared link opens the same exercise.
   const [slug, setSlug] = useState<string | null>(initial.slug);
+  /** The checkpoint the exercise was opened from (V4): decides the value shown. */
+  const [cp, setCp] = useState<string | null>(initial.checkpoint);
   const [detail, setDetail] = useState<ExerciseDetail | null>(null);
   const [files, setFiles] = useState<Record<string, string>>({});
   const [order, setOrder] = useState<string[]>([]);
@@ -586,6 +588,7 @@ function Workbench({
       onNavigate((loc) => {
         if (loc.language) setLanguage(loc.language);
         setSlug(loc.slug);
+        setCp(loc.checkpoint);
       }),
     [],
   );
@@ -606,12 +609,13 @@ function Workbench({
 
   /** Selecting an exercise is a navigation, so it belongs in the history. */
   const select = useCallback(
-    (next: string) => {
+    (next: string, checkpoint: string | null = null) => {
       setSlug((prev) => {
         if (prev !== next) pickedFromTree.current = true;
         return next;
       });
-      navigate(language, next);
+      setCp(checkpoint);
+      navigate(language, next, { checkpoint });
       setPane('subject');
     },
     [language],
@@ -1373,10 +1377,10 @@ function Workbench({
                             <ExerciseRow
                               key={`${levelKey}/${s}`}
                               slug={s}
-                              current={slug === s}
+                              current={slug === s && (!cp || cp === checkpoint)}
                               done={passed.has(s)}
                               star={starred.has(s)}
-                              onSelect={() => select(s)}
+                              onSelect={() => select(s, checkpoint)}
                               onStar={() => toggleStar(s)}
                               indent="1.15rem"
                             />
@@ -1400,7 +1404,7 @@ function Workbench({
         */}
       <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact ? pane !== 'subject' : focus) }}>
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
-          {detail && slug && !exam && <Breadcrumbs language={language} detail={detail} exam={exam} list={list} />}
+          {detail && slug && !exam && <Breadcrumbs language={language} detail={detail} exam={exam} list={list} checkpoint={cp} />}
           {detail && slug && !exam && (
             <div style={{ marginBottom: '.8rem' }}>
               <HintBox key={`${language}/${slug}`} language={language} slug={slug} />
@@ -2051,29 +2055,11 @@ export function nextInOrder(placements: Placement[], list: ExerciseSummary[], sl
 }
 
 /** Where the open exercise sits (V3): track › checkpoint › level › exercise. */
-/** What the exercise is worth in each checkpoint it belongs to (V4, D35), percent only. */
-function ValueChips({ placements }: { placements: { checkpoint: string; value?: number | null; category?: string }[] }) {
-  const shown = placements.filter((p) => typeof p.value === 'number');
-  if (!shown.length) return null;
-  return (
-    <span style={{ display: 'inline-flex', gap: '.3rem', marginLeft: '.3rem', flexWrap: 'wrap' }}>
-      {shown.map((p) => (
-        <span
-          key={p.checkpoint}
-          title={`Worth ${fmtPercent(p.value!)} of checkpoint ${p.checkpoint}${p.category === 'optional' ? ' (optional: adds on top of 100%)' : ''}`}
-          style={{ border: '1px solid var(--border-strong)', borderRadius: 999, padding: '0 .45rem', color: p.category === 'optional' ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}
-        >
-          CP{p.checkpoint === 'final' ? ' final' : p.checkpoint === 'retest' ? ' retest' : p.checkpoint} · {fmtPercent(p.value!)}
-          {p.category === 'optional' ? ' +' : ''}
-        </span>
-      ))}
-    </span>
-  );
-}
-
-function Breadcrumbs({ language, detail, exam, list }: { language: Language; detail: ExerciseDetail; exam?: ExamView; list: ExerciseSummary[] }) {
+function Breadcrumbs({ language, detail, exam, list, checkpoint }: { language: Language; detail: ExerciseDetail; exam?: ExamView; list: ExerciseSummary[]; checkpoint: string | null }) {
   const item = exam?.items.find((i) => i.slug === detail.slug);
-  const first = detail.placements?.[0];
+  const placements = (detail.placements ?? []) as Placement[];
+  // The checkpoint it was opened from (V4); else its first one.
+  const first = placements.find((p) => p.checkpoint === checkpoint) ?? placements[0];
   const parts = exam
     ? ['Mock exam', `Checkpoint ${exam.checkpoint}`, item ? `Level ${item.level}` : null]
     : [LANGUAGE_LABEL[language], first ? `Checkpoint ${first.checkpoint}` : null, first ? `Level ${first.level}` : null];
@@ -2085,7 +2071,14 @@ function Breadcrumbs({ language, detail, exam, list }: { language: Language; det
         </span>
       ))}
       <span style={{ color: 'var(--text-muted)' }}>{list.find((e) => e.slug === detail.slug)?.title ?? detail.slug}</span>
-      <ValueChips placements={detail.placements ?? []} />
+      {first && typeof first.value === 'number' && (
+        <span
+          title={first.category === 'optional' ? 'Optional: adds on top of 100% in this checkpoint' : `Share of checkpoint ${first.checkpoint}'s mark`}
+          style={{ marginLeft: '.3rem', border: '1px solid var(--border-strong)', borderRadius: 999, padding: '0 .45rem', color: first.category === 'optional' ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums' }}
+        >
+          worth {fmtPercent(first.value)}{first.category === 'optional' ? ' +' : ''}
+        </span>
+      )}
     </nav>
   );
 }
