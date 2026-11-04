@@ -28,7 +28,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 ## Steps
 | # | Step | Features | State | Result check |
 |---|---|---|---|---|
-| 1 | Preferences: schema, API, settings panel, applied to the editor | 4 | todo | |
+| 1 | Preferences: schema, API, settings panel, applied to the editor | 4 | done (awaiting owner test) | server 37/37, web 109/109, browser: light theme, font, Vim, reload keeps them |
 | 2 | Dashboard + track choice moved out of the sidebar | 1 | todo | |
 | 3 | History explorer and attempt detail | 2 | todo | |
 | 4 | Solutions vault + exercise report export | 3 | todo | |

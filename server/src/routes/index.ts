@@ -24,7 +24,8 @@ import {
   setSessionCookie,
   type Caller,
 } from '../middleware/http.js';
-import { attempts, progress, sessions, snapshots, users } from '../repositories/index.js';
+import { attempts, preferences, progress, sessions, snapshots, users } from '../repositories/index.js';
+import { normalizePreferences } from '../services/preferences.js';
 import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
 import {
   getExercise,
@@ -70,6 +71,8 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   }
 
   if (path === '/api/languages' && method === 'GET') return languages(req, res);
+  if (path === '/api/preferences' && method === 'GET') return getPreferences(req, res);
+  if (path === '/api/preferences' && method === 'PUT') return putPreferences(req, res);
 
   // ── runs, not language-scoped (the id is enough)
   if (path === '/api/runner' && method === 'GET') return runnerState(req, res);
@@ -222,6 +225,28 @@ function me(req: IncomingMessage, res: ServerResponse): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
   sendJson(res, 200, { identifier: caller.user.identifier_normalized, devLogin: config.devLoginEnabled });
+}
+
+// ── preferences (V2, D24) ────────────────────────────────────────────────────
+
+function getPreferences(req: IncomingMessage, res: ServerResponse): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  sendJson(res, 200, { preferences: normalizePreferences(preferences.get(caller.user.id)) });
+}
+
+/** Partial update: only the keys sent change; invalid values are ignored. */
+async function putPreferences(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const input = await body<unknown>(req, res);
+  if (input === null) {
+    if (!res.headersSent) sendError(res, 400, 'invalid_request', 'Invalid request.');
+    return;
+  }
+  const next = normalizePreferences(input, normalizePreferences(preferences.get(caller.user.id)));
+  preferences.set(caller.user.id, next);
+  sendJson(res, 200, { preferences: next });
 }
 
 // ── content ──────────────────────────────────────────────────────────────────

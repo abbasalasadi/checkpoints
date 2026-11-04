@@ -345,3 +345,29 @@ export const runnerUsage = {
       .run(now(), now(), containerId);
   },
 };
+
+// ── preferences ──────────────────────────────────────────────────────────────
+
+export const preferences = {
+  /** The stored JSON, parsed; null when the user never saved any. */
+  get(userId: number): unknown {
+    const row = getDb().prepare('SELECT prefs_json FROM preferences WHERE user_id = ?').get(userId) as
+      | { prefs_json: string }
+      | undefined;
+    if (!row) return null;
+    try {
+      return JSON.parse(row.prefs_json);
+    } catch {
+      return null;
+    }
+  },
+
+  set(userId: number, prefs: unknown): void {
+    getDb()
+      .prepare(
+        `INSERT INTO preferences (user_id, prefs_json, updated_at) VALUES (?, ?, ?)
+         ON CONFLICT(user_id) DO UPDATE SET prefs_json = excluded.prefs_json, updated_at = excluded.updated_at`,
+      )
+      .run(userId, JSON.stringify(prefs), now());
+  },
+};

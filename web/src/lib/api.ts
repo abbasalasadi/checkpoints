@@ -161,7 +161,22 @@ function saveBody(files: Record<string, string>) {
   return { files, ...(lib !== undefined ? { libRs: lib } : {}), ...(main !== undefined ? { mainRs: main } : {}) };
 }
 
+/** Account preferences (V2, D24). The server validates; this mirrors its shape. */
+export interface Preferences {
+  theme: 'dark' | 'light';
+  fontSize: number;
+  tabSize: 2 | 4 | 8;
+  wordWrap: boolean;
+  keybindings: 'default' | 'vim';
+}
+
 export const api = {
+  preferences: () => request<{ preferences: Preferences }>('/api/preferences'),
+  savePreferences: (patch: Partial<Preferences>) =>
+    request<{ preferences: Preferences }>('/api/preferences', {
+      method: 'PUT',
+      body: JSON.stringify(patch),
+    }),
   me: () => request<{ identifier?: string; login?: string }>('/api/auth/me'),
   login: (identifier: string, password: string) =>
     request<{ identifier?: string; login?: string }>('/api/auth/login', {

@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import './styles.css';
+import './lib/monaco.js';
 import { createRoot } from 'react-dom/client';
 import { App } from './App.js';
 import { logger } from './logger.js';

@@ -22,6 +22,8 @@ import { Splitter, usePaneSize } from './components/Split.js';
 import { Menu } from './components/Menu.js';
 import { Icon, Logo } from './components/Icon.js';
 import { About } from './components/About.js';
+import { Settings } from './components/Settings.js';
+import { usePreferences, type Preferences } from './lib/preferences.js';
 import { StuckDialog } from './components/StuckDialog.js';
 import { useToast } from './components/Toast.js';
 import { RunState, type RunPhase } from './components/RunState.js';
@@ -87,6 +89,7 @@ export function App() {
    * work; it has not, and the message says so.
    */
   const [signedOutReason, setSignedOutReason] = useState<string | null>(null);
+  const { prefs, update: updatePrefs } = usePreferences(screen === 'app');
 
   useEffect(() => {
     api
@@ -113,6 +116,8 @@ export function App() {
   return (
     <Workbench
       identifier={identifier}
+      prefs={prefs}
+      onPrefs={updatePrefs}
       onSignedOut={(reason) => {
         setSignedOutReason(reason ?? null);
         setScreen('login');
@@ -233,9 +238,13 @@ interface Pending {
 
 function Workbench({
   identifier,
+  prefs,
+  onPrefs,
   onSignedOut,
 }: {
   identifier: string;
+  prefs: Preferences;
+  onPrefs: (patch: Partial<Preferences>) => void;
   onSignedOut: (reason?: string) => void;
 }) {
   const initial = useMemo(() => readLocation(), []);
@@ -267,6 +276,23 @@ function Workbench({
   /** Dismissed for THIS run, so the warning cannot nag every second. */
   const [stuckDismissed, setStuckDismissed] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const editorRef = useRef<import('monaco-editor').editor.IStandaloneCodeEditor | null>(null);
+  const vimStatus = useRef<HTMLDivElement | null>(null);
+  const [editorReady, setEditorReady] = useState(false);
+  // Vim mode (D24): loaded only when chosen, disposed when switched off.
+  useEffect(() => {
+    if (prefs.keybindings !== 'vim' || !editorReady || !editorRef.current || !vimStatus.current) return;
+    let mode: { dispose: () => void } | null = null;
+    let live = true;
+    void import('monaco-vim').then(({ initVimMode }) => {
+      if (live && editorRef.current && vimStatus.current) mode = initVimMode(editorRef.current, vimStatus.current);
+    });
+    return () => {
+      live = false;
+      mode?.dispose();
+    };
+  }, [prefs.keybindings, editorReady]);
   const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
   const [openLevels, setOpenLevels] = useState<Set<string>>(new Set());
   const term = useRef<TerminalHandle | null>(null);
@@ -1038,7 +1064,10 @@ function Workbench({
                     onSelect: () => void restore(s.id, 'your saved copy'),
                   })),
                 ],
-                [{ label: 'About', onSelect: () => setAboutOpen(true) }],
+                [
+                  { label: 'Preferences', onSelect: () => setSettingsOpen(true) },
+                  { label: 'About', onSelect: () => setAboutOpen(true) },
+                ],
               ]}
             />
           </span>
@@ -1061,7 +1090,11 @@ function Workbench({
                This is vs-dark with the surfaces swapped for the theme tokens;
                Monaco cannot read CSS variables, so the values are literals. */
             beforeMount={defineEditorTheme}
-            theme="checkpoints"
+            theme={prefs.theme === 'light' ? 'checkpoints-light' : 'checkpoints'}
+            onMount={(ed) => {
+              editorRef.current = ed;
+              setEditorReady(true);
+            }}
             language={editorLanguage(tab, language)}
             path={`${language}/${detail?.slug ?? 'none'}/${tab}`}
             value={files[tab] ?? ''}
@@ -1073,13 +1106,30 @@ function Workbench({
             }}
             options={{
               minimap: { enabled: false },
-              fontSize: 13,
+              fontSize: prefs.fontSize,
+              tabSize: prefs.tabSize,
+              detectIndentation: false,
+              wordWrap: prefs.wordWrap ? 'on' : 'off',
               scrollBeyondLastLine: false,
               automaticLayout: true,
               padding: { top: 8 },
             }}
           />
         </div>
+        {/* Vim's mode line (-- INSERT --, :commands); only in Vim mode. */}
+        <div
+          ref={vimStatus}
+          style={{
+            display: prefs.keybindings === 'vim' ? 'block' : 'none',
+            flex: '0 0 auto',
+            padding: '.15rem .6rem',
+            borderTop: '1px solid var(--border)',
+            fontFamily: 'ui-monospace, monospace',
+            fontSize: '.75rem',
+            color: 'var(--text-muted)',
+            minHeight: '1.4rem',
+          }}
+        />
 
         {/* C. arguments — only where the exercise reads argv */}
         {showArgs && (
@@ -1164,6 +1214,7 @@ function Workbench({
 
       {dialog}
       <About open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
       <StuckDialog
         open={
           running &&
@@ -1322,6 +1373,18 @@ function defineEditorTheme(monaco: typeof import('monaco-editor')): void {
       'editor.selectionBackground': '#264a80',
       'scrollbarSlider.background': '#2a313d80',
       'scrollbarSlider.hoverBackground': '#3a4356b0',
+    },
+  });
+  monaco.editor.defineTheme('checkpoints-light', {
+    base: 'vs',
+    inherit: true,
+    rules: [],
+    colors: {
+      'editor.background': '#ffffff', // --surface (light)
+      'editorGutter.background': '#ffffff',
+      'editor.lineHighlightBackground': '#f6f8fb', // --raised (light)
+      'editorLineNumber.foreground': '#9aa5b8',
+      'editorLineNumber.activeForeground': '#4b5668',
     },
   });
 }
