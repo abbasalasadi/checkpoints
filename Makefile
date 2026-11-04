@@ -20,10 +20,10 @@ setup: ## LOCAL: check prerequisites, create var/, install workspaces
 
 run: ## LOCAL: start API (8157) and Vite (5203) detached; logs in var/logs, stop with make stop
 	@mkdir -p var/logs var/db
-	@API_PORT=$(API_PORT) nohup npm run serve --workspace server > var/logs/backend.log 2>&1 & echo $$! > var/backend.pid
+	@API_PORT=$(API_PORT) nohup npm run serve --workspace server > var/logs/backend.out 2>&1 & echo $$! > var/backend.pid
 	@API_PORT=$(API_PORT) WEB_PORT=$(WEB_PORT) nohup npm run dev --workspace web > var/logs/frontend.log 2>&1 & echo $$! > var/frontend.pid
 	@sleep 3
-	@echo "API  http://127.0.0.1:$(API_PORT)   (var/logs/backend.log)"
+	@echo "API  http://127.0.0.1:$(API_PORT)   (var/logs/backend.log; console in backend.out)"
 	@echo "Web  http://127.0.0.1:$(WEB_PORT)   (var/logs/frontend.log)"
 
 stop: ## LOCAL: stop whatever holds the API and Vite ports
