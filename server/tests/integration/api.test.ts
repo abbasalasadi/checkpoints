@@ -347,3 +347,21 @@ test('vault and exercise report: passing copy, Markdown download, ownership', as
   assert.equal((await fetch(`${base}/api/rust/exercises/${ex.slug}/report`)).status, 401);
   assert.equal((await fetch(`${base}/api/rust/exercises/no_such_thing/report`, { headers: { cookie: a } })).status, 404);
 });
+
+test('stars are private, toggle, and show in the exercise list with status', async () => {
+  const a = await devLogin('fake_star_a');
+  const b = await devLogin('fake_star_b');
+  const slug = listExercises('js')[0]!.slug;
+  assert.equal((await call(`/api/js/exercises/${slug}/star`, { method: 'PUT', cookie: a })).status, 200);
+  assert.equal((await call(`/api/js/exercises/${slug}/star`, { method: 'PUT', cookie: a })).status, 200);
+  const la = await call('/api/js/exercises', { cookie: a });
+  const ea = la.json.exercises.find((e: any) => e.slug === slug);
+  assert.equal(ea.starred, true);
+  assert.equal(ea.status, 'not_started');
+  const lb = await call('/api/js/exercises', { cookie: b });
+  assert.equal(lb.json.exercises.find((e: any) => e.slug === slug).starred, false);
+  await call(`/api/js/exercises/${slug}/star`, { method: 'DELETE', cookie: a });
+  assert.equal((await call('/api/js/exercises', { cookie: a })).json.exercises.find((e: any) => e.slug === slug).starred, false);
+  assert.equal((await call('/api/js/exercises/no_such/star', { method: 'PUT', cookie: a })).status, 404);
+  assert.equal((await call(`/api/js/exercises/${slug}/star`, { method: 'PUT' })).status, 401);
+});

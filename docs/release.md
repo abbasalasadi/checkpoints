@@ -32,7 +32,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 | 2 | Dashboard + track choice moved out of the sidebar | 1 | done (awaiting owner test) | server 38/38, web 110/110, browser: cards, resume, recent activity |
 | 3 | History explorer and attempt detail | 2 | done (awaiting owner test) | browser: filters, row → code + output |
 | 4 | Solutions vault + exercise report export | 3 | done (awaiting owner test) | server 39/39, web 111/111, browser: /vault list, code view, report download (.md) |
-| 5 | Stars, sidebar search/filters, compact rail | 5 | todo | |
+| 5 | Stars, sidebar search/filters, compact rail | 5 | done (awaiting owner test) | server 40/40, web 111/111, browser: star, Starred filter, rail collapse |
 | 6 | Offline indicator, draft re-sync, skeletons | 7 | todo | |
 | 7 | Mobile and tablet layouts | 6 | todo | |
 | 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | todo | |

@@ -24,7 +24,7 @@ import {
   setSessionCookie,
   type Caller,
 } from '../middleware/http.js';
-import { attempts, preferences, progress, sessions, snapshots, users } from '../repositories/index.js';
+import { attempts, preferences, progress, sessions, snapshots, stars, users } from '../repositories/index.js';
 import { normalizePreferences } from '../services/preferences.js';
 import { assertUsername, InvalidCredentialsError, InvalidIdentifierError, signIn, UpstreamError } from '../services/auth.js';
 import {
@@ -108,6 +108,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
         }
         if (action === 'attempts' && !sub && method === 'GET') return listAttempts(req, res, p);
         if (action === 'report' && !sub && method === 'GET') return report(req, res, p);
+        if (action === 'star' && !sub && (method === 'PUT' || method === 'DELETE')) return star(req, res, p, method === 'PUT');
         if (action === 'snapshots' && !sub && method === 'GET') return listSnapshots(req, res, p);
         if (action === 'snapshots' && !sub && method === 'POST') return createSnapshot(req, res, p);
         if (action === 'snapshots' && sub === 'restore' && method === 'POST') return restoreSnapshot(req, res, p);
@@ -409,6 +410,14 @@ export function buildReport(ex: Exercise, solution: Record<string, string>, sour
   return out.join('\n');
 }
 
+function star(req: IncomingMessage, res: ServerResponse, p: Params, on: boolean): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!exerciseFor(res, p)) return;
+  stars.set(caller.user.id, p.lang, p.slug, on);
+  sendJson(res, 200, { starred: on });
+}
+
 function report(req: IncomingMessage, res: ServerResponse, p: Params): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
@@ -445,15 +454,16 @@ function languages(req: IncomingMessage, res: ServerResponse): void {
 function listAll(req: IncomingMessage, res: ServerResponse, lang: Language): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  const done = new Set(
-    progress
-      .listForUser(caller.user.id, lang)
-      .filter((p) => p.status === 'passed')
-      .map((p) => p.exercise_slug),
-  );
+  const status = new Map(progress.listForUser(caller.user.id, lang).map((p) => [p.exercise_slug, p.status]));
+  const starred = new Set(stars.list(caller.user.id, lang));
   sendJson(res, 200, {
     language: lang,
-    exercises: listExercises(lang).map((e) => ({ ...e, passed: done.has(e.slug) })),
+    exercises: listExercises(lang).map((e) => ({
+      ...e,
+      passed: status.get(e.slug) === 'passed',
+      status: status.get(e.slug) ?? 'not_started',
+      starred: starred.has(e.slug),
+    })),
     placements: placementsFor(lang),
   });
 }

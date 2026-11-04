@@ -48,6 +48,8 @@ export interface ExerciseSummary {
   /** Go/JS style progress; `passed` is derived from it when absent. */
   status?: string;
   title?: string | null;
+  /** V2: private bookmark. */
+  starred?: boolean;
 }
 export interface Placement {
   exercise: string;
@@ -264,6 +266,8 @@ export const api = {
     request<{ slug: string }>(`/api/${lang}/progress/${enc(slug)}`, { method: 'DELETE' }),
   snapshots: (lang: Language, slug: string) =>
     request<{ snapshots: SnapshotMeta[] }>(`/api/${lang}/snapshots/${enc(slug)}`),
+  star: (lang: Language, slug: string, on: boolean) =>
+    request<{ starred: boolean }>(`/api/${lang}/exercises/${enc(slug)}/star`, { method: on ? 'PUT' : 'DELETE' }),
   saveSnapshot: (lang: Language, slug: string, files: Record<string, string>) =>
     request<SnapshotMeta>(`/api/${lang}/snapshots/${enc(slug)}`, {
       method: 'POST',

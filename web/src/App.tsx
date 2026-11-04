@@ -411,6 +411,8 @@ function Workbench({
     setSaveState('saving');
     try {
       await api.save(p.language, p.slug, p.files);
+      // A first save starts the exercise (the sidebar's "In progress" filter).
+      setList((prev) => prev.map((e) => (e.slug === p.slug && e.status !== 'passed' && !e.passed ? { ...e, status: 'in_progress' } : e)));
       setSaveState('saved');
       setSavedAt(new Date());
       return true;
@@ -633,6 +635,38 @@ function Workbench({
     () => new Set(list.filter((e) => e.passed ?? e.status === 'passed').map((e) => e.slug)),
     [list],
   );
+  const starred = useMemo(() => new Set(list.filter((e) => e.starred).map((e) => e.slug)), [list]);
+
+  // V2 sidebar: search and status filter give a flat list; the rail hides it.
+  const [query, setQuery] = useState('');
+  const [show, setShow] = useState<SidebarFilter>('all');
+  const [rail, setRail] = useState(() => readFlag('cp.rail'));
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle && show === 'all') return null;
+    return list.filter((e) => {
+      if (needle && !e.slug.toLowerCase().includes(needle) && !(e.title ?? '').toLowerCase().includes(needle)) return false;
+      const st = passed.has(e.slug) ? 'passed' : e.status === 'in_progress' ? 'in_progress' : 'not_started';
+      if (show === 'starred') return !!e.starred;
+      return show === 'all' || show === st;
+    });
+  }, [list, query, show, passed]);
+
+  const toggleRail = () => {
+    setRail((r) => {
+      writeFlag('cp.rail', !r);
+      return !r;
+    });
+  };
+
+  const toggleStar = (s: string) => {
+    const on = !starred.has(s);
+    setList((prev) => prev.map((e) => (e.slug === s ? { ...e, starred: on } : e)));
+    api.star(language, s, on).catch((err) => {
+      logger.warn('star.failed', { error: String(err) });
+      setList((prev) => prev.map((e) => (e.slug === s ? { ...e, starred: !on } : e)));
+    });
+  };
 
   /**
    * Advisory problems the checkpoint would reject, found before Submit. Only
@@ -935,9 +969,27 @@ function Workbench({
 
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
-      {/* ── left: exercise tree ─────────────────────────────────────────── */}
+      {/* ── left: exercise tree, or the compact rail (V2) ─────────────────── */}
+      {rail && (
+        <nav
+          aria-label="Compact sidebar"
+          style={{ width: '2.6rem', flex: '0 0 auto', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.6rem 0' }}
+        >
+          <button type="button" onClick={toggleRail} aria-label="Expand the exercise list" title="Expand" style={{ ...ghostBtn, fontSize: '1rem' }}>
+            »
+          </button>
+          <button type="button" onClick={() => void flush().then(onDashboard)} aria-label="Dashboard" title="Dashboard" style={{ ...ghostBtn, fontSize: '1rem' }}>
+            ⌂
+          </button>
+          <span title={LANGUAGE_LABEL[language]} style={{ fontSize: '.7rem', color: 'var(--text-muted)', writingMode: 'vertical-rl' }}>
+            {LANGUAGE_LABEL[language]}
+          </span>
+        </nav>
+      )}
       <aside
+        hidden={rail}
         style={{
+          display: rail ? 'none' : undefined,
           width: left.size,
           flex: '0 0 auto',
           borderRight: '1px solid var(--border)',
@@ -948,9 +1000,14 @@ function Workbench({
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.6rem' }}>
           <strong style={{ fontSize: '.85rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>{identifier}</strong>
-          <button type="button" onClick={() => void signOut()} style={{ ...ghostBtn, fontSize: '.75rem' }}>
-            Sign out
-          </button>
+          <span style={{ display: 'flex', gap: '.2rem' }}>
+            <button type="button" onClick={() => void signOut()} style={{ ...ghostBtn, fontSize: '.75rem' }}>
+              Sign out
+            </button>
+            <button type="button" onClick={toggleRail} aria-label="Collapse the exercise list" title="Collapse" style={{ ...ghostBtn, fontSize: '.85rem' }}>
+              «
+            </button>
+          </span>
         </div>
 
         {/* The track is chosen on the dashboard (D23); here it is only named. */}
@@ -968,15 +1025,40 @@ function Workbench({
         </div>
 
         {/* A track without placements still lists its exercises, flat. */}
-        {grouped.size === 0 &&
-          list.map((e) => (
-            <button key={e.slug} type="button" onClick={() => select(e.slug)} style={treeRow(slug === e.slug ? 'var(--accent-text)' : 'var(--text-muted)', '.82rem')}>
-              <span style={{ width: 12, flex: 'none', color: 'var(--success)' }}>{passed.has(e.slug) && <Icon name="check" size={12} />}</span>
-              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{e.slug}</span>
-            </button>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.35rem', marginBottom: '.6rem' }}>
+          <input
+            type="search"
+            aria-label="Search exercises"
+            placeholder="Search exercises…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            style={{ ...sideInput }}
+          />
+          <select aria-label="Show" value={show} onChange={(e) => setShow(e.target.value as SidebarFilter)} style={{ ...sideInput }}>
+            <option value="all">All exercises</option>
+            <option value="not_started">Not started</option>
+            <option value="in_progress">In progress</option>
+            <option value="passed">Passed</option>
+            <option value="starred">Starred</option>
+          </select>
+        </div>
 
-        {[...grouped.entries()].map(([checkpoint, levels]) => {
+        {filtered && filtered.length === 0 && <p style={{ color: 'var(--text-dim)', fontSize: '.8rem', margin: '.3rem .2rem' }}>Nothing matches.</p>}
+
+        {(filtered ?? (grouped.size === 0 ? list : [])).map((e) => (
+          <ExerciseRow
+            key={e.slug}
+            slug={e.slug}
+            current={slug === e.slug}
+            done={passed.has(e.slug)}
+            star={starred.has(e.slug)}
+            onSelect={() => select(e.slug)}
+            onStar={() => toggleStar(e.slug)}
+            indent=".3rem"
+          />
+        ))}
+
+        {!filtered && [...grouped.entries()].map(([checkpoint, levels]) => {
           const inGroup = [...levels.values()].flat();
           const groupDone = inGroup.filter((s) => passed.has(s)).length;
           const groupOpen = openGroups.has(checkpoint);
@@ -1015,30 +1097,16 @@ function Workbench({
 
                         {levelOpen &&
                           slugs.map((s) => (
-                            <button
+                            <ExerciseRow
                               key={`${levelKey}/${s}`}
-                              type="button"
-                              onClick={() => select(s)}
-                              style={{
-                                ...ghostBtn,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '.35rem',
-                                width: '100%',
-                                textAlign: 'left',
-                                color: slug === s ? 'var(--accent-text)' : 'var(--text-muted)',
-                                fontSize: '.82rem',
-                                padding: '.15rem .3rem .15rem 1.15rem',
-                                overflow: 'hidden',
-                              }}
-                            >
-                              {/* Reserved whether or not it is filled, so a row
-                                  does not shift sideways once it starts passing. */}
-                              <span style={{ width: 12, flex: 'none', color: 'var(--success)' }}>
-                                {passed.has(s) && <Icon name="check" size={12} />}
-                              </span>
-                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{s}</span>
-                            </button>
+                              slug={s}
+                              current={slug === s}
+                              done={passed.has(s)}
+                              star={starred.has(s)}
+                              onSelect={() => select(s)}
+                              onStar={() => toggleStar(s)}
+                              indent="1.15rem"
+                            />
                           ))}
                       </div>
                     );
@@ -1048,7 +1116,7 @@ function Workbench({
         })}
       </aside>
 
-      <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />
+      {!rail && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
 
       {/* ── centre: instructions ─────────────────────────────────────────
         * No title bar: every README opens with the exercise's own heading, so a
@@ -1498,7 +1566,66 @@ function outlineBtn(disabled: boolean): React.CSSProperties {
     fontSize: '.78rem',
   };
 }
+const sideInput: React.CSSProperties = {
+  width: '100%', boxSizing: 'border-box', background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--border-strong)',
+  borderRadius: 'var(--radius)', padding: '.28rem .45rem', font: 'inherit', fontSize: '.8rem',
+};
+
 const ghostBtn: React.CSSProperties = {
   background: 'transparent', color: 'var(--text)', border: 'none',
   cursor: 'pointer', font: 'inherit', fontSize: '.85rem', padding: '.25rem .4rem',
 };
+
+// ── sidebar filters and rail (V2) ────────────────────────────────────────────
+
+type SidebarFilter = 'all' | 'not_started' | 'in_progress' | 'passed' | 'starred';
+
+function readFlag(key: string): boolean {
+  try {
+    return localStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function writeFlag(key: string, on: boolean): void {
+  try {
+    localStorage.setItem(key, on ? '1' : '0');
+  } catch {
+    /* storage blocked: the rail just is not remembered */
+  }
+}
+
+function ExerciseRow({ slug, current, done, star, onSelect, onStar, indent }: {
+  slug: string; current: boolean; done: boolean; star: boolean; onSelect: () => void; onStar: () => void; indent: string;
+}) {
+  return (
+    <div className="cp-row" style={{ display: 'flex', alignItems: 'center' }}>
+      <button
+        type="button"
+        onClick={onSelect}
+        aria-current={current ? 'true' : undefined}
+        style={{
+          ...ghostBtn, display: 'flex', alignItems: 'center', gap: '.35rem', flex: 1, minWidth: 0, textAlign: 'left',
+          color: current ? 'var(--accent-text)' : 'var(--text-muted)', fontSize: '.82rem', padding: `.15rem .3rem .15rem ${indent}`, overflow: 'hidden',
+        }}
+      >
+        {/* Reserved whether or not it is filled, so a row does not shift
+            sideways once it starts passing. */}
+        <span style={{ width: 12, flex: 'none', color: 'var(--success)' }}>{done && <Icon name="check" size={12} />}</span>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{slug}</span>
+      </button>
+      <button
+        type="button"
+        aria-pressed={star}
+        aria-label={star ? `Unstar ${slug}` : `Star ${slug}`}
+        title={star ? 'Unstar' : 'Star'}
+        className={star ? 'cp-star cp-star-on' : 'cp-star'}
+        onClick={onStar}
+        style={{ ...ghostBtn, flex: 'none', color: star ? 'var(--warning, #eab308)' : 'var(--text-dim)', padding: '0 .25rem', fontSize: '.85rem' }}
+      >
+        {star ? '★' : '☆'}
+      </button>
+    </div>
+  );
+}

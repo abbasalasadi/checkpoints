@@ -457,3 +457,22 @@ export const preferences = {
       .run(userId, JSON.stringify(prefs), now());
   },
 };
+
+// ── stars ─────────────────────────────────────────────────────────────────────
+
+/** Private bookmarks (V2, D24): scoped to the caller like everything else. */
+export const stars = {
+  list(userId: number, language: Language): string[] {
+    return (
+      getDb().prepare('SELECT exercise_slug FROM stars WHERE user_id = ? AND language = ?').all(userId, language) as { exercise_slug: string }[]
+    ).map((r) => r.exercise_slug);
+  },
+  set(userId: number, language: Language, slug: string, on: boolean): void {
+    const db = getDb();
+    if (on) {
+      db.prepare('INSERT OR IGNORE INTO stars (user_id, language, exercise_slug, created_at) VALUES (?, ?, ?, ?)').run(userId, language, slug, now());
+    } else {
+      db.prepare('DELETE FROM stars WHERE user_id = ? AND language = ? AND exercise_slug = ?').run(userId, language, slug);
+    }
+  },
+};
