@@ -41,7 +41,7 @@ RUN set -eux; \
     # artifacts are deliberately not shared with student projects: a shared
     # CARGO_TARGET_DIR makes the outer `cargo test` and the inner `cargo run`
     # contend on the same build-directory lock and hang.
-    cargo build --offline --quiet; \
+    CARGO_BUILD_JOBS=2 cargo build --offline --quiet; \
     rm -rf /home/runner/.warm/target
 
 # Student projects are materialised here, on a disk-backed volume. Not tmpfs:

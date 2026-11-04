@@ -27,6 +27,8 @@ flag="${REMOTE_MAINTENANCE_FLAG}"
 html="${REMOTE_MAINTENANCE_HTML}"
 email="${CERTBOT_EMAIL:-}"
 legacy_disable="${LEGACY_DISABLE:-0}"
+# LEGACY_REDIRECT=0: serve only the new host and leave the old sites untouched.
+legacy_redirect="${LEGACY_REDIRECT:-1}"
 target="$(resolve_ssh_target)"
 
 [ -n "$email" ] || die "CERTBOT_EMAIL is required for certificate issuance"
@@ -41,10 +43,11 @@ scp "${SCP_ARGS[@]}" "$ROOT_DIR/deploy/nginx/checkpoints.conf" "$ROOT_DIR/deploy
   "$ROOT_DIR/deploy/maintenance.html" "${target}:${stage}/" >/dev/null
 
 ssh "${SSH_ARGS[@]}" "$target" \
-  "HOST='${host}' PORT='${port}' PROJECT='${project}' FLAG='${flag}' HTML='${html}' EMAIL='${email}' STAGE='${stage}' LEGACY_DISABLE='${legacy_disable}' bash -s" <<'REMOTE'
+  "HOST='${host}' PORT='${port}' PROJECT='${project}' FLAG='${flag}' HTML='${html}' EMAIL='${email}' STAGE='${stage}' LEGACY_DISABLE='${legacy_disable}' LEGACY_REDIRECT='${legacy_redirect}' bash -s" <<'REMOTE'
 set -euo pipefail
 trap 'rm -rf "$STAGE"' EXIT
 LEGACY="go-checkpoints.appsyss.com js-checkpoints.appsyss.com rust-checkpoints.appsyss.com"
+[ "$LEGACY_REDIRECT" = "1" ] || LEGACY=""
 
 command -v nginx >/dev/null || [ -x /usr/sbin/nginx ] || { echo "nginx is not installed on the VM"; exit 1; }
 
@@ -95,7 +98,7 @@ server {
   location / { return 301 https://\$host\$request_uri; }
 }
 CONF
-sudo install -m 0644 "$STAGE/checkpoints-map.conf" "$mapconf"
+[ -z "$LEGACY" ] || sudo install -m 0644 "$STAGE/checkpoints-map.conf" "$mapconf"
 sudo ln -sf "$conf" "$enabled"
 sudo nginx -t || revert
 sudo systemctl reload nginx
@@ -105,20 +108,21 @@ if [ ! -d "/etc/letsencrypt/live/${HOST}" ]; then
   sudo certbot certonly --webroot -w /var/www/html -d "${HOST}" \
     --non-interactive --agree-tos -m "${EMAIL}" --keep-until-expiring
 fi
-if [ ! -d /etc/letsencrypt/live/checkpoints-legacy ]; then
+if [ -n "$LEGACY" ] && [ ! -d /etc/letsencrypt/live/checkpoints-legacy ]; then
   args=(); for h in $LEGACY; do args+=( -d "$h" ); done
   sudo certbot certonly --webroot -w /var/www/html --cert-name checkpoints-legacy "${args[@]}" \
     --non-interactive --agree-tos -m "${EMAIL}" --keep-until-expiring
 fi
 
 # Step 3: the full site from the template.
-sed -e "s|@HOST@|${HOST}|g" -e "s|@PORT@|${PORT}|g" -e "s|@PROJECT@|${PROJECT}|g" \
+drop=(); [ -n "$LEGACY" ] || drop=( -e "/# LEGACY-BEGIN/,/# LEGACY-END/d" )
+sed "${drop[@]}" -e "s|@HOST@|${HOST}|g" -e "s|@PORT@|${PORT}|g" -e "s|@PROJECT@|${PROJECT}|g" \
     -e "s|@FLAG@|${FLAG}|g" -e "s|@HTML@|${HTML}|g" -e "s|@LISTEN_HTTP2@|${LISTEN_HTTP2}|g" \
     -e "s|@HTTP2_DIRECTIVE@|${HTTP2_DIRECTIVE}|g" "$STAGE/checkpoints.conf" | sudo tee "$conf" >/dev/null
 if sudo grep -q '@[A-Z0-9_]*@' "$conf"; then echo "unfilled placeholder in $conf" >&2; revert; fi
 sudo nginx -t || revert
 sudo systemctl reload nginx
-echo "nginx configured for ${HOST} (+ 301 from ${LEGACY})"
+echo "nginx configured for ${HOST}${LEGACY:+ (+ 301 from ${LEGACY})}"
 REMOTE
 
 print_info "[VM] nginx + HTTPS ready for https://${host}"
