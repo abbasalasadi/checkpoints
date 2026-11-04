@@ -471,3 +471,27 @@ test('every exercise has a one-line hint (D4)', async () => {
     }
   }
 });
+
+test('deletes (history, solutions, exam reports) touch only the caller\'s own rows', async () => {
+  const a = await devLogin('fake_del_a');
+  const b = await devLogin('fake_del_b');
+  const ua = users.upsertOnLogin('fake_del_a', null, null);
+  const slug = listExercises('go')[0]!.slug;
+  attempts.record({ userId: ua.id, language: 'go', slug, kind: 'run', outcome: 'passed', exitCode: 0, durationMs: 1, files: {}, output: '' } as any);
+  const id = (getDb().prepare('SELECT id FROM attempts WHERE user_id = ? ORDER BY id DESC LIMIT 1').get(ua.id) as { id: number }).id;
+  assert.equal((await call(`/api/history/${id}`, { method: 'DELETE', cookie: b })).status, 404, 'not another student\'s');
+  assert.equal((await call(`/api/history/${id}`, { method: 'DELETE', cookie: a })).status, 200);
+  assert.equal((await call(`/api/history/${id}`, { method: 'DELETE', cookie: a })).status, 404, 'gone');
+
+  snapshots.savePassing(ua.id, 'go', slug, { 'x.go': 'package x\n' });
+  assert.equal((await call(`/api/vault/go/${slug}`, { method: 'DELETE', cookie: b })).status, 404);
+  assert.equal((await call(`/api/vault/go/${slug}`, { method: 'DELETE', cookie: a })).status, 200);
+  assert.equal(snapshots.passing(ua.id, 'go', slug), undefined);
+
+  const s = await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1' } });
+  assert.equal((await call(`/api/exams/${s.json.id}`, { method: 'DELETE', cookie: a })).status, 404, 'a running exam is kept');
+  await call(`/api/exams/${s.json.id}/end`, { method: 'POST', cookie: a, body: { abandon: true } });
+  assert.equal((await call(`/api/exams/${s.json.id}`, { method: 'DELETE', cookie: b })).status, 404);
+  assert.equal((await call(`/api/exams/${s.json.id}`, { method: 'DELETE', cookie: a })).status, 200);
+  assert.equal((await call('/api/exams', { cookie: a })).json.past.length, 0);
+});
