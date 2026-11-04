@@ -62,4 +62,5 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 **Done when:** same pattern, tagged `v4.0`.
 
 ## After V4
+- Merge of the three old sites' databases (owner, 2026-11-04): announced window; maintenance on for all four sites, final copies, backup, merge, check. The old sites never come back: each gets a redirect to the new application's main page (owner: no maintenance-off for them).
 Redirect the three old sites to the new one, after re-merging their databases (D21). Then the full visual redesign (owner's plan).

@@ -17,6 +17,6 @@ No deploy until the owner has tested locally (D20).
 
 ## Done when
 - [x] All steps done, tests pass
-- [ ] Owner tested locally (D20)
-- [ ] Deployed after the owner's test (with approval); tagged `v4.0`
+- [x] Owner tested locally (D20), 2026-11-04
+- [x] Deployed 2026-11-04 (owner approved) · [ ] owner tests the live site · [ ] tag `v4.0`
 - [ ] Cleanup: delete the temporary `list.json` (owner reference only, never committed)

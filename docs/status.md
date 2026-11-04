@@ -1,6 +1,6 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V4 steps 1-6 done; waiting for the owner's local test (V3 closed by the owner, no deploy) · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of the live site (V3 closed by the owner, no deploy) · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
@@ -8,6 +8,7 @@ As of: 2026-11-04 · Version: V4 steps 1-6 done; waiting for the owner's local t
 | (none) | | | |
 
 ## Done
+- V3+V4 deployed 2026-11-04 to checkpoint.appsyss.com (owner approved): lan_vm1 server 50/50, web 148/148 first; prod DB backup var/backups/app-20261104T204040Z-1540067.db.gz (3.6 MB, integrity-checked); Java Cloud Run service java-checkpoints-runner created (us-central1, private, run.invoker for the VM's service account, concurrency 1, 2 CPU / 2 GiB, min 0, max 5, image java-runner:v3); RUNNER_JAVA_CLOUDRUN_URL in .env.vm. Result check: deploy rc 0; healthz 200; /api/java/exercises 401 unauthenticated; migrations 006_exams, 007_java applied; content go 57/191, js 29/73, rust 40/77, java 44/44; factorial solution 4/4 on the Java service (11.7 s cold); old sites 200, untouched — pass. Waiting for the owner's test of the live site before tagging v4.0, the old sites' maintenance and the data merge
 - V4 steps 1-6 (2026-11-04, D35/D35a): weights from the program list for all four tracks (Go final dropped, re-test rebuilt to 46, brainfuck/grouping/printnbrbase deleted; JS balanced); marks service (value %, exam mark, weighted progress, no XP in API); exam result popup; % on exam bar, exercise tree, breadcrumb, dashboard and reports. Result check: lan_vm1 server 50/50 (incl. marks maths), web 141/141; local server loads go 57/191, js 29/73, rust 40/77, java 44/44 — pass. UI not clicked through by me (needs the owner's sign-in); waiting for the owner's local test
 - V3 step 8 (2026-11-04): lan_vm1 server 45/45, web 141/141; parity Go 60/60, JS 29/29, Rust 40/40 ×3 (after fixing a Rust stale-build race: whole-second tar mtimes let cargo reuse the previous build; files now re-stamped before cargo), Java image 132/132, Java Cloud Run wrapper 133/133. Self-audit pass, F1-F3 minor fixed (docs/audits/v3.0-2026-11-04.md). DEV_LOGIN off locally (never on in production); fake users fake_v3_ui, fake_exam_ui deleted with their exams, plus orphan rows of earlier fake users (backup var/db/app.pre-step8.bak). Release note draft docs/releases/v3.0.md. Result check: every gate's own count read from its log — pass
 - V3 7f Java on Cloud Run (owner approved 2026-11-04, same principle as Go/JS): wrapper docker/runner-java/cloudrun (Java, no new deps, same NDJSON contract, one request per instance, /tmp and request dir wiped). Result check: tools/java-cloudrun-check.mjs on lan_vm1 against the wrapper container, 133/133 (44 solutions pass, 44 starters fail on the same warm instance, 44 runs print, ../ names refused), submit median 8.6 s — pass. Service not created yet: at release, with approval (min-instances 0, small max, concurrency 1, ~1 GiB)
