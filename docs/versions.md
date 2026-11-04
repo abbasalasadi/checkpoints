@@ -49,5 +49,17 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 
 **Done when:** same pattern, tagged `v3.0`.
 
-## After V3
+## V4 Weighted marks
+**Goal:** Marks follow the platform weight (`baseXp`), shown only as percentages. Design: `docs/01_design/08_marks.md`.
+
+**Features:**
+1. Per-placement weight and category for all four tracks, imported from the owner's list.
+2. Exam mark in percent; optional adds above 100%.
+3. Exam result popup on finish, expiry or leaving.
+4. Value (%) of each exercise on the exercise page and the exam page.
+5. Dashboard and history show percentages instead of counts.
+
+**Done when:** same pattern, tagged `v4.0`.
+
+## After V4
 Redirect the three old sites to the new one, after re-merging their databases (D21). Then the full visual redesign (owner's plan).
