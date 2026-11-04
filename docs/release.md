@@ -17,7 +17,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched un
 5. [x] Command palette + keyboard shortcut sheet
 6. [x] Focus (zen) mode, post-pass "next exercise" prompt, breadcrumbs
 7. [x] Java track (D30–D34; 44 exercises; Cloud Run service created at deploy), design in `docs/01_design/07_java_track.md`: 7a content importer, 7b solutions + hints, 7c runner image + verify/parity, 7d server + migration 007, 7e web, 7f Cloud Run service
-8. [ ] Tests on lan_vm1, self-audit, clean-up (DEV_LOGIN, fake users), release note draft
+8. [x] Tests on lan_vm1, self-audit, clean-up (DEV_LOGIN, fake users), release note draft (`docs/releases/v3.0.md`)
 
 ## Done when
 - [ ] All steps done, tests pass, audit pass
