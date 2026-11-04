@@ -30,7 +30,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 |---|---|---|---|---|
 | 1 | Preferences: schema, API, settings panel, applied to the editor | 4 | done (awaiting owner test) | server 37/37, web 109/109, browser: light theme, font, Vim, reload keeps them |
 | 2 | Dashboard + track choice moved out of the sidebar | 1 | done (awaiting owner test) | server 38/38, web 110/110, browser: cards, resume, recent activity |
-| 3 | History explorer and attempt detail | 2 | done (awaiting owner test) | browser: filters, row → code + output |
+| 3 | History explorer and attempt detail (regrouped by exercise, D26) | 2 | done (awaiting owner test) | server 41/41, web 121/121, browser: exercise list, folded runs, submit compare diff |
 | 4 | Solutions vault + exercise report export | 3 | done (awaiting owner test) | server 39/39, web 111/111, browser: /vault list, code view, report download (.md) |
 | 5 | Stars, sidebar search/filters, compact rail | 5 | done (awaiting owner test) | server 40/40, web 111/111, browser: star, Starred filter, rail collapse |
 | 6 | Offline indicator, draft re-sync, skeletons | 7 | done (awaiting owner test) | web 114/114, browser: offline banner + Run/Submit wait, browser draft restored and re-saved, skeletons |

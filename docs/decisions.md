@@ -80,3 +80,6 @@ Keybindings: Default and Vim. Stars private per student. Preferences per account
 
 ## D25 (2026-11-04) — Dark theme only
 The Light theme is removed from Preferences; the app is always dark. Amends D24. Owner: "Dark only".
+
+## D26 (2026-11-04) — History grouped by exercise; every attempt kept
+History lists one row per exercise (result, runs, submits, time spent, last activity). Opening one shows a timeline where the runs between two submits fold into one line, submits are milestones, any attempt can be viewed, and a submit can be compared with the previous one (line diff). Storage unchanged: every attempt is kept (D5). Owner: "agreed. proceed".

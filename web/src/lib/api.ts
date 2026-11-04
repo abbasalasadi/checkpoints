@@ -201,6 +201,22 @@ export interface TrackSummary {
   submitsPassed: number;
 }
 
+/** One exercise in history (D26): attempts are grouped, never listed flat. */
+export interface ExerciseHistory {
+  language: Language;
+  slug: string;
+  title: string;
+  passed: boolean;
+  runs: number;
+  submits: number;
+  passedOnSubmit: number | null;
+  firstAt: string;
+  lastAt: string;
+  activeMs: number;
+  lastKind: string;
+  lastOutcome: string | null;
+}
+
 /** A passing copy in the solutions vault (V2). */
 export interface VaultItem {
   language: Language;
@@ -232,6 +248,10 @@ export const api = {
     return request<{ attempts: AttemptSummary[]; next: number | null }>(`/api/history?${q.toString()}`);
   },
   attempt: (id: number) => request<AttemptDetail>(`/api/history/${id}`),
+  historyExercises: (language?: Language) =>
+    request<{ exercises: ExerciseHistory[] }>(`/api/history/exercises${language ? `?language=${language}` : ''}`),
+  timeline: (language: Language, slug: string) =>
+    request<{ attempts: AttemptSummary[] }>(`/api/history/exercises/${language}/${encodeURIComponent(slug)}`),
   vault: () => request<{ items: VaultItem[] }>('/api/vault'),
   preferences: () => request<{ preferences: Preferences }>('/api/preferences'),
   savePreferences: (patch: Partial<Preferences>) =>

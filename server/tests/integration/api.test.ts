@@ -365,3 +365,37 @@ test('stars are private, toggle, and show in the exercise list with status', asy
   assert.equal((await call('/api/js/exercises/no_such/star', { method: 'PUT', cookie: a })).status, 404);
   assert.equal((await call(`/api/js/exercises/${slug}/star`, { method: 'PUT' })).status, 401);
 });
+
+test('history by exercise: one summary per exercise, timeline oldest first, ownership (D26)', async () => {
+  const a = await devLogin('fake_hx_a');
+  const b = await devLogin('fake_hx_b');
+  const ua = users.upsertOnLogin('fake_hx_a', null, null);
+  const [e1, e2] = listExercises('go');
+  const rec = (slug: string, kind: 'run' | 'test', outcome: string) =>
+    attempts.record({ userId: ua.id, language: 'go', slug, kind, outcome, exitCode: outcome === 'passed' ? 0 : 1, durationMs: 100 });
+  rec(e1!.slug, 'run', 'build_error');
+  rec(e1!.slug, 'run', 'passed');
+  rec(e1!.slug, 'test', 'failed');
+  rec(e1!.slug, 'run', 'passed');
+  rec(e1!.slug, 'test', 'passed');
+  rec(e2!.slug, 'run', 'failed');
+
+  const s = await call('/api/history/exercises', { cookie: a });
+  assert.equal(s.status, 200);
+  assert.equal(s.json.exercises.length, 2);
+  assert.equal(s.json.exercises[0].slug, e2!.slug, 'latest activity first');
+  const one = s.json.exercises.find((x: any) => x.slug === e1!.slug);
+  assert.equal(one.runs, 3);
+  assert.equal(one.submits, 2);
+  assert.equal(one.passedOnSubmit, 2);
+  assert.equal(one.passed, true);
+  assert.equal(s.json.exercises.find((x: any) => x.slug === e2!.slug).passed, false);
+
+  const t = await call(`/api/history/exercises/go/${e1!.slug}`, { cookie: a });
+  assert.equal(t.json.attempts.length, 5);
+  assert.ok(t.json.attempts[0].id < t.json.attempts[4].id);
+  assert.equal((await call('/api/history/exercises', { cookie: b })).json.exercises.length, 0);
+  assert.equal((await call(`/api/history/exercises/go/${e1!.slug}`, { cookie: b })).json.attempts.length, 0);
+  assert.equal((await call('/api/history/exercises?language=cobol', { cookie: a })).status, 400);
+  assert.equal((await call('/api/history/exercises/cobol/x', { cookie: a })).status, 404);
+});

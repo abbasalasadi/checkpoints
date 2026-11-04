@@ -75,6 +75,9 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (path === '/api/dashboard' && method === 'GET') return dashboard(req, res);
   if (path === '/api/history' && method === 'GET') return history(req, res, url.searchParams);
   if (path === '/api/vault' && method === 'GET') return vault(req, res);
+  if (path === '/api/history/exercises' && method === 'GET') return historyByExercise(req, res, url.searchParams);
+  const tl = /^\/api\/history\/exercises\/([a-z]+)\/([^/]+)$/.exec(path);
+  if (tl?.[1] && tl[2] && method === 'GET') return exerciseTimeline(req, res, tl[1], tl[2]);
   const historyMatch = /^\/api\/history\/(\d{1,12})$/.exec(path);
   if (historyMatch?.[1] && method === 'GET') return historyDetail(req, res, Number(historyMatch[1]));
   if (path === '/api/preferences' && method === 'PUT') return putPreferences(req, res);
@@ -342,6 +345,69 @@ function history(req: IncomingMessage, res: ServerResponse, q: URLSearchParams):
   const more = rows.length > limit;
   const page = rows.slice(0, limit);
   sendJson(res, 200, { attempts: page.map(attemptView), next: more ? page[page.length - 1]!.id : null });
+}
+
+/** Gaps longer than this are breaks, not work, in "time spent". */
+const ACTIVE_GAP_MS = 15 * 60_000;
+
+/**
+ * D26: history by exercise — one summary per exercise the student has tried,
+ * newest activity first. Every attempt is still stored; this only groups them.
+ */
+function historyByExercise(req: IncomingMessage, res: ServerResponse, q: URLSearchParams): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const lang = q.get('language');
+  if (lang && !isLanguage(lang)) {
+    sendError(res, 400, 'invalid_request', 'Invalid filter.');
+    return;
+  }
+  const uid = caller.user.id;
+  type Sum = {
+    language: Language; slug: string; title: string; passed: boolean; runs: number; submits: number;
+    passedOnSubmit: number | null; firstAt: string; lastAt: string; activeMs: number; lastKind: string; lastOutcome: string | null;
+  };
+  const by = new Map<string, Sum & { prevMs: number }>();
+  for (const a of attempts.allLight(uid, (lang as Language) || undefined)) {
+    const key = `${a.language}/${a.exercise_slug}`;
+    const ms = Date.parse(a.created_at);
+    let s = by.get(key);
+    if (!s) {
+      s = {
+        language: a.language, slug: a.exercise_slug, title: titleOf(a.language, a.exercise_slug), passed: false, runs: 0, submits: 0,
+        passedOnSubmit: null, firstAt: a.created_at, lastAt: a.created_at, activeMs: 0, lastKind: a.kind, lastOutcome: a.outcome, prevMs: ms,
+      };
+      by.set(key, s);
+    }
+    const gap = ms - s.prevMs;
+    if (gap > 0 && gap <= ACTIVE_GAP_MS) s.activeMs += gap;
+    s.activeMs += a.duration_ms ?? 0;
+    s.prevMs = ms;
+    if (a.kind === 'test') {
+      s.submits += 1;
+      if (a.outcome === 'passed' && s.passedOnSubmit === null) s.passedOnSubmit = s.submits;
+    } else s.runs += 1;
+    s.lastAt = a.created_at;
+    s.lastKind = a.kind;
+    s.lastOutcome = a.outcome;
+  }
+  const passedSlugs = new Map<Language, Set<string>>();
+  for (const l of LANGUAGES) passedSlugs.set(l, new Set(progress.listForUser(uid, l).filter((p) => p.status === 'passed').map((p) => p.exercise_slug)));
+  const list = [...by.values()]
+    .map(({ prevMs: _p, ...s }) => ({ ...s, passed: s.passedOnSubmit !== null || !!passedSlugs.get(s.language)?.has(s.slug) }))
+    .sort((a, b) => (a.lastAt < b.lastAt ? 1 : -1));
+  sendJson(res, 200, { exercises: list });
+}
+
+/** Every attempt on one exercise, oldest first; the browser folds runs between submits. */
+function exerciseTimeline(req: IncomingMessage, res: ServerResponse, lang: string, slug: string): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!isLanguage(lang) || !SLUG_PATTERN.test(slug)) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  sendJson(res, 200, { attempts: attempts.allLight(caller.user.id, lang, slug, 5000).map(attemptView) });
 }
 
 function historyDetail(req: IncomingMessage, res: ServerResponse, id: number): void {

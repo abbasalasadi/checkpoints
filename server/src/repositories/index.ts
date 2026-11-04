@@ -365,6 +365,21 @@ export const attempts = {
    * History explorer (V2 feature 2): newest first, optional filters, keyset
    * paging by id (`before`), so a page never shifts while new runs land.
    */
+  /** Every attempt, oldest first, light columns only (history by exercise, D26). */
+  allLight(userId: number, language?: Language, slug?: string, limit = 100_000): AttemptRow[] {
+    const where = ['user_id = ?'];
+    const args: (string | number)[] = [userId];
+    if (language) { where.push('language = ?'); args.push(language); }
+    if (slug) { where.push('exercise_slug = ?'); args.push(slug); }
+    args.push(limit);
+    return getDb()
+      .prepare(
+        `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
+          WHERE ${where.join(' AND ')} ORDER BY id ASC LIMIT ?`,
+      )
+      .all(...args) as AttemptRow[];
+  },
+
   search(userId: number, f: AttemptFilter): AttemptRow[] {
     const where = ['user_id = ?'];
     const args: (string | number)[] = [userId];
