@@ -67,7 +67,7 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
       {open && (
         <div style={{ marginTop: '.7rem', display: 'flex', flexDirection: 'column', gap: '.5rem', fontSize: '.84rem' }}>
           <div style={{ color: 'var(--text-muted)', fontSize: '.8rem' }}>
-            Took {fmtSpent(examSpent(exam))} of {exam.minutes} min · started {new Date(exam.startedAt).toLocaleString()}
+            Took {fmtSpent(examSpent(exam))} of {fmtHours(exam.minutes)} · started {new Date(exam.startedAt).toLocaleString()}
           </div>
           <table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
@@ -102,7 +102,8 @@ export function Exams({ onStarted, focus }: Props) {
   const [language, setLanguage] = useState<Language>('go');
   const [checkpoints, setCheckpoints] = useState<{ checkpoint: string; levels: number }[]>([]);
   const [checkpoint, setCheckpoint] = useState('');
-  const [minutes, setMinutes] = useState(180);
+  const [hours, setHours] = useState(3);
+  const minutes = Math.round(hours * 60);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<Set<number>>(() => new Set(focus ? [focus] : []));
@@ -189,10 +190,13 @@ export function Exams({ onStarted, focus }: Props) {
               </select>
             </label>
             <label style={{ display: 'flex', flexDirection: 'column', gap: '.25rem', fontSize: '.78rem', color: 'var(--text-muted)' }}>
-              Minutes
-              <input type="number" min={10} max={360} step={10} style={{ ...input, width: '5.5rem' }} value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} />
+              Time
+              <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+                <input type="number" min={0.5} max={6} step={0.5} style={{ ...input, width: '5rem' }} value={hours} onChange={(e) => setHours(Number(e.target.value))} aria-label="Time in hours" />
+                hours
+              </span>
             </label>
-            <button type="button" style={{ ...primary, opacity: busy || !chosen ? 0.6 : 1 }} disabled={busy || !chosen} onClick={() => void start()}>
+            <button type="button" style={{ ...primary, opacity: busy || !chosen ? 0.6 : 1 }} disabled={busy || !chosen || !(hours >= 0.5 && hours <= 6)} onClick={() => void start()}>
               Start exam
             </button>
           </div>
@@ -224,4 +228,10 @@ export function Exams({ onStarted, focus }: Props) {
       </div>
     </main>
   );
+}
+
+/** Exam length in hours, as the start form sets it. */
+export function fmtHours(minutes: number): string {
+  const h = minutes / 60;
+  return `${Number.isInteger(h) ? h : h.toFixed(1)} hour${h === 1 ? '' : 's'}`;
 }

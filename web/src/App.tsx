@@ -26,6 +26,9 @@ import { Icon, Logo } from './components/Icon.js';
 import { About } from './components/About.js';
 import { HintBox } from './components/HintBox.js';
 import { AssertionCard } from './components/AssertionCard.js';
+import { CommandPalette, type Command } from './components/CommandPalette.js';
+import { ShortcutSheet } from './components/ShortcutSheet.js';
+import { keysFor, matchShortcut } from './lib/shortcuts.js';
 import { parseAssertion, type AssertionDiff } from './lib/assertion.js';
 import { fmtCountdown } from './lib/format.js';
 import { Exams, STATUS_LABEL } from './components/Exams.js';
@@ -435,6 +438,13 @@ function Workbench({
   const [cool, setCool] = useState<{ run: number; test: number }>({ run: 0, test: 0 });
   const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null);
   const [assertion, setAssertion] = useState<AssertionDiff | null>(null);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  /** Focus mode (V3): the editor alone. Not during an exam, whose panel holds the timer. */
+  const [focusMode, setFocusMode] = useState(false);
+  const focus = focusMode && !examStart;
+  /** After a pass (V3): the next exercise in the track's order. */
+  const [nextUp, setNextUp] = useState<{ slug: string; title: string } | null>(null);
   const [lastKind, setLastKind] = useState<'run' | 'test'>('test');
   const [args, setArgs] = useState('');
   const [notice, setNotice] = useState<NoticeSpec | null>(null);
@@ -639,6 +649,7 @@ function Workbench({
         setPhase('idle');
         setDiagnosis(null);
         setAssertion(null);
+        setNextUp(null);
         setNotice(null);
         setArgs('');
         pending.current = resumed ? { language: lang, slug, files: resumed } : null;
@@ -993,6 +1004,8 @@ function Workbench({
       void api.exam(exam.id).then(setExam).catch(() => undefined);
     } else if (kind === 'test' && didPass && lang === language) {
       setList((prev) => prev.map((e) => (e.slug === exerciseSlug ? { ...e, passed: true, status: 'passed' } : e)));
+      const next = nextInOrder(placements, list, exerciseSlug);
+      setNextUp(next ? { slug: next.slug, title: next.title ?? next.slug } : null);
       // Submit stores the passing code; pick the new snapshot up.
       void api.snapshots(lang, exerciseSlug).then((r) => setSnaps(r.snapshots)).catch(() => undefined);
     }
@@ -1126,6 +1139,51 @@ function Workbench({
   const showArgs = !!detail && (detail.argv === true || (language !== 'rust' && detail.argv !== false));
   const readme = detail?.readme ?? detail?.subject ?? '';
 
+  // V3: the palette's commands, and the shortcuts that reach some of them.
+  const actions = {
+    run: () => !blocked.run && detail && void execute('run'),
+    submit: () => !blocked.test && detail && void execute('test'),
+    save: () => void flush(),
+    format: () => language === 'go' && detail && !formatting && void formatCode(),
+    focus: () => !exam && setFocusMode((f) => !f),
+    sheet: () => setSheetOpen(true),
+    palette: () => setPaletteOpen(true),
+  };
+  const actionsRef = useRef(actions);
+  actionsRef.current = actions;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const id = matchShortcut(e);
+      if (!id) return;
+      e.preventDefault();
+      e.stopPropagation();
+      actionsRef.current[id]();
+    };
+    // Capture phase, so the editor does not swallow them first.
+    document.addEventListener('keydown', onKey, true);
+    return () => document.removeEventListener('keydown', onKey, true);
+  }, []);
+  const commands: Command[] = [
+    { id: 'run', label: 'Run', keys: keysFor('run'), run: actions.run },
+    { id: 'submit', label: 'Submit', keys: keysFor('submit'), run: actions.submit },
+    { id: 'save', label: 'Save now', keys: keysFor('save'), run: actions.save },
+    ...(language === 'go' ? [{ id: 'format', label: 'Format (gofumpt)', keys: keysFor('format'), run: actions.format }] : []),
+    ...(!exam ? [{ id: 'focus', label: focus ? 'Leave focus mode' : 'Focus mode', keys: keysFor('focus'), run: actions.focus }] : []),
+    { id: 'prefs', label: 'Editor preferences', run: () => setSettingsOpen(true) },
+    { id: 'sheet', label: 'Keyboard shortcuts', keys: keysFor('sheet'), run: actions.sheet },
+    ...(!exam && detail ? [{ id: 'copy', label: 'Save a copy', run: () => void saveCopy() }] : []),
+    ...(detail ? [{ id: 'reset', label: 'Restore starting stub', run: () => void resetExercise() }] : []),
+    ...(exam
+      ? [
+          { id: 'end-exam', label: 'End exam', run: () => void endExam() },
+          ...exam.items.map((i) => ({ id: `open:${i.slug}`, label: `Open: Level ${i.level} · ${i.title}`, run: () => select(i.slug) })),
+        ]
+      : [
+          { id: 'dashboard', label: 'Go to Dashboard', run: () => void flush().then(onDashboard) },
+          ...list.map((e) => ({ id: `open:${e.slug}`, label: `Open exercise: ${e.title}`, run: () => select(e.slug) })),
+        ]),
+  ];
+
   return (
     <div style={{ display: 'flex', flexDirection: compact ? 'column' : 'row', height: '100dvh', width: '100vw', overflow: 'hidden' }}>
       {compact && (
@@ -1148,7 +1206,7 @@ function Workbench({
         </nav>
       )}
       {/* ── left: exercise tree, or the compact rail (V2) ─────────────────── */}
-      {rail && !compact && (
+      {rail && !focus && !compact && (
         <nav
           aria-label="Compact sidebar"
           style={{ width: '2.6rem', flex: '0 0 auto', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.6rem 0' }}
@@ -1167,9 +1225,9 @@ function Workbench({
         </nav>
       )}
       <aside
-        hidden={compact ? pane !== 'list' : rail}
+        hidden={compact ? pane !== 'list' : rail || focus}
         style={{
-          display: (compact ? pane !== 'list' : rail) ? 'none' : undefined,
+          display: (compact ? pane !== 'list' : rail || focus) ? 'none' : undefined,
           width: compact ? '100%' : left.size,
           flex: compact ? '1 1 0' : '0 0 auto',
           borderRight: '1px solid var(--border)',
@@ -1317,15 +1375,16 @@ function Workbench({
         )}
       </aside>
 
-      {!rail && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
+      {!rail && !focus && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
 
       {/* ── centre: instructions ─────────────────────────────────────────
         * No title bar: every README opens with the exercise's own heading, so a
         * separate one would repeat it. Progress and placement are already in the
         * sidebar — the checkmark and the tree position say both.
         */}
-      <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact && pane !== 'subject') }}>
+      <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact ? pane !== 'subject' : focus) }}>
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
+          {detail && slug && <Breadcrumbs language={language} detail={detail} exam={exam} list={list} />}
           {detail && slug && !exam && (
             <div style={{ marginBottom: '.8rem' }}>
               <HintBox key={`${language}/${slug}`} language={language} slug={slug} />
@@ -1348,13 +1407,13 @@ function Workbench({
         </div>
       </section>
 
-      {!compact && <Splitter axis="x" label="Resize the instructions" onDelta={(d) => right.nudge(-d)} onCommit={right.persist} />}
+      {!compact && !focus && <Splitter axis="x" label="Resize the instructions" onDelta={(d) => right.nudge(-d)} onCommit={right.persist} />}
 
       {/* ── right: editor, arguments, actions, results ──────────────────── */}
       <section
         style={{
-          width: compact ? '100%' : right.size,
-          flex: compact ? '1 1 0' : '0 0 auto',
+          width: compact || focus ? '100%' : right.size,
+          flex: compact || focus ? '1 1 0' : '0 0 auto',
           display: 'flex',
           flexDirection: 'column',
           borderLeft: compact ? 'none' : '1px solid var(--border)',
@@ -1595,6 +1654,18 @@ function Workbench({
 
         {/* E. results */}
         <RunNotice notice={notice} />
+        {nextUp && phase === 'done' && (
+          <div role="status" style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.45rem .7rem', borderTop: '1px solid var(--border)', fontSize: '.84rem', flexWrap: 'wrap' }}>
+            <span style={{ color: 'var(--success)' }}>Passed ✓</span>
+            <span style={{ color: 'var(--text-muted)' }}>Next exercise:</span>
+            <button type="button" onClick={() => select(nextUp.slug)} style={{ ...ghostBtn, color: 'var(--accent-text)', padding: 0, fontSize: '.84rem' }}>
+              {nextUp.title} →
+            </button>
+            <button type="button" aria-label="Dismiss" onClick={() => setNextUp(null)} style={{ ...ghostBtn, marginLeft: 'auto', fontSize: '.8rem' }}>
+              ✕
+            </button>
+          </div>
+        )}
         {assertion && phase === 'done' && <AssertionCard key={JSON.stringify(assertion)} diff={assertion} />}
         <div
           style={{
@@ -1611,6 +1682,8 @@ function Workbench({
 
       {dialog}
       <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} commands={commands} />
+      <ShortcutSheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
       <StuckDialog
         open={
           running &&
@@ -1957,5 +2030,37 @@ function ExamPanel({ exam, current, onSelect, onEnd, onExpired }: {
         End exam
       </button>
     </div>
+  );
+}
+
+/** The exercise after `slug` in the track's checkpoint / level order (V3). */
+export function nextInOrder(placements: Placement[], list: ExerciseSummary[], slug: string): ExerciseSummary | null {
+  const order: string[] = [];
+  const sorted = [...placements].sort(
+    (a, b) => a.checkpoint.localeCompare(b.checkpoint, undefined, { numeric: true }) || a.level - b.level,
+  );
+  for (const p of sorted) if (!order.includes(p.exercise)) order.push(p.exercise);
+  for (const e of list) if (!order.includes(e.slug)) order.push(e.slug);
+  const i = order.indexOf(slug);
+  const next = i >= 0 ? order[i + 1] : undefined;
+  return (next && list.find((e) => e.slug === next)) || null;
+}
+
+/** Where the open exercise sits (V3): track › checkpoint › level › exercise. */
+function Breadcrumbs({ language, detail, exam, list }: { language: Language; detail: ExerciseDetail; exam?: ExamView; list: ExerciseSummary[] }) {
+  const item = exam?.items.find((i) => i.slug === detail.slug);
+  const first = detail.placements?.[0];
+  const parts = exam
+    ? ['Mock exam', `Checkpoint ${exam.checkpoint}`, item ? `Level ${item.level}` : null]
+    : [LANGUAGE_LABEL[language], first ? `Checkpoint ${first.checkpoint}` : null, first ? `Level ${first.level}` : null];
+  return (
+    <nav aria-label="Breadcrumb" style={{ fontSize: '.76rem', color: 'var(--text-dim)', marginBottom: '.6rem', display: 'flex', gap: '.35rem', flexWrap: 'wrap' }}>
+      {parts.filter(Boolean).map((p) => (
+        <span key={p}>
+          {p} <span aria-hidden="true">›</span>
+        </span>
+      ))}
+      <span style={{ color: 'var(--text-muted)' }}>{list.find((e) => e.slug === detail.slug)?.title ?? detail.slug}</span>
+    </nav>
   );
 }
