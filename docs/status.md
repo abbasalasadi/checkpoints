@@ -51,3 +51,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-05: Java starters = README templates exactly; solutions = starter with only bodies filled (24 rewritten). java-image-check on lan_vm1: 132 cases, 0 bad. Not deployed (owner has more local edits).
 - 2026-11-05: exams start blank (student files empty; provided main/runner kept), no 'Restore starting stub' in exams. lan_vm1: server 50/50, web 148/148. Not deployed.
 - 2026-11-05: output panel cleared on every exercise switch (exam pass no longer leaves the previous result). web 148/148 on lan_vm1. Not deployed.
+- 2026-11-05: re-verified on lan_vm1 at d263eb7 (earlier VM runs had tested an older commit): Java Cloud Run gate 0 bad, tsc clean, server 50/50, web 148/148. Not deployed.
