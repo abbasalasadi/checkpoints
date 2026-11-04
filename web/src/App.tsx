@@ -60,6 +60,9 @@ export const AUTOSAVE_MS = 900;
 const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust', java: 'Java' };
 const LAST_LANGUAGE_KEY = 'cp.language';
 
+/** Seconds before the progress popup shows; quick runs never see it. */
+const BUSY_POPUP_SECONDS = 5;
+
 function lastLanguage(): Language {
   try {
     const v = localStorage.getItem(LAST_LANGUAGE_KEY);
@@ -1705,22 +1708,11 @@ function Workbench({
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} commands={commands} />
       <ShortcutSheet open={sheetOpen} onClose={() => setSheetOpen(false)} />
       <StuckDialog
-        open={
-          running &&
-          !cancelling &&
-          !stuckDismissed &&
-          limits.warnSeconds !== undefined &&
-          // Java builds with Maven: a normal Submit takes 10-20 s on a cold
-          // runner, so the 20 s warning flashed just before a pass landed.
-          elapsed >= (language === 'java' ? Math.max(limits.warnSeconds, 40) : limits.warnSeconds)
-        }
+        // A calm progress popup once a run passes a few seconds (owner, 2026-11-05).
+        open={running && !cancelling && !stuckDismissed && elapsed >= BUSY_POPUP_SECONDS}
+        kind={lastKind}
         elapsed={elapsed}
-        timeoutSeconds={limits.timeoutSeconds ?? 60}
-        onKeepWaiting={() => setStuckDismissed(true)}
-        onCancel={() => {
-          setStuckDismissed(true);
-          void cancelRun();
-        }}
+        onHide={() => setStuckDismissed(true)}
       />
     </div>
     </div>
