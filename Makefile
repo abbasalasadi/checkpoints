@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help parity secrets-push secrets-pull setup run stop dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
+.PHONY: help parity secrets-push secrets-pull setup run kill dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -18,7 +18,7 @@ WEB_PORT ?= 5203
 setup: ## LOCAL: check prerequisites, create var/, install workspaces
 	@bash scripts/setup.sh
 
-run: ## LOCAL: start API (8157) and Vite (5203) detached; logs in var/logs, stop with make stop
+run: ## LOCAL: start API (8157) and Vite (5203) detached; logs in var/logs, stop with make kill
 	@mkdir -p var/logs var/db
 	@API_PORT=$(API_PORT) nohup npm run serve --workspace server > var/logs/backend.out 2>&1 & echo $$! > var/backend.pid
 	@API_PORT=$(API_PORT) WEB_PORT=$(WEB_PORT) nohup npm run dev --workspace web > var/logs/frontend.log 2>&1 & echo $$! > var/frontend.pid
@@ -26,7 +26,7 @@ run: ## LOCAL: start API (8157) and Vite (5203) detached; logs in var/logs, stop
 	@echo "API  http://127.0.0.1:$(API_PORT)   (var/logs/backend.log; console in backend.out)"
 	@echo "Web  http://127.0.0.1:$(WEB_PORT)   (var/logs/frontend.log)"
 
-stop: ## LOCAL: stop whatever holds the API and Vite ports
+kill: ## LOCAL: stop whatever holds the API and Vite ports
 	@bash -c 'source scripts/lib/common.sh; kill_by_port $(API_PORT); kill_by_port $(WEB_PORT)'
 	@rm -f var/backend.pid var/frontend.pid
 
