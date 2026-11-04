@@ -666,6 +666,9 @@ function Workbench({
         setOrder(f.order);
         setTab(f.order[0] ?? '');
         setPhase('idle');
+        // A new exercise starts with an empty output: the last one's result
+        // (e.g. the pass that just opened this exam level) is not this one's.
+        term.current?.clear();
         setDiagnosis(null);
         setAssertion(null);
         setNextUp(null);
