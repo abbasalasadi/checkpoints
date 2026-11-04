@@ -26,9 +26,9 @@ For one checkpoint:
 - **Exam mark** = the sum of the values of the exercises passed in the exam.
   Required levels add up to 100%; optional or bonus adds on top (e.g. 150%,
   160%).
-- **Practice progress (per track)** = the weight passed ÷ the required weight,
-  counting each exercise once, at its highest placement weight. Optional
-  exercises add on top, so this can pass 100% too.
+- **Practice progress (per track)** = Σ best value of the passed exercises ÷
+  Σ best value of all exercises (each exercise counted once, at its highest
+  value across checkpoints). 0–100%: 100% means every exercise solved.
 
 ## Steps
 1. **Import.** `tools/` reads `list.json` and maps each checkpoint child to
@@ -37,10 +37,10 @@ For one checkpoint:
    fails on unmapped or missing exercises. `list.json` is removed only after
    this is committed (it is still deleted in the V3 cleanup; V4 keeps a
    copy of the extracted numbers in `content/*/sources/weights.json`).
-2. **Server.** Content loader exposes per-placement `value` (percent) and per
-   checkpoint `R`. Migration 008: `exams.mark` (percent × 10, integer),
-   filled when the exam ends and back-filled for past exams from their items.
-   No XP in any API response; only percentages.
+2. **Server.** `server/src/services/marks.ts`: per-placement `value`, exam
+   `mark`/`maxMark`, track `progress`. Marks are computed from the exam items
+   on read, so no migration and past exams get a mark at once. No XP in any
+   API response; only percentages.
 3. **API.**
    - Exercise list / detail: `value` per checkpoint placement.
    - Exam view: `value` per item, `mark`, `maxMark` (100 + optional).

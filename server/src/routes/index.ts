@@ -42,6 +42,7 @@ import {
 } from '../services/exercises.js';
 import * as runs from '../services/runs.js';
 import { pickExamItems } from '../services/exams.js';
+import { examMark, examMaxMark, placementView, trackProgress, valueOf } from '../services/marks.js';
 import type { Exam } from '../repositories/index.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
@@ -307,6 +308,7 @@ function dashboard(req: IncomingMessage, res: ServerResponse): void {
   if (!caller) return;
   const uid = caller.user.id;
   const counts = attempts.counts(uid);
+  const finished = exams.list(uid).filter((e) => e.status !== 'active');
   const tracks = LANGUAGES.map((lang) => {
     const all = listExercises(lang);
     const rows = progress.listForUser(uid, lang);
@@ -328,6 +330,12 @@ function dashboard(req: IncomingMessage, res: ServerResponse): void {
       language: lang,
       total: all.length,
       passed: [...passed].filter((s) => known.has(s)).length,
+      // Percent, weighted (D35).
+      progress: trackProgress(lang, [...known], passed),
+      bestExamMark: finished
+        .filter((e) => e.language === lang)
+        .map((e) => examMark(lang, e.checkpoint, exams.items(e.id).map((i) => ({ slug: i.exercise_slug, passed: i.passed_at !== null }))))
+        .reduce<number | null>((m, v) => (m === null || v > m ? v : m), null),
       started: rows.filter((p) => known.has(p.exercise_slug)).length,
       resume: latest ? { slug: latest.exercise_slug, title: titleOf(lang, latest.exercise_slug), at: latest.updated_at, passed: latest.status === 'passed' } : null,
       gates: [...gates.values()],
@@ -558,7 +566,7 @@ function listAll(req: IncomingMessage, res: ServerResponse, lang: Language): voi
       status: status.get(e.slug) ?? 'not_started',
       starred: starred.has(e.slug),
     })),
-    placements: placementsFor(lang),
+    placements: placementsFor(lang).map((pl) => placementView(lang, pl.exercise, pl)),
   });
 }
 
@@ -570,6 +578,7 @@ function getOne(req: IncomingMessage, res: ServerResponse, p: Params): void {
   const saved = progress.get(caller.user.id, p.lang, p.slug);
   sendJson(res, 200, {
     ...publicView(ex),
+    placements: ex.placements.map((pl) => placementView(ex.language, ex.slug, pl)),
     // The test is deliberately NOT sent: the runner writes it server-side.
     files: workingFiles(ex, saved?.files),
     starter: ex.starter,
@@ -955,10 +964,12 @@ function revealedItems(exam: Exam) {
 }
 
 function examView(exam: Exam) {
-  const total = exams.items(exam.id).length;
+  const all = exams.items(exam.id);
+  const total = all.length;
   const items = revealedItems(exam).map((i) => ({
     level: i.level,
     slug: i.exercise_slug,
+    value: valueOf(exam.language, exam.checkpoint, i.exercise_slug),
     title: titleOf(exam.language, i.exercise_slug),
     submits: i.submits,
     passed: i.passed_at !== null,
@@ -975,6 +986,9 @@ function examView(exam: Exam) {
     status: exam.status,
     passed: items.filter((i) => i.passed).length,
     total,
+    // Percent (D35); optional pushes it above 100.
+    mark: examMark(exam.language, exam.checkpoint, items),
+    maxMark: examMaxMark(exam.language, exam.checkpoint, all.map((i) => i.exercise_slug)),
     items,
   };
 }
@@ -1052,7 +1066,7 @@ function examGetOne(req: IncomingMessage, res: ServerResponse, p: Params, exam: 
   if (!caller) return;
   const ex = exerciseFor(res, p);
   if (!ex) return;
-  sendJson(res, 200, { ...publicView(ex), files: examFiles(ex, exam), starter: ex.starter, status: 'in_progress', examId: exam.id });
+  sendJson(res, 200, { ...publicView(ex), placements: ex.placements.map((pl) => placementView(ex.language, ex.slug, pl)), files: examFiles(ex, exam), starter: ex.starter, status: 'in_progress', examId: exam.id });
 }
 
 async function examSave(req: IncomingMessage, res: ServerResponse, p: Params, exam: Exam): Promise<void> {
