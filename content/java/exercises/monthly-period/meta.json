@@ -1,0 +1,46 @@
+{
+  "slug": "monthly-period",
+  "title": "Monthly Period",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "MonthlyPeriod.java"
+  ],
+  "editorFiles": [
+    "MonthlyPeriod.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "MonthlyPeriod.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/monthly-period/README.md",
+    "sha256": "8d719e6036e131e7c649f17035e40b9b97169f14146803fbfff77515301690a8"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/MonthlyPeriod_test",
+    "className": "MonthlyPeriod",
+    "files": [
+      "MonthlyPeriod_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

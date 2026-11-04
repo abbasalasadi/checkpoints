@@ -1,0 +1,86 @@
+{
+  "source": "owner, 2026-11-04 (D30)",
+  "checkpoints": {
+    "1": [
+      [
+        "goodbye-mars",
+        "system-logger",
+        "universal-greeting",
+        "average-calc"
+      ],
+      [
+        "multiplication-table",
+        "unit-converter"
+      ],
+      [
+        "strlen",
+        "count-char",
+        "digitlen"
+      ],
+      [
+        "rotate-array",
+        "reverse-array",
+        "sort-array"
+      ],
+      [
+        "almost-palindrom",
+        "factorial",
+        "next-prime"
+      ]
+    ],
+    "2": [
+      [
+        "todo-list",
+        "time-tracker",
+        "date-formatter"
+      ],
+      [
+        "area-calculator",
+        "factorial-master",
+        "flexisort"
+      ],
+      [
+        "double-linked-list",
+        "circular-linked-list",
+        "single-linked-list"
+      ],
+      [
+        "harmonious-fusion",
+        "distinct-substring-length",
+        "is-anagram"
+      ],
+      [
+        "spiral-matrix",
+        "maximal-square",
+        "steady-sequence"
+      ]
+    ],
+    "3": [
+      [
+        "day-of-week",
+        "monthly-period",
+        "age-finder"
+      ],
+      [
+        "html-validator",
+        "breakdown-url",
+        "config-protector"
+      ],
+      [
+        "singleton-blueprint",
+        "builder-blueprint",
+        "factory-blueprint"
+      ],
+      [
+        "top-frequents",
+        "longest-common-prefix",
+        "first-unique"
+      ],
+      [
+        "valid-sudoku",
+        "armstrong-number",
+        "perfect-number"
+      ]
+    ]
+  }
+}

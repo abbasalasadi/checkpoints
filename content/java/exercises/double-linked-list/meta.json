@@ -1,0 +1,49 @@
+{
+  "slug": "double-linked-list",
+  "title": "Double Linked List",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "LinkedList.java",
+    "DoubleLinkedList.java"
+  ],
+  "editorFiles": [
+    "LinkedList.java",
+    "DoubleLinkedList.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "LinkedList.java",
+      "DoubleLinkedList.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/double-linked-list/README.md",
+    "sha256": "310c7f54e1853683e8cae7875b3509513919fbeb835abe9299b6715bfc26a7f2"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/DoubleLinkedList_test",
+    "className": "DoubleLinkedList",
+    "files": [
+      "DoubleLinkedList_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

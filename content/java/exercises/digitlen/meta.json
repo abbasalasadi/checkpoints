@@ -1,0 +1,46 @@
+{
+  "slug": "digitlen",
+  "title": "Digitlen",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Digitlen.java"
+  ],
+  "editorFiles": [
+    "Digitlen.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Digitlen.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/digitlen/README.md",
+    "sha256": "6eb578482950a328101228cbff9129bf8842a7d84de64440334ec4b5bef49328"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/Digitlen_test",
+    "className": "Digitlen",
+    "files": [
+      "Digitlen_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

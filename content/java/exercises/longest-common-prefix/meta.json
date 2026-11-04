@@ -1,0 +1,46 @@
+{
+  "slug": "longest-common-prefix",
+  "title": "Longest Common Prefix",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "LongestCommonPrefix.java"
+  ],
+  "editorFiles": [
+    "LongestCommonPrefix.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "LongestCommonPrefix.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/longest-common-prefix/README.md",
+    "sha256": "396a4255080cff0f33810f758ec5d0fa0f5cefa44b9779ba9adc853ea68151a0"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/LongestCommonPrefix_test",
+    "className": "LongestCommonPrefix",
+    "files": [
+      "LongestCommonPrefix_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

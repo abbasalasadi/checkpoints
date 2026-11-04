@@ -1,0 +1,46 @@
+{
+  "slug": "reverse-array",
+  "title": "ReverseArray",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "ReverseArray.java"
+  ],
+  "editorFiles": [
+    "ReverseArray.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "ReverseArray.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/reverse-array/README.md",
+    "sha256": "18ab9896230d423e1ee85f8ae08485dbc268e41cf194fc9644d135e2144ed50a"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/ReverseArray_test",
+    "className": "ReverseArray",
+    "files": [
+      "ReverseArray_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

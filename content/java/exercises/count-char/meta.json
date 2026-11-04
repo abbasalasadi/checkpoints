@@ -1,0 +1,46 @@
+{
+  "slug": "count-char",
+  "title": "CountChar",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "CountChar.java"
+  ],
+  "editorFiles": [
+    "CountChar.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "CountChar.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/count-char/README.md",
+    "sha256": "82d5663670bb2c53d40b8f699f0e1fac83682f0d09078b7b4dab1e231728b721"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/CountChar_test",
+    "className": "CountChar",
+    "files": [
+      "CountChar_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "harmonious-fusion",
+  "title": "Harmonious Fusion",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "HarmoniousFusion.java"
+  ],
+  "editorFiles": [
+    "HarmoniousFusion.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "HarmoniousFusion.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/harmonious-fusion/README.md",
+    "sha256": "6d6dd5bbe715db508d26fcb310d12892c3f6425355fc1f06382e8e6f5c3eb0c7"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/HarmoniousFusion_test",
+    "className": "HarmoniousFusion",
+    "files": [
+      "HarmoniousFusion_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

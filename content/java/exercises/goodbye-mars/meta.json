@@ -1,0 +1,46 @@
+{
+  "slug": "goodbye-mars",
+  "title": "GoodbyeMars",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "GoodbyeMars.java"
+  ],
+  "editorFiles": [
+    "GoodbyeMars.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "GoodbyeMars.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/goodbye-mars/README.md",
+    "sha256": "bfd3408f894a01d01fdeaadf58cbb34b4a53c75c5db3af881f113ca71f6f39b0"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/GoodbyeMars_test",
+    "className": "GoodbyeMars",
+    "files": [
+      "GoodbyeMars_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

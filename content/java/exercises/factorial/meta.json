@@ -1,0 +1,46 @@
+{
+  "slug": "factorial",
+  "title": "Factorial",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Factorial.java"
+  ],
+  "editorFiles": [
+    "Factorial.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Factorial.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/factorial/README.md",
+    "sha256": "9b41a347b3a4510fe94cd80bb1e013807cac6df77b2bd9706eb4af55be09dda5"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/Factorial_test",
+    "className": "Factorial",
+    "files": [
+      "Factorial_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 1,
+      "order": 1,
+      "category": "optional"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "is-anagram",
+  "title": "Check Anagram",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "AnagramChecker.java"
+  ],
+  "editorFiles": [
+    "AnagramChecker.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "AnagramChecker.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/is-anagram/README.md",
+    "sha256": "4a4359248893b7d2420f0c8aef5300e4ee90b292a1e95153dd83da9f653080d9"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/IsAnagram_test",
+    "className": "IsAnagram",
+    "files": [
+      "IsAnagram_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

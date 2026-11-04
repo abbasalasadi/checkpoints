@@ -87,7 +87,10 @@ and fixed by hand in `meta.json` (never silently guessed).
 
 **Starter**: the subject's expected signatures with bodies replaced by `// your code here` and a type-correct
 placeholder return, so the starter **compiles** (the test then fails, not the build) — same rule as Go/Rust starters.
-Subjects that hand over "incomplete code to fix" (blueprints) get that code verbatim as the starter.
+Subjects that hand over "incomplete code to fix" (blueprints) keep that code as close to the subject as compiles.
+7a finding: the subjects' code blocks are pseudo-code (`...`, `????`, missing bodies, one malformed fence), so
+starters are **written by hand in 7b** and compile-checked, not generated. `expectedFiles` is generated: 8
+multi-class exercises reviewed against their tests (2026-11-04), one pseudo-code type added by hand (`RegexBuilder`).
 
 **Build tool**: `tools/java-content.ts` (reads the image dir + zip, writes `content/java/`, idempotent, prints a
 diff summary). It is a one-off importer like the existing ones; the app never reads the image or the zip.
@@ -110,8 +113,8 @@ diff summary). It is a one-off importer like the existing ones; the app never re
 - `EXERCISE` = `test.className` (not the slug).
 
 Performance budget: JVM + Maven start is the cost. Target ≤ 6 s per submit on Cloud Run warm, ≤ 3 s per Run.
-If Maven alone exceeds the budget, the fallback (needs owner approval, since it changes the grading path) is
-calling `javac` + the JUnit launcher directly with the same jars — **not** done by default.
+Owner (2026-11-04): measure after implementation, then decide. The possible fallback (it changes the grading
+path, so it needs owner approval) is calling `javac` + the JUnit launcher directly with the same jars.
 
 ## 5. Where it runs (D32)
 
@@ -119,8 +122,11 @@ calling `javac` + the JUnit launcher directly with the same jars — **not** don
 - Cloud Run wrapper: a static Go binary (pattern of `docker/cloudrun/main.go`) copied into the Java image in a
   multi-stage build; it materialises files under `/tmp/work/student`, sets `EDITOR_FILES` / `EXERCISE` /
   `CODE_EDITOR_RUN_ONLY`, runs `/app/entrypoint.sh`, streams output, returns the exit code. Same HTTP contract as the Go/JS wrappers.
-- Service settings: 1 vCPU, 1 GiB, concurrency 1, timeout as the other tracks, min-instances 0 (spending: any
-  min-instance > 0 is an owner decision).
+- Service settings: 1 vCPU, 1 GiB, concurrency 1, timeout as the other tracks, **min-instances 0**, a small
+  max-instances cap, request-based billing, same region as Go/JS.
+- Cost (owner, 2026-11-04: small amounts, go ahead): Java is an optional specialisation with far fewer students
+  than Go/JS/Rust, so it fits the shared Cloud Run free allowance; extra image storage is cents a month. Measure
+  CPU-seconds per Submit after 7f and record them here.
 - Local development uses the Docker backend with the same image.
 
 ## 6. Server changes

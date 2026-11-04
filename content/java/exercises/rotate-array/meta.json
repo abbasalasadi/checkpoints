@@ -1,0 +1,46 @@
+{
+  "slug": "rotate-array",
+  "title": "RotateArray",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "RotateArray.java"
+  ],
+  "editorFiles": [
+    "RotateArray.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "RotateArray.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/rotate-array/README.md",
+    "sha256": "a43b571e3de661e538965c0dd1453ab71404fb899f398b2ba90b592c8f9fe9a6"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/RotateArray_test",
+    "className": "RotateArray",
+    "files": [
+      "RotateArray_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

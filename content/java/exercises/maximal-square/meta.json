@@ -1,0 +1,46 @@
+{
+  "slug": "maximal-square",
+  "title": "Maximal Square",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "MaximalSquare.java"
+  ],
+  "editorFiles": [
+    "MaximalSquare.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "MaximalSquare.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/maximal-square/README.md",
+    "sha256": "fb29fcb7d3bde1ceb2767bca6875b2a8a76be29b5f48d3d2600ccec9877cb1de"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/MaximalSquare_test",
+    "className": "MaximalSquare",
+    "files": [
+      "MaximalSquare_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": 1,
+      "order": 1,
+      "category": "optional"
+    }
+  ]
+}

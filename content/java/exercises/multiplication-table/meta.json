@@ -1,0 +1,46 @@
+{
+  "slug": "multiplication-table",
+  "title": "MultiplicationTable",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "MultiplicationTable.java"
+  ],
+  "editorFiles": [
+    "MultiplicationTable.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "MultiplicationTable.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/multiplication-table/README.md",
+    "sha256": "4be2b5775e8170d7ae4836087840556e8fe1f7511a6eb77f0b2c5e0cee639bc0"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/MultiplicationTable_test",
+    "className": "MultiplicationTable",
+    "files": [
+      "MultiplicationTable_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

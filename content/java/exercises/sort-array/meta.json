@@ -1,0 +1,46 @@
+{
+  "slug": "sort-array",
+  "title": "SortArray",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "SortArray.java"
+  ],
+  "editorFiles": [
+    "SortArray.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "SortArray.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/sort-array/README.md",
+    "sha256": "26b955e42ac68bb56c9d1446c7bacedc8ef033e48a44801cd3de64da8dbde9e0"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SortArray_test",
+    "className": "SortArray",
+    "files": [
+      "SortArray_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 4,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

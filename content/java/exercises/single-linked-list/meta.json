@@ -1,0 +1,49 @@
+{
+  "slug": "single-linked-list",
+  "title": "Single Linked List",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "LinkedList.java",
+    "SingleLinkedList.java"
+  ],
+  "editorFiles": [
+    "LinkedList.java",
+    "SingleLinkedList.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "LinkedList.java",
+      "SingleLinkedList.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/single-linked-list/README.md",
+    "sha256": "4928976d6536c263d6c62b7cf3b503a7db42478e5820c5c059c130ba9e24ecbe"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SingleLinkedList_test",
+    "className": "SingleLinkedList",
+    "files": [
+      "SingleLinkedList_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "date-formatter",
+  "title": "Date Formatter",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "DateFormatter.java"
+  ],
+  "editorFiles": [
+    "DateFormatter.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "DateFormatter.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/date-formatter/README.md",
+    "sha256": "16ee55fc8cdf20d8f26487394813ed79088c644ac2591c5c118e2ec20b2d0072"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/DateFormatter_test",
+    "className": "DateFormatter",
+    "files": [
+      "DateFormatter_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

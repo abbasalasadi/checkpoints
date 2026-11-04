@@ -1,0 +1,46 @@
+{
+  "slug": "steady-sequence",
+  "title": "Steady Sequence",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "SteadySequence.java"
+  ],
+  "editorFiles": [
+    "SteadySequence.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "SteadySequence.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/steady-sequence/README.md",
+    "sha256": "88b022e759343618c9e965372cb50fd1a6c1af9a94dcbd9b4e37444cea961e8c"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SteadySequence_test",
+    "className": "SteadySequence",
+    "files": [
+      "SteadySequence_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": 2,
+      "order": 2,
+      "category": "optional"
+    }
+  ]
+}

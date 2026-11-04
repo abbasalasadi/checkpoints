@@ -5,7 +5,7 @@ As of: 2026-11-04 · Version: V3 in progress, steps 1-6 done, step 7 (Java) desi
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
 |---|---|---|---|
-| — | — | — | — |
+| V3 7a Java content | main chat | 2026-11-04 | main |
 
 ## Done
 - V3 steps 1-6 built (2026-11-04): mock exam (levels open one at a time, top bar, reports show only seen levels), hints 129/129, assertion card, palette, shortcuts, focus mode, breadcrumbs, next-exercise prompt; About thanks card. Result check: server 43/43, web 136/136, browser checks of exam flow (pass moves to next level) — pass. Owner: happy with the app (2026-11-04)

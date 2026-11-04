@@ -1,0 +1,46 @@
+{
+  "slug": "spiral-matrix",
+  "title": "Spiral Matrix",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "SpiralMatrix.java"
+  ],
+  "editorFiles": [
+    "SpiralMatrix.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "SpiralMatrix.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/spiral-matrix/README.md",
+    "sha256": "d030a0f90c6f5fe10fdd028d6e7aa25bec08352760a442622fda091a9191ee07"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SpiralMatrix_test",
+    "className": "SpiralMatrix",
+    "files": [
+      "SpiralMatrix_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    }
+  ]
+}

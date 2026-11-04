@@ -1,0 +1,46 @@
+{
+  "slug": "average-calc",
+  "title": "AverageCalc",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "AverageCalc.java"
+  ],
+  "editorFiles": [
+    "AverageCalc.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "AverageCalc.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/average-calc/README.md",
+    "sha256": "b0eeeec53f255ab1facec182aa578f2565ad18c293ee0cf7e884abbae14e1b7e"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/AverageCalc_test",
+    "className": "AverageCalc",
+    "files": [
+      "AverageCalc_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 3,
+      "order": 3,
+      "category": "required"
+    }
+  ]
+}

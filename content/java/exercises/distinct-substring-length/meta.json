@@ -1,0 +1,46 @@
+{
+  "slug": "distinct-substring-length",
+  "title": "Distinct Substring length",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "DistinctSubstringLength.java"
+  ],
+  "editorFiles": [
+    "DistinctSubstringLength.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "DistinctSubstringLength.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/distinct-substring-length/README.md",
+    "sha256": "7f54bb5d5f768e88b283f7e43748fdabd29019f1f2f7c75233ad51d31d7104f3"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/DistinctSubstringLength_test",
+    "className": "DistinctSubstringLength",
+    "files": [
+      "DistinctSubstringLength_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

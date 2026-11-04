@@ -1,0 +1,788 @@
+{
+  "schema": 1,
+  "language": "java",
+  "meta": {
+    "description": "Canonical content for the Java checkpoint tester: one directory per exercise.",
+    "levelModel": "level belongs to the placement, not the exercise",
+    "subjects": {
+      "repo": "01-edu/public",
+      "zip": "public-master.zip"
+    },
+    "tests": {
+      "image": "module-java",
+      "archive": "app/tests"
+    },
+    "placementSource": {
+      "file": "content/java/sources/placements.json"
+    }
+  },
+  "exercises": [
+    {
+      "slug": "goodbye-mars",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/goodbye-mars",
+      "title": "GoodbyeMars",
+      "className": "GoodbyeMars"
+    },
+    {
+      "slug": "system-logger",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/system-logger",
+      "title": "SystemLogger",
+      "className": "SystemLogger"
+    },
+    {
+      "slug": "universal-greeting",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/universal-greeting",
+      "title": "UniversalGreeting",
+      "className": "UniversalGreeting"
+    },
+    {
+      "slug": "average-calc",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/average-calc",
+      "title": "AverageCalc",
+      "className": "AverageCalc"
+    },
+    {
+      "slug": "multiplication-table",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/multiplication-table",
+      "title": "MultiplicationTable",
+      "className": "MultiplicationTable"
+    },
+    {
+      "slug": "unit-converter",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/unit-converter",
+      "title": "UnitConverter",
+      "className": "UnitConverter"
+    },
+    {
+      "slug": "strlen",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/strlen",
+      "title": "Strlen",
+      "className": "Strlen"
+    },
+    {
+      "slug": "count-char",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/count-char",
+      "title": "CountChar",
+      "className": "CountChar"
+    },
+    {
+      "slug": "digitlen",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/digitlen",
+      "title": "Digitlen",
+      "className": "Digitlen"
+    },
+    {
+      "slug": "rotate-array",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/rotate-array",
+      "title": "RotateArray",
+      "className": "RotateArray"
+    },
+    {
+      "slug": "reverse-array",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/reverse-array",
+      "title": "ReverseArray",
+      "className": "ReverseArray"
+    },
+    {
+      "slug": "sort-array",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/sort-array",
+      "title": "SortArray",
+      "className": "SortArray"
+    },
+    {
+      "slug": "almost-palindrom",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/almost-palindrom",
+      "title": "AlmostPalindrome",
+      "className": "AlmostPalindrome"
+    },
+    {
+      "slug": "factorial",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/factorial",
+      "title": "Factorial",
+      "className": "Factorial"
+    },
+    {
+      "slug": "next-prime",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/next-prime",
+      "title": "NextPrime",
+      "className": "NextPrime"
+    },
+    {
+      "slug": "todo-list",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/todo-list",
+      "title": "TodoList",
+      "className": "TodoList"
+    },
+    {
+      "slug": "time-tracker",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/time-tracker",
+      "title": "TimeTracker",
+      "className": "TimeTracker"
+    },
+    {
+      "slug": "date-formatter",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/date-formatter",
+      "title": "Date Formatter",
+      "className": "DateFormatter"
+    },
+    {
+      "slug": "area-calculator",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/area-calculator",
+      "title": "Area Calculator",
+      "className": "AreaCalculator"
+    },
+    {
+      "slug": "factorial-master",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/factorial-master",
+      "title": "Factorial Master",
+      "className": "FactorialMaster"
+    },
+    {
+      "slug": "flexisort",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/flexisort",
+      "title": "Flexisort",
+      "className": "Flexisort"
+    },
+    {
+      "slug": "double-linked-list",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/double-linked-list",
+      "title": "Double Linked List",
+      "className": "DoubleLinkedList"
+    },
+    {
+      "slug": "circular-linked-list",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/circular-linked-list",
+      "title": "Circular Linked List",
+      "className": "CircularLinkedList"
+    },
+    {
+      "slug": "single-linked-list",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/single-linked-list",
+      "title": "Single Linked List",
+      "className": "SingleLinkedList"
+    },
+    {
+      "slug": "harmonious-fusion",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/harmonious-fusion",
+      "title": "Harmonious Fusion",
+      "className": "HarmoniousFusion"
+    },
+    {
+      "slug": "distinct-substring-length",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/distinct-substring-length",
+      "title": "Distinct Substring length",
+      "className": "DistinctSubstringLength"
+    },
+    {
+      "slug": "is-anagram",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/is-anagram",
+      "title": "Check Anagram",
+      "className": "IsAnagram"
+    },
+    {
+      "slug": "spiral-matrix",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/spiral-matrix",
+      "title": "Spiral Matrix",
+      "className": "SpiralMatrix"
+    },
+    {
+      "slug": "maximal-square",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/maximal-square",
+      "title": "Maximal Square",
+      "className": "MaximalSquare"
+    },
+    {
+      "slug": "steady-sequence",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/steady-sequence",
+      "title": "Steady Sequence",
+      "className": "SteadySequence"
+    },
+    {
+      "slug": "day-of-week",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/day-of-week",
+      "title": "Day Of Week",
+      "className": "DayOfWeek"
+    },
+    {
+      "slug": "monthly-period",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/monthly-period",
+      "title": "Monthly Period",
+      "className": "MonthlyPeriod"
+    },
+    {
+      "slug": "age-finder",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/age-finder",
+      "title": "Age Finder",
+      "className": "AgeFinder"
+    },
+    {
+      "slug": "html-validator",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/html-validator",
+      "title": "HTML Validator",
+      "className": "HTMLValidator"
+    },
+    {
+      "slug": "breakdown-url",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/breakdown-url",
+      "title": "Breakdown URL",
+      "className": "BreakdownURL"
+    },
+    {
+      "slug": "config-protector",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/config-protector",
+      "title": "Config Protector",
+      "className": "ConfigProtector"
+    },
+    {
+      "slug": "singleton-blueprint",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/singleton-blueprint",
+      "title": "Singleton Blueprint",
+      "className": "SingletonBlueprint"
+    },
+    {
+      "slug": "builder-blueprint",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/builder-blueprint",
+      "title": "Builder Blueprint",
+      "className": "BuilderBlueprint"
+    },
+    {
+      "slug": "factory-blueprint",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/factory-blueprint",
+      "title": "Factory Blueprint",
+      "className": "FactoryBlueprint"
+    },
+    {
+      "slug": "top-frequents",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/top-frequents",
+      "title": "Top Frequents",
+      "className": "TopFrequents"
+    },
+    {
+      "slug": "longest-common-prefix",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/longest-common-prefix",
+      "title": "Longest Common Prefix",
+      "className": "LongestCommonPrefix"
+    },
+    {
+      "slug": "first-unique",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/first-unique",
+      "title": "First Unique",
+      "className": "FirstUnique"
+    },
+    {
+      "slug": "valid-sudoku",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/valid-sudoku",
+      "title": "Valid Sudoku",
+      "className": "ValidSudoku"
+    },
+    {
+      "slug": "armstrong-number",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/armstrong-number",
+      "title": "Armstrong Number",
+      "className": "ArmstrongNumber"
+    },
+    {
+      "slug": "perfect-number",
+      "language": "java",
+      "kind": "class",
+      "argv": false,
+      "dir": "exercises/perfect-number",
+      "title": "Perfect Number",
+      "className": "PerfectNumber"
+    }
+  ],
+  "placements": [
+    {
+      "exercise": "goodbye-mars",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "system-logger",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "universal-greeting",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "average-calc",
+      "checkpoint": "1",
+      "level": 1,
+      "index": 3,
+      "order": 3,
+      "category": "required"
+    },
+    {
+      "exercise": "multiplication-table",
+      "checkpoint": "1",
+      "level": 2,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "unit-converter",
+      "checkpoint": "1",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "strlen",
+      "checkpoint": "1",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "count-char",
+      "checkpoint": "1",
+      "level": 3,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "digitlen",
+      "checkpoint": "1",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "rotate-array",
+      "checkpoint": "1",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "reverse-array",
+      "checkpoint": "1",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "sort-array",
+      "checkpoint": "1",
+      "level": 4,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "almost-palindrom",
+      "checkpoint": "1",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    },
+    {
+      "exercise": "factorial",
+      "checkpoint": "1",
+      "level": 5,
+      "index": 1,
+      "order": 1,
+      "category": "optional"
+    },
+    {
+      "exercise": "next-prime",
+      "checkpoint": "1",
+      "level": 5,
+      "index": 2,
+      "order": 2,
+      "category": "optional"
+    },
+    {
+      "exercise": "todo-list",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "time-tracker",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "date-formatter",
+      "checkpoint": "2",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "area-calculator",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "factorial-master",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "flexisort",
+      "checkpoint": "2",
+      "level": 2,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "double-linked-list",
+      "checkpoint": "2",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "circular-linked-list",
+      "checkpoint": "2",
+      "level": 3,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "single-linked-list",
+      "checkpoint": "2",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "harmonious-fusion",
+      "checkpoint": "2",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "distinct-substring-length",
+      "checkpoint": "2",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "is-anagram",
+      "checkpoint": "2",
+      "level": 4,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "spiral-matrix",
+      "checkpoint": "2",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    },
+    {
+      "exercise": "maximal-square",
+      "checkpoint": "2",
+      "level": 5,
+      "index": 1,
+      "order": 1,
+      "category": "optional"
+    },
+    {
+      "exercise": "steady-sequence",
+      "checkpoint": "2",
+      "level": 5,
+      "index": 2,
+      "order": 2,
+      "category": "optional"
+    },
+    {
+      "exercise": "day-of-week",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "monthly-period",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "age-finder",
+      "checkpoint": "3",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "html-validator",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "breakdown-url",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "config-protector",
+      "checkpoint": "3",
+      "level": 2,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "singleton-blueprint",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "builder-blueprint",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "factory-blueprint",
+      "checkpoint": "3",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "top-frequents",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    },
+    {
+      "exercise": "longest-common-prefix",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    },
+    {
+      "exercise": "first-unique",
+      "checkpoint": "3",
+      "level": 4,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    },
+    {
+      "exercise": "valid-sudoku",
+      "checkpoint": "3",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    },
+    {
+      "exercise": "armstrong-number",
+      "checkpoint": "3",
+      "level": 5,
+      "index": 1,
+      "order": 1,
+      "category": "optional"
+    },
+    {
+      "exercise": "perfect-number",
+      "checkpoint": "3",
+      "level": 5,
+      "index": 2,
+      "order": 2,
+      "category": "optional"
+    }
+  ]
+}

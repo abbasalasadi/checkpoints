@@ -1,0 +1,46 @@
+{
+  "slug": "unit-converter",
+  "title": "UnitConverter",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "UnitConverter.java"
+  ],
+  "editorFiles": [
+    "UnitConverter.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "UnitConverter.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/unit-converter/README.md",
+    "sha256": "9f7d2e0d0ad10c76a80cf23db41f8bbb72fbb7029bc2508d9a2c8e8cd47535d6"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/UnitConverter_test",
+    "className": "UnitConverter",
+    "files": [
+      "UnitConverter_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

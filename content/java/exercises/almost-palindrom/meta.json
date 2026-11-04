@@ -1,0 +1,46 @@
+{
+  "slug": "almost-palindrom",
+  "title": "AlmostPalindrome",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "AlmostPalindrome.java"
+  ],
+  "editorFiles": [
+    "AlmostPalindrome.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "AlmostPalindrome.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/almost-palindrom/README.md",
+    "sha256": "5946f35ae0fd4852e342f9cdc314e6a68630c98edcdb233a8871cf7da00c0f57"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/AlmostPalindrome_test",
+    "className": "AlmostPalindrome",
+    "files": [
+      "AlmostPalindrome_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    }
+  ]
+}

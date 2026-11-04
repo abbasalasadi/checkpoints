@@ -1,0 +1,49 @@
+{
+  "slug": "circular-linked-list",
+  "title": "Circular Linked List",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "LinkedList.java",
+    "CircularLinkedList.java"
+  ],
+  "editorFiles": [
+    "LinkedList.java",
+    "CircularLinkedList.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "LinkedList.java",
+      "CircularLinkedList.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/circular-linked-list/README.md",
+    "sha256": "94feeaa79baaebe6aae04459530f964fc6be7d442a001465a838c9b4e70db246"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/CircularLinkedList_test",
+    "className": "CircularLinkedList",
+    "files": [
+      "CircularLinkedList_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 3,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

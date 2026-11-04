@@ -1,0 +1,46 @@
+{
+  "slug": "top-frequents",
+  "title": "Top Frequents",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "TopFrequents.java"
+  ],
+  "editorFiles": [
+    "TopFrequents.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "TopFrequents.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/top-frequents/README.md",
+    "sha256": "4eb17d8aa771119ca15cd9202a27eac74d4532b1ea8d7f19edae10f90c5043de"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/TopFrequents_test",
+    "className": "TopFrequents",
+    "files": [
+      "TopFrequents_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 4,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

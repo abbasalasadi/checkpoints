@@ -16,7 +16,7 @@ No deploy until the owner has tested locally (D20). Old sites are not touched un
 4. [x] Assertion diff card on failed tests (expected vs actual)
 5. [x] Command palette + keyboard shortcut sheet
 6. [x] Focus (zen) mode, post-pass "next exercise" prompt, breadcrumbs
-7. [ ] Java track (D30–D33), design in `docs/01_design/07_java_track.md`: 7a content importer, 7b solutions + hints, 7c runner image + verify/parity, 7d server + migration 007, 7e web, 7f Cloud Run service
+7. [ ] Java track (7a done) (D30–D33), design in `docs/01_design/07_java_track.md`: 7a content importer, 7b solutions + hints, 7c runner image + verify/parity, 7d server + migration 007, 7e web, 7f Cloud Run service
 8. [ ] Tests on lan_vm1, self-audit, clean-up (DEV_LOGIN, fake users), release note draft
 
 ## Done when

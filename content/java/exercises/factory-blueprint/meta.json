@@ -1,0 +1,55 @@
+{
+  "slug": "factory-blueprint",
+  "title": "Factory Blueprint",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Product.java",
+    "ConcreteProductA.java",
+    "ConcreteProductB.java",
+    "Factory.java"
+  ],
+  "editorFiles": [
+    "Product.java",
+    "ConcreteProductA.java",
+    "ConcreteProductB.java",
+    "Factory.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Product.java",
+      "ConcreteProductA.java",
+      "ConcreteProductB.java",
+      "Factory.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/factory-blueprint/README.md",
+    "sha256": "c797f2c54fe5e96706117b19bd3c747f835d153fbb0860222871aaae1f82e314"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/FactoryBlueprint_test",
+    "className": "FactoryBlueprint",
+    "files": [
+      "FactoryBlueprint_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 3,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

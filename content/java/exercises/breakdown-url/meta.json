@@ -1,0 +1,46 @@
+{
+  "slug": "breakdown-url",
+  "title": "Breakdown URL",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "BreakdownURL.java"
+  ],
+  "editorFiles": [
+    "BreakdownURL.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "BreakdownURL.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/breakdown-url/README.md",
+    "sha256": "10603ae9d732ef742e2724ceb40358f17e7e2f41093374a9e0c6a99a5a37f611"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/BreakdownURL_test",
+    "className": "BreakdownURL",
+    "files": [
+      "BreakdownURL_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "valid-sudoku",
+  "title": "Valid Sudoku",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "ValidSudoku.java"
+  ],
+  "editorFiles": [
+    "ValidSudoku.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "ValidSudoku.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/valid-sudoku/README.md",
+    "sha256": "38df204127fda7fb0924931f468152c415a396f6989c451bcff4e795ee9b6b4f"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/ValidSudoku_test",
+    "className": "ValidSudoku",
+    "files": [
+      "ValidSudoku_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 5,
+      "index": 0,
+      "order": 0,
+      "category": "optional"
+    }
+  ]
+}

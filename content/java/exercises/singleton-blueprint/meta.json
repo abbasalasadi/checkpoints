@@ -1,0 +1,46 @@
+{
+  "slug": "singleton-blueprint",
+  "title": "Singleton Blueprint",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Singleton.java"
+  ],
+  "editorFiles": [
+    "Singleton.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Singleton.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/singleton-blueprint/README.md",
+    "sha256": "19124aa963d612420a88a549e527e126fc27cb87349727d27ff09b86354c611e"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SingletonBlueprint_test",
+    "className": "SingletonBlueprint",
+    "files": [
+      "SingletonBlueprint_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

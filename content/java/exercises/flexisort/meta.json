@@ -1,0 +1,52 @@
+{
+  "slug": "flexisort",
+  "title": "Flexisort",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Sorter.java",
+    "BubbleSort.java",
+    "InsertionSort.java"
+  ],
+  "editorFiles": [
+    "Sorter.java",
+    "BubbleSort.java",
+    "InsertionSort.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Sorter.java",
+      "BubbleSort.java",
+      "InsertionSort.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/flexisort/README.md",
+    "sha256": "b37f0f382ff239a4ebaf085a1f8340e8acba89e336099f9cf6ff96c286fa52ed"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/Flexisort_test",
+    "className": "Flexisort",
+    "files": [
+      "Flexisort_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

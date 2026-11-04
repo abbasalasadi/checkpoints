@@ -1,0 +1,46 @@
+{
+  "slug": "next-prime",
+  "title": "NextPrime",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "NextPrime.java"
+  ],
+  "editorFiles": [
+    "NextPrime.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "NextPrime.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/next-prime/README.md",
+    "sha256": "c7c44e9a5a64881766dd65c08500fa1a8f2e86023663178273aaf25df9493390"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/NextPrime_test",
+    "className": "NextPrime",
+    "files": [
+      "NextPrime_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 5,
+      "index": 2,
+      "order": 2,
+      "category": "optional"
+    }
+  ]
+}

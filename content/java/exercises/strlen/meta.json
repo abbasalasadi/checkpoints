@@ -1,0 +1,46 @@
+{
+  "slug": "strlen",
+  "title": "Strlen",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Strlen.java"
+  ],
+  "editorFiles": [
+    "Strlen.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Strlen.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/strlen/README.md",
+    "sha256": "dce9871ccffaf5ab32a573688714c8f65af85acfe610c9c68cc36e8384c62f4a"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/Strlen_test",
+    "className": "Strlen",
+    "files": [
+      "Strlen_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 3,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

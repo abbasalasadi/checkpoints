@@ -1,0 +1,52 @@
+{
+  "slug": "todo-list",
+  "title": "TodoList",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "TaskStatus.java",
+    "Task.java",
+    "TodoList.java"
+  ],
+  "editorFiles": [
+    "TaskStatus.java",
+    "Task.java",
+    "TodoList.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "TaskStatus.java",
+      "Task.java",
+      "TodoList.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/todo-list/README.md",
+    "sha256": "76d1535ad75d9269d3f4b19c2b07ab749041861dddb2799d3122393470580237"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/TodoList_test",
+    "className": "TodoList",
+    "files": [
+      "TodoList_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 0,
+      "order": 0,
+      "category": "required"
+    }
+  ]
+}

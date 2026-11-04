@@ -1,0 +1,46 @@
+{
+  "slug": "age-finder",
+  "title": "Age Finder",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "AgeFinder.java"
+  ],
+  "editorFiles": [
+    "AgeFinder.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "AgeFinder.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/age-finder/README.md",
+    "sha256": "58e7e524a1460f324c341731a8a83047e0cca511992dcb5d2f68b416af47b07a"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/AgeFinder_test",
+    "className": "AgeFinder",
+    "files": [
+      "AgeFinder_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "3",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

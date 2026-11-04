@@ -1,0 +1,46 @@
+{
+  "slug": "universal-greeting",
+  "title": "UniversalGreeting",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "UniversalGreeting.java"
+  ],
+  "editorFiles": [
+    "UniversalGreeting.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "UniversalGreeting.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/universal-greeting/README.md",
+    "sha256": "439134bc0877f9fa962fd8f041ba2c8570d5ffe7a7e507a0e85e8a0bbd20ceee"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/UniversalGreeting_test",
+    "className": "UniversalGreeting",
+    "files": [
+      "UniversalGreeting_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 2,
+      "order": 2,
+      "category": "required"
+    }
+  ]
+}

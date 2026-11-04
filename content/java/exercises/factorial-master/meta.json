@@ -1,0 +1,52 @@
+{
+  "slug": "factorial-master",
+  "title": "Factorial Master",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "Factorial.java",
+    "IterativeFactorial.java",
+    "RecursiveFactorial.java"
+  ],
+  "editorFiles": [
+    "Factorial.java",
+    "IterativeFactorial.java",
+    "RecursiveFactorial.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "Factorial.java",
+      "IterativeFactorial.java",
+      "RecursiveFactorial.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/factorial-master/README.md",
+    "sha256": "194e4880363544b8d570ac752e068cc3eb6ff8ffbd48138194acdf4b0a29ffd8"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/FactorialMaster_test",
+    "className": "FactorialMaster",
+    "files": [
+      "FactorialMaster_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 2,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "system-logger",
+  "title": "SystemLogger",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "SystemLog.java"
+  ],
+  "editorFiles": [
+    "SystemLog.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "SystemLog.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/system-logger/README.md",
+    "sha256": "3431177dae803ab70a4c4a7adb041978c95e4e18f3762e840ff761f937ed61e2"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/SystemLogger_test",
+    "className": "SystemLogger",
+    "files": [
+      "SystemLogger_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "1",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}

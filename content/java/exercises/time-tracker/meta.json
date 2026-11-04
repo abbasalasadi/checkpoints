@@ -1,0 +1,46 @@
+{
+  "slug": "time-tracker",
+  "title": "TimeTracker",
+  "language": "java",
+  "status": "placed",
+  "kind": "class",
+  "argv": false,
+  "expectedFiles": [
+    "ProjectTime.java"
+  ],
+  "editorFiles": [
+    "ProjectTime.java",
+    "ExerciseRunner.java"
+  ],
+  "files": {
+    "subject": "README.md",
+    "starter": [
+      "ProjectTime.java"
+    ],
+    "main": "ExerciseRunner.java",
+    "solution": "solution/",
+    "test": "test/"
+  },
+  "subject": {
+    "repo": "01-edu/public",
+    "path": "subjects/java/checkpoints/time-tracker/README.md",
+    "sha256": "e9ec04e082aa4733cb4135b8b2c9e3bacd19cc8dbe9d5d82532ab85fa9f23db0"
+  },
+  "test": {
+    "image": "module-java",
+    "path": "/app/tests/TimeTracker_test",
+    "className": "TimeTracker",
+    "files": [
+      "TimeTracker_test.java"
+    ]
+  },
+  "placements": [
+    {
+      "checkpoint": "2",
+      "level": 1,
+      "index": 1,
+      "order": 1,
+      "category": "required"
+    }
+  ]
+}
