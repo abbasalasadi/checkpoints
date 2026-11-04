@@ -14,13 +14,16 @@ build_ssh_args
 rust_image="$(resolve_runner_image)"
 go_image="$(resolve_runner_go_image)"
 js_image="$(resolve_runner_js_image)"
+# Cloud Run serves Go and JS; only Rust needs a local image then.
+only="go,js,rust"
+[ "${RUNNER_BACKEND:-docker}" = "cloudrun" ] && only="rust"
 
-print_info "[VM] Building runner images: ${go_image}, ${js_image}, ${rust_image}"
+print_info "[VM] Building runner images (${only})"
 ssh "${SSH_ARGS[@]}" "$(resolve_ssh_target)" \
-  "PROJECT='${REMOTE_PROJECT_DIR}' RUST_IMAGE='${rust_image}' GO_IMAGE='${go_image}' JS_IMAGE='${js_image}' bash -s" <<'REMOTE'
+  "NODE='${NODE_BIN:-node}' ONLY='${only}' PROJECT='${REMOTE_PROJECT_DIR}' RUST_IMAGE='${rust_image}' GO_IMAGE='${go_image}' JS_IMAGE='${js_image}' bash -s" <<'REMOTE'
 set -euo pipefail
 cd "$PROJECT"
 RUNNER_IMAGE="$RUST_IMAGE" RUNNER_GO_IMAGE="$GO_IMAGE" RUNNER_JS_IMAGE="$JS_IMAGE" \
-  node scripts/build-runner-images.mjs
+  "$NODE" scripts/build-runner-images.mjs --only "$ONLY"
 REMOTE
 print_info "[VM] runner images ready"
