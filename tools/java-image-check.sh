@@ -4,7 +4,7 @@
 # tmpfs /tmp, editor files mounted at /jail/student):
 #   submit solution must PASS, submit starter must FAIL, run solution must print.
 # Prints one line per case and a timing summary.
-#   tools/java-image-check.sh [image]
+#   [ONLY=slug] tools/java-image-check.sh [image]
 set -uo pipefail
 img="${1:-java-checkpoints-runner:dev}"
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -18,7 +18,7 @@ run() { # dir className mode(true=run) -> exit code, output in $dir.log
     -v "$dir:/jail/student:ro" -e "EXERCISE=$cls" -e "EDITOR_FILES=$files" \
     -e "CODE_EDITOR_RUN_ONLY=$only" "$img" >"$dir.log" 2>&1
 }
-for ex in "$root"/content/java/exercises/*/; do
+for ex in "$root"/content/java/exercises/${ONLY:-*}/; do
   slug="$(basename "$ex")"
   cls="$(sed -n 's/.*"className": "\([^"]*\)".*/\1/p' "$ex/meta.json")"
   for kind in solution starter run; do
