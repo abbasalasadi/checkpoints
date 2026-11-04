@@ -3,7 +3,7 @@
  * so a timeline reads as its milestones, and a small line diff for comparing
  * two submits.
  */
-import type { AttemptSummary } from './api.js';
+import type { AttemptSummary, ExerciseHistory } from './api.js';
 import { outcomeLabel } from './format.js';
 
 export type TimelineItem =
@@ -87,4 +87,11 @@ export function lineDiff(before: string, after: string, maxLines = 1500): DiffLi
   while (i < m) out.push({ op: '-', text: a[i++]! });
   while (j < n) out.push({ op: '+', text: b[j++]! });
   return out;
+}
+
+/** "✓ Passed on submit 3", "✗ Not passed yet", "Not submitted yet". */
+export function resultText(e: ExerciseHistory): string {
+  if (e.passedOnSubmit) return `✓ Passed on submit ${e.passedOnSubmit}`;
+  if (e.passed) return '✓ Passed';
+  return e.submits ? '✗ Not passed yet' : 'Not submitted yet';
 }

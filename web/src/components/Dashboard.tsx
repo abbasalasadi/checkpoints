@@ -4,14 +4,16 @@
  * choice lives here (D23).
  */
 import { useEffect, useState } from 'react';
-import { api, type AttemptSummary, type Language, type TrackSummary } from '../lib/api.js';
-import { LANGUAGE_LABEL, ago, kindLabel, outcomeColor, outcomeLabel } from '../lib/format.js';
+import { api, type ExerciseHistory, type Language, type TrackSummary } from '../lib/api.js';
+import { LANGUAGE_LABEL, ago } from '../lib/format.js';
+import { resultText } from '../lib/timeline.js';
 import { logger } from '../logger.js';
 import { Skeleton } from './Skeleton.js';
 
 interface Props {
   onOpen: (language: Language, slug: string | null) => void;
-  onHistory: () => void;
+  /** All history, or one exercise's timeline. */
+  onHistory: (focus?: { language: Language; slug: string }) => void;
 }
 
 const card: React.CSSProperties = {
@@ -93,29 +95,36 @@ function TrackCard({ t, onOpen }: { t: TrackSummary; onOpen: Props['onOpen'] }) 
   );
 }
 
-export function ActivityRow({ a, onOpen }: { a: AttemptSummary; onOpen: () => void }) {
+/** One exercise worked on recently (D26): grouped like History, not one row per attempt. */
+function RecentRow({ e, onTimeline, onContinue }: { e: ExerciseHistory; onTimeline: () => void; onContinue: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      style={{
-        display: 'grid', gridTemplateColumns: '5.5rem 1fr auto auto', gap: '.7rem', alignItems: 'center', width: '100%',
-        background: 'transparent', border: 'none', borderBottom: '1px solid var(--border)', color: 'var(--text)',
-        font: 'inherit', fontSize: '.84rem', textAlign: 'left', padding: '.5rem .2rem', cursor: 'pointer',
-      }}
-    >
-      <span style={{ color: 'var(--text-dim)' }}>{LANGUAGE_LABEL[a.language]}</span>
-      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-        {a.title} <span style={{ color: 'var(--text-dim)' }}>· {kindLabel(a.kind)}</span>
-      </span>
-      <span style={{ color: outcomeColor(a.outcome) }}>{outcomeLabel(a.outcome, a.kind)}</span>
-      <span style={{ color: 'var(--text-dim)', fontSize: '.76rem', minWidth: '4.5rem', textAlign: 'right' }}>{ago(a.at)}</span>
-    </button>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', borderBottom: '1px solid var(--border)', padding: '.45rem .2rem', fontSize: '.84rem', flexWrap: 'wrap' }}>
+      <button
+        type="button"
+        onClick={onTimeline}
+        title="Show the timeline of this exercise"
+        style={{ display: 'flex', alignItems: 'center', gap: '.7rem', flex: 1, minWidth: 0, background: 'transparent', border: 'none', color: 'var(--text)', font: 'inherit', textAlign: 'left', padding: 0, cursor: 'pointer' }}
+      >
+        <span style={{ color: 'var(--text-dim)', width: '5.5rem', flex: 'none' }}>{LANGUAGE_LABEL[e.language]}</span>
+        <strong style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{e.title}</strong>
+        <span style={{ color: e.passed ? 'var(--success)' : 'var(--text-muted)', whiteSpace: 'nowrap' }}>{resultText(e)}</span>
+        <span style={{ color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+          {e.runs} run{e.runs === 1 ? '' : 's'} · {e.submits} submit{e.submits === 1 ? '' : 's'}
+        </span>
+      </button>
+      <span style={{ color: 'var(--text-dim)', fontSize: '.76rem', minWidth: '4.5rem', textAlign: 'right' }}>{ago(e.lastAt)}</span>
+      <button type="button" onClick={onContinue} style={{ ...secondary, padding: '.2rem .6rem', fontSize: '.78rem' }}>
+        {e.passed ? 'Open' : 'Continue'}
+      </button>
+    </div>
   );
 }
 
+const RECENT = 6;
+
 export function Dashboard({ onOpen, onHistory }: Props) {
-  const [data, setData] = useState<{ tracks: TrackSummary[]; recent: AttemptSummary[] } | null>(null);
+  const [data, setData] = useState<{ tracks: TrackSummary[] } | null>(null);
+  const [recent, setRecent] = useState<ExerciseHistory[] | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -126,6 +135,13 @@ export function Dashboard({ onOpen, onHistory }: Props) {
       .catch((err) => {
         logger.warn('dashboard.load_failed', { error: String(err) });
         if (live) setError(true);
+      });
+    api
+      .historyExercises()
+      .then((r) => live && setRecent(r.exercises.slice(0, RECENT)))
+      .catch((err) => {
+        logger.warn('dashboard.recent_failed', { error: String(err) });
+        if (live) setRecent([]);
       });
     return () => {
       live = false;
@@ -144,13 +160,20 @@ export function Dashboard({ onOpen, onHistory }: Props) {
         <section style={{ ...card, gap: '.3rem' }} aria-label="Recent activity">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <h2 style={{ margin: '0 0 .3rem', fontSize: '1rem' }}>Recent activity</h2>
-            <button type="button" onClick={onHistory} style={{ ...secondary, border: 'none', color: 'var(--accent-text)', padding: 0 }}>
+            <button type="button" onClick={() => onHistory()} style={{ ...secondary, border: 'none', color: 'var(--accent-text)', padding: 0 }}>
               All history →
             </button>
           </div>
-          {!data && !error && [0, 1, 2, 3].map((i) => <Skeleton key={i} height="1.9rem" />)}
-          {data && data.recent.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: '.86rem', margin: '.3rem 0' }}>Nothing yet. Pick a track above and run your first exercise.</p>}
-          {data?.recent.map((a) => <ActivityRow key={a.id} a={a} onOpen={() => onOpen(a.language, a.slug)} />)}
+          {!recent && [0, 1, 2, 3].map((i) => <Skeleton key={i} height="1.9rem" />)}
+          {recent && recent.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: '.86rem', margin: '.3rem 0' }}>Nothing yet. Pick a track above and run your first exercise.</p>}
+          {recent?.map((e) => (
+            <RecentRow
+              key={`${e.language}/${e.slug}`}
+              e={e}
+              onTimeline={() => onHistory({ language: e.language, slug: e.slug })}
+              onContinue={() => onOpen(e.language, e.slug)}
+            />
+          ))}
         </section>
       </div>
     </main>

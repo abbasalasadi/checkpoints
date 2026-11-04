@@ -7,12 +7,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { api, reportUrl, type AttemptDetail, type AttemptSummary, type ExerciseHistory, type Language } from '../lib/api.js';
 import { LANGUAGES } from '../lib/route.js';
 import { LANGUAGE_LABEL, ago, kindLabel, outcomeColor, outcomeLabel } from '../lib/format.js';
-import { fmtSpent, groupTimeline, lineDiff, runLabel, summariseRuns, type TimelineItem } from '../lib/timeline.js';
+import { fmtSpent, groupTimeline, resultText, lineDiff, runLabel, summariseRuns, type TimelineItem } from '../lib/timeline.js';
 import { logger } from '../logger.js';
 import { Skeleton } from './Skeleton.js';
 
 interface Props {
   onOpen: (language: Language, slug: string) => void;
+  /** Open straight on this exercise's timeline (from the dashboard). */
+  focus?: { language: Language; slug: string } | null;
 }
 
 const select: React.CSSProperties = {
@@ -205,11 +207,6 @@ function Item({ item, open, setOpen }: { item: TimelineItem; open: Open; setOpen
   );
 }
 
-function resultText(e: ExerciseHistory): string {
-  if (e.passedOnSubmit) return `✓ Passed on submit ${e.passedOnSubmit}`;
-  if (e.passed) return '✓ Passed';
-  return e.submits ? '✗ Not passed yet' : 'Not submitted yet';
-}
 
 function Timeline({ ex, onOpen, onBack }: { ex: ExerciseHistory; onOpen: Props['onOpen']; onBack: () => void }) {
   const [items, setItems] = useState<TimelineItem[] | null>(null);
@@ -272,7 +269,7 @@ function Timeline({ ex, onOpen, onBack }: { ex: ExerciseHistory; onOpen: Props['
 
 type ResultFilter = '' | 'passed' | 'not_passed';
 
-export function History({ onOpen }: Props) {
+export function History({ onOpen, focus }: Props) {
   const [language, setLanguage] = useState<Language | ''>('');
   const [result, setResult] = useState<ResultFilter>('');
   const [q, setQ] = useState('');
@@ -284,7 +281,11 @@ export function History({ onOpen }: Props) {
     setRows(null);
     api
       .historyExercises(language || undefined)
-      .then((r) => live && setRows(r.exercises))
+      .then((r) => {
+        if (!live) return;
+        setRows(r.exercises);
+        if (focus) setSelected((cur) => cur ?? r.exercises.find((e) => e.language === focus.language && e.slug === focus.slug) ?? null);
+      })
       .catch((err) => {
         logger.warn('history.load_failed', { error: String(err) });
         if (live) setRows([]);

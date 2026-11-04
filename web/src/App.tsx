@@ -169,6 +169,7 @@ function SignedIn({
 }) {
   const [loc, setLoc] = useState(() => readLocation());
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [historyFocus, setHistoryFocus] = useState<{ language: Language; slug: string } | null>(null);
   const { confirm, dialog } = useConfirm();
   useEffect(() => onNavigate(setLoc), []);
 
@@ -191,7 +192,10 @@ function SignedIn({
         onPrefs={onPrefs}
         onSignedOut={onSignedOut}
         onDashboard={() => goPage('dashboard')}
-        onHistory={() => goPage('history')}
+        onHistory={() => {
+          setHistoryFocus(null);
+          goPage('history');
+        }}
       />
     );
   }
@@ -215,17 +219,26 @@ function SignedIn({
         identifier={identifier}
         current={page}
         onDashboard={() => goPage('dashboard')}
-        onHistory={() => goPage('history')}
+        onHistory={() => {
+          setHistoryFocus(null);
+          goPage('history');
+        }}
         onVault={() => goPage('vault')}
         onPreferences={() => setSettingsOpen(true)}
         onSignOut={() => void signOut()}
       />
       {page === 'history' ? (
-        <History onOpen={(l, s) => openTrack(l, s)} />
+        <History key={historyFocus ? `${historyFocus.language}/${historyFocus.slug}` : 'all'} focus={historyFocus} onOpen={(l, s) => openTrack(l, s)} />
       ) : page === 'vault' ? (
         <Vault onOpen={(l, s) => openTrack(l, s)} />
       ) : (
-        <Dashboard onOpen={openTrack} onHistory={() => goPage('history')} />
+        <Dashboard
+          onOpen={openTrack}
+          onHistory={(focus) => {
+            setHistoryFocus(focus ?? null);
+            goPage('history');
+          }}
+        />
       )}
       <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
       {dialog}
