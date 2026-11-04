@@ -324,7 +324,77 @@ export const attempts = {
       )
       .all(userId, language, slug, limit);
   },
+
+  /** Latest attempts across every track (dashboard recent activity). */
+  recent(userId: number, limit = 10): AttemptRow[] {
+    return getDb()
+      .prepare(
+        `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
+          WHERE user_id = ? ORDER BY created_at DESC, id DESC LIMIT ?`,
+      )
+      .all(userId, limit) as AttemptRow[];
+  },
+
+  /** Attempt counts by language, kind and outcome (dashboard statistics). */
+  counts(userId: number): { language: Language; kind: string; outcome: string | null; n: number }[] {
+    return getDb()
+      .prepare(
+        `SELECT language, kind, outcome, COUNT(*) AS n FROM attempts
+          WHERE user_id = ? GROUP BY language, kind, outcome`,
+      )
+      .all(userId) as { language: Language; kind: string; outcome: string | null; n: number }[];
+  },
+
+  /**
+   * History explorer (V2 feature 2): newest first, optional filters, keyset
+   * paging by id (`before`), so a page never shifts while new runs land.
+   */
+  search(userId: number, f: AttemptFilter): AttemptRow[] {
+    const where = ['user_id = ?'];
+    const args: (string | number)[] = [userId];
+    if (f.language) { where.push('language = ?'); args.push(f.language); }
+    if (f.slug) { where.push('exercise_slug = ?'); args.push(f.slug); }
+    if (f.kind) { where.push('kind = ?'); args.push(f.kind); }
+    if (f.outcome) { where.push('outcome = ?'); args.push(f.outcome); }
+    if (f.before) { where.push('id < ?'); args.push(f.before); }
+    args.push(f.limit);
+    return getDb()
+      .prepare(
+        `SELECT id, language, exercise_slug, kind, outcome, duration_ms, created_at FROM attempts
+          WHERE ${where.join(' AND ')} ORDER BY id DESC LIMIT ?`,
+      )
+      .all(...args) as AttemptRow[];
+  },
+
+  /** One attempt with its code and output; undefined unless it is the caller's. */
+  detail(userId: number, id: number): (AttemptRow & { exit_code: number | null; files_json: string | null; output: string | null }) | undefined {
+    return getDb()
+      .prepare(
+        `SELECT id, language, exercise_slug, kind, outcome, exit_code, duration_ms, files_json, output, created_at
+           FROM attempts WHERE user_id = ? AND id = ?`,
+      )
+      .get(userId, id) as (AttemptRow & { exit_code: number | null; files_json: string | null; output: string | null }) | undefined;
+  },
 };
+
+export interface AttemptRow {
+  id: number;
+  language: Language;
+  exercise_slug: string;
+  kind: string;
+  outcome: string | null;
+  duration_ms: number | null;
+  created_at: string;
+}
+
+export interface AttemptFilter {
+  language?: Language;
+  slug?: string;
+  kind?: 'run' | 'test';
+  outcome?: string;
+  before?: number;
+  limit: number;
+}
 
 export const runnerUsage = {
   open(userId: number, containerId: string): number {

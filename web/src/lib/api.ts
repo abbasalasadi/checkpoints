@@ -169,7 +169,53 @@ export interface Preferences {
   keybindings: 'default' | 'vim';
 }
 
+/** One attempt as listed on the dashboard and in history (V2). */
+export interface AttemptSummary {
+  id: number;
+  language: Language;
+  slug: string;
+  title: string;
+  kind: 'run' | 'test';
+  outcome: string | null;
+  durationMs: number | null;
+  at: string;
+}
+
+export interface AttemptDetail extends AttemptSummary {
+  exitCode: number | null;
+  files: Record<string, string>;
+  output: string;
+}
+
+export interface TrackSummary {
+  language: Language;
+  total: number;
+  passed: number;
+  started: number;
+  resume: { slug: string; title: string; at: string; passed: boolean } | null;
+  gates: { checkpoint: string; total: number; passed: number }[];
+  runs: number;
+  submits: number;
+  submitsPassed: number;
+}
+
+export interface HistoryFilter {
+  language?: Language;
+  slug?: string;
+  kind?: 'run' | 'test';
+  outcome?: string;
+  before?: number;
+  limit?: number;
+}
+
 export const api = {
+  dashboard: () => request<{ tracks: TrackSummary[]; recent: AttemptSummary[] }>('/api/dashboard'),
+  history: (f: HistoryFilter = {}) => {
+    const q = new URLSearchParams();
+    for (const [k, v] of Object.entries(f)) if (v !== undefined && v !== '') q.set(k, String(v));
+    return request<{ attempts: AttemptSummary[]; next: number | null }>(`/api/history?${q.toString()}`);
+  },
+  attempt: (id: number) => request<AttemptDetail>(`/api/history/${id}`),
   preferences: () => request<{ preferences: Preferences }>('/api/preferences'),
   savePreferences: (patch: Partial<Preferences>) =>
     request<{ preferences: Preferences }>('/api/preferences', {

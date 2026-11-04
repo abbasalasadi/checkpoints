@@ -72,6 +72,10 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
 
   if (path === '/api/languages' && method === 'GET') return languages(req, res);
   if (path === '/api/preferences' && method === 'GET') return getPreferences(req, res);
+  if (path === '/api/dashboard' && method === 'GET') return dashboard(req, res);
+  if (path === '/api/history' && method === 'GET') return history(req, res, url.searchParams);
+  const historyMatch = /^\/api\/history\/(\d{1,12})$/.exec(path);
+  if (historyMatch?.[1] && method === 'GET') return historyDetail(req, res, Number(historyMatch[1]));
   if (path === '/api/preferences' && method === 'PUT') return putPreferences(req, res);
 
   // ── runs, not language-scoped (the id is enough)
@@ -247,6 +251,111 @@ async function putPreferences(req: IncomingMessage, res: ServerResponse): Promis
   const next = normalizePreferences(input, normalizePreferences(preferences.get(caller.user.id)));
   preferences.set(caller.user.id, next);
   sendJson(res, 200, { preferences: next });
+}
+
+// ── dashboard and history (V2 features 1 and 2) ─────────────────────────────
+
+function titleOf(lang: Language, slug: string): string {
+  return getExercise(lang, slug)?.title ?? slug;
+}
+
+function attemptView(a: { id: number; language: Language; exercise_slug: string; kind: string; outcome: string | null; duration_ms: number | null; created_at: string }) {
+  return {
+    id: a.id,
+    language: a.language,
+    slug: a.exercise_slug,
+    title: titleOf(a.language, a.exercise_slug),
+    kind: a.kind,
+    outcome: a.outcome,
+    durationMs: a.duration_ms,
+    at: a.created_at,
+  };
+}
+
+/**
+ * Per track: totals, the exercise to resume, and per-checkpoint (gate) counts.
+ * Plus recent activity across tracks and attempt statistics.
+ */
+function dashboard(req: IncomingMessage, res: ServerResponse): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const uid = caller.user.id;
+  const counts = attempts.counts(uid);
+  const tracks = LANGUAGES.map((lang) => {
+    const all = listExercises(lang);
+    const rows = progress.listForUser(uid, lang);
+    const passed = new Set(rows.filter((p) => p.status === 'passed').map((p) => p.exercise_slug));
+    const known = new Set(all.map((e) => e.slug));
+    const latest = rows
+      .filter((p) => known.has(p.exercise_slug))
+      .sort((a, b) => (a.updated_at < b.updated_at ? 1 : -1))[0];
+    const gates = new Map<string, { checkpoint: string; total: number; passed: number }>();
+    for (const pl of placementsFor(lang)) {
+      const g = gates.get(pl.checkpoint) ?? { checkpoint: pl.checkpoint, total: 0, passed: 0 };
+      g.total += 1;
+      if (passed.has(pl.exercise)) g.passed += 1;
+      gates.set(pl.checkpoint, g);
+    }
+    const mine = counts.filter((c) => c.language === lang);
+    const sum = (f: (c: (typeof mine)[number]) => boolean) => mine.filter(f).reduce((n, c) => n + c.n, 0);
+    return {
+      language: lang,
+      total: all.length,
+      passed: [...passed].filter((s) => known.has(s)).length,
+      started: rows.filter((p) => known.has(p.exercise_slug)).length,
+      resume: latest ? { slug: latest.exercise_slug, title: titleOf(lang, latest.exercise_slug), at: latest.updated_at, passed: latest.status === 'passed' } : null,
+      gates: [...gates.values()],
+      runs: sum((c) => c.kind === 'run'),
+      submits: sum((c) => c.kind === 'test'),
+      submitsPassed: sum((c) => c.kind === 'test' && c.outcome === 'passed'),
+    };
+  });
+  sendJson(res, 200, { tracks, recent: attempts.recent(uid, 10).map(attemptView) });
+}
+
+const HISTORY_PAGE_MAX = 100;
+
+function history(req: IncomingMessage, res: ServerResponse, q: URLSearchParams): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const lang = q.get('language');
+  const slug = q.get('slug');
+  const kind = q.get('kind');
+  const outcome = q.get('outcome');
+  const before = Number(q.get('before') ?? 0);
+  const limit = Math.min(Math.max(Number(q.get('limit') ?? 50) || 50, 1), HISTORY_PAGE_MAX);
+  if ((lang && !isLanguage(lang)) || (slug && !SLUG_PATTERN.test(slug)) || (kind && kind !== 'run' && kind !== 'test') || (outcome && !/^[a-z_]{1,32}$/.test(outcome))) {
+    sendError(res, 400, 'invalid_request', 'Invalid filter.');
+    return;
+  }
+  const rows = attempts.search(caller.user.id, {
+    language: (lang as Language) || undefined,
+    slug: slug || undefined,
+    kind: (kind as 'run' | 'test') || undefined,
+    outcome: outcome || undefined,
+    before: Number.isInteger(before) && before > 0 ? before : undefined,
+    limit: limit + 1,
+  });
+  const more = rows.length > limit;
+  const page = rows.slice(0, limit);
+  sendJson(res, 200, { attempts: page.map(attemptView), next: more ? page[page.length - 1]!.id : null });
+}
+
+function historyDetail(req: IncomingMessage, res: ServerResponse, id: number): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const a = attempts.detail(caller.user.id, id);
+  if (!a) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  let files: Record<string, string> = {};
+  try {
+    files = a.files_json ? (JSON.parse(a.files_json) as Record<string, string>) : {};
+  } catch {
+    files = {};
+  }
+  sendJson(res, 200, { ...attemptView(a), exitCode: a.exit_code, files, output: a.output ?? '' });
 }
 
 // ── content ──────────────────────────────────────────────────────────────────

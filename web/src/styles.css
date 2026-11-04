@@ -362,3 +362,15 @@ body[data-resizing] .splitter {
 .dlg-btn-danger:hover {
   background: #bd453c;
 }
+
+/* Loading skeletons (V2). Still for people who asked for less motion. */
+.cp-skeleton {
+  background: var(--raised);
+  animation: cp-pulse 1.4s ease-in-out infinite;
+}
+@keyframes cp-pulse {
+  50% { opacity: 0.45; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-skeleton { animation: none; }
+}

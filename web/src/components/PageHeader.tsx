@@ -1,0 +1,52 @@
+/**
+ * Header for the pages outside the workbench (dashboard, history): who is
+ * signed in, where they are, and the account actions.
+ */
+import { Logo } from './Icon.js';
+
+interface Props {
+  identifier: string;
+  current: 'dashboard' | 'history';
+  onDashboard: () => void;
+  onHistory: () => void;
+  onPreferences: () => void;
+  onSignOut: () => void;
+}
+
+const link = (active: boolean): React.CSSProperties => ({
+  background: 'transparent',
+  border: 'none',
+  font: 'inherit',
+  fontSize: '.86rem',
+  cursor: 'pointer',
+  padding: '.3rem .55rem',
+  borderRadius: 'var(--radius)',
+  color: active ? 'var(--text)' : 'var(--text-muted)',
+  boxShadow: active ? 'inset 0 -2px 0 var(--accent)' : 'none',
+});
+
+export function PageHeader({ identifier, current, onDashboard, onHistory, onPreferences, onSignOut }: Props) {
+  return (
+    <header style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap' }}>
+      <span style={{ color: 'var(--accent-text)', display: 'flex' }}>
+        <Logo size={22} />
+      </span>
+      <strong style={{ fontSize: '.95rem', marginRight: '.6rem' }}>Checkpoints</strong>
+      <nav style={{ display: 'flex', gap: '.15rem' }}>
+        <button type="button" style={link(current === 'dashboard')} aria-current={current === 'dashboard' ? 'page' : undefined} onClick={onDashboard}>
+          Dashboard
+        </button>
+        <button type="button" style={link(current === 'history')} aria-current={current === 'history' ? 'page' : undefined} onClick={onHistory}>
+          History
+        </button>
+      </nav>
+      <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontSize: '.82rem' }}>{identifier}</span>
+      <button type="button" style={link(false)} onClick={onPreferences}>
+        Preferences
+      </button>
+      <button type="button" style={link(false)} onClick={onSignOut}>
+        Sign out
+      </button>
+    </header>
+  );
+}

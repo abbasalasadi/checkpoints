@@ -16,8 +16,8 @@ function at(path: string) {
 beforeEach(() => at('/'));
 
 describe('reading the location', () => {
-  test('the root selects nothing', () => {
-    expect(readLocation()).toEqual({ language: null, slug: null, legacy: false });
+  test('the root selects no track (it is the dashboard)', () => {
+    expect(readLocation()).toEqual({ page: 'dashboard', language: null, slug: null, legacy: false });
   });
 
   test.each([
@@ -32,15 +32,21 @@ describe('reading the location', () => {
   });
 
   test('a bare track selects the track only', () => {
-    expect(parsePath('/go')).toEqual({ language: 'go', slug: null, legacy: false });
+    expect(parsePath('/go')).toEqual({ page: null, language: 'go', slug: null, legacy: false });
   });
 
   test('a legacy /e/ path is read as Rust and flagged for rewriting', () => {
-    expect(parsePath('/e/min_and_max')).toEqual({ language: 'rust', slug: 'min_and_max', legacy: true });
+    expect(parsePath('/e/min_and_max')).toEqual({ page: null, language: 'rust', slug: 'min_and_max', legacy: true });
   });
 
   test('an unrelated path selects nothing rather than guessing', () => {
     expect(parsePath('/something/else')).toMatchObject({ language: null, slug: null });
+  });
+
+  test('the root is the dashboard and /history the history explorer (V2)', () => {
+    expect(parsePath('/')).toMatchObject({ page: 'dashboard', language: null });
+    expect(parsePath('/history')).toMatchObject({ page: 'history', language: null });
+    expect(parsePath('/history/x')).toMatchObject({ page: 'dashboard', language: null });
   });
 });
 

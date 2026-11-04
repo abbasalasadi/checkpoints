@@ -32,7 +32,10 @@ import { canonicalOutcome, diagnoseRun, noticeOutcome, type Diagnosis } from './
 import { lint as lintGo } from './lib/lint/go.js';
 import { lintForSubmit as lintJs } from './lib/lint/js.js';
 import { logger } from './logger.js';
-import { LANGUAGES, isLanguage, navigate, onNavigate, readLocation } from './lib/route.js';
+import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
+import { Dashboard } from './components/Dashboard.js';
+import { History } from './components/History.js';
+import { PageHeader } from './components/PageHeader.js';
 
 type Screen = 'loading' | 'login' | 'app';
 
@@ -113,16 +116,84 @@ export function App() {
         }}
       />
     );
+  const signedOut = (reason?: string) => {
+    setSignedOutReason(reason ?? null);
+    setScreen('login');
+  };
+  return <SignedIn identifier={identifier} prefs={prefs} onPrefs={updatePrefs} onSignedOut={signedOut} />;
+}
+
+/**
+ * The signed-in app: the dashboard and history pages (V2), or the workbench
+ * for a track. Which one comes from the URL, so Back and Forward move between
+ * them.
+ */
+function SignedIn({
+  identifier,
+  prefs,
+  onPrefs,
+  onSignedOut,
+}: {
+  identifier: string;
+  prefs: Preferences;
+  onPrefs: (patch: Partial<Preferences>) => void;
+  onSignedOut: (reason?: string) => void;
+}) {
+  const [loc, setLoc] = useState(() => readLocation());
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { confirm, dialog } = useConfirm();
+  useEffect(() => onNavigate(setLoc), []);
+
+  const goPage = (page: Page) => {
+    navigatePage(page);
+    setLoc(readLocation());
+  };
+  const openTrack = (language: Language, slug: string | null) => {
+    rememberLanguage(language);
+    navigate(language, slug);
+    setLoc(readLocation());
+  };
+
+  if (!loc.page && loc.language) {
+    return (
+      <Workbench
+        key="workbench"
+        identifier={identifier}
+        prefs={prefs}
+        onPrefs={onPrefs}
+        onSignedOut={onSignedOut}
+        onDashboard={() => goPage('dashboard')}
+        onHistory={() => goPage('history')}
+      />
+    );
+  }
+
+  async function signOut() {
+    const ok = await confirm({
+      title: 'Sign out?',
+      body: 'Your saved code stays on the server — you can sign back in and pick up where you left off.',
+      confirmLabel: 'Sign out',
+    });
+    if (!ok) return;
+    await api.logout().catch(() => undefined);
+    onSignedOut();
+  }
+
+  const page = loc.page ?? 'dashboard';
   return (
-    <Workbench
-      identifier={identifier}
-      prefs={prefs}
-      onPrefs={updatePrefs}
-      onSignedOut={(reason) => {
-        setSignedOutReason(reason ?? null);
-        setScreen('login');
-      }}
-    />
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <PageHeader
+        identifier={identifier}
+        current={page}
+        onDashboard={() => goPage('dashboard')}
+        onHistory={() => goPage('history')}
+        onPreferences={() => setSettingsOpen(true)}
+        onSignOut={() => void signOut()}
+      />
+      {page === 'history' ? <History onOpen={(l, s) => openTrack(l, s)} /> : <Dashboard onOpen={openTrack} onHistory={() => goPage('history')} />}
+      <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
+      {dialog}
+    </div>
   );
 }
 
@@ -241,11 +312,15 @@ function Workbench({
   prefs,
   onPrefs,
   onSignedOut,
+  onDashboard,
+  onHistory,
 }: {
   identifier: string;
   prefs: Preferences;
   onPrefs: (patch: Partial<Preferences>) => void;
   onSignedOut: (reason?: string) => void;
+  onDashboard: () => void;
+  onHistory: () => void;
 }) {
   const initial = useMemo(() => readLocation(), []);
   const [language, setLanguage] = useState<Language>(() => initial.language ?? lastLanguage());
@@ -342,6 +417,9 @@ function Workbench({
     }
   }, []);
 
+  // Leaving the workbench (Back to the dashboard) must not drop the last edit.
+  useEffect(() => () => void flush(), [flush]);
+
   /** Record an edit and mark it unsaved. The debounce below writes it. */
   const markDirty = useCallback(
     (next: Record<string, string>) => {
@@ -402,22 +480,6 @@ function Workbench({
     runId.current = null;
   }, []);
   useEffect(() => detach, [detach]);
-
-  /** Switching track is a navigation: flush, then land on the track's root. */
-  const switchLanguage = useCallback(
-    async (next: Language) => {
-      if (next === language) return;
-      await flush();
-      rememberLanguage(next);
-      setLanguage(next);
-      setSlug(null);
-      setDetail(null);
-      setOpenGroups(new Set());
-      setOpenLevels(new Set());
-      navigate(next, null);
-    },
-    [flush, language],
-  );
 
   /**
    * Set when the tree itself picked the exercise: its branch is already open,
@@ -882,27 +944,18 @@ function Workbench({
           </button>
         </div>
 
-        {/* Track switcher. A segmented control: exactly one is always current. */}
-        <div role="tablist" aria-label="Language" style={{ display: 'flex', gap: 2, marginBottom: '.7rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: 2 }}>
-          {LANGUAGES.map((l) => (
-            <button
-              key={l}
-              type="button"
-              role="tab"
-              aria-selected={language === l}
-              onClick={() => void switchLanguage(l)}
-              style={{
-                ...ghostBtn,
-                flex: 1,
-                fontSize: '.78rem',
-                borderRadius: 'calc(var(--radius) - 2px)',
-                background: language === l ? 'var(--accent)' : 'transparent',
-                color: language === l ? '#fff' : 'var(--text-muted)',
-              }}
-            >
-              {LANGUAGE_LABEL[l]}
-            </button>
-          ))}
+        {/* The track is chosen on the dashboard (D23); here it is only named. */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.4rem', marginBottom: '.7rem' }}>
+          <button
+            type="button"
+            onClick={() => void flush().then(onDashboard)}
+            style={{ ...ghostBtn, fontSize: '.78rem', color: 'var(--accent-text)', padding: '.2rem 0' }}
+          >
+            ← Dashboard
+          </button>
+          <span style={{ fontSize: '.78rem', color: 'var(--text-muted)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '.1rem .45rem' }}>
+            {LANGUAGE_LABEL[language]}
+          </span>
         </div>
 
         {/* A track without placements still lists its exercises, flat. */}
@@ -1065,6 +1118,7 @@ function Workbench({
                   })),
                 ],
                 [
+                  { label: 'History', onSelect: () => void flush().then(onHistory) },
                   { label: 'Preferences', onSelect: () => setSettingsOpen(true) },
                   { label: 'About', onSelect: () => setAboutOpen(true) },
                 ],

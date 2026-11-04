@@ -5,7 +5,8 @@
  * application entirely. In the path they survive reload, work with Back and
  * Forward, and can be linked to or bookmarked.
  *
- *   /                    nothing selected (the last track, or Rust)
+ *   /                    the dashboard (V2): tracks, resume, recent activity
+ *   /history             the history explorer (V2)
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
  *   /e/min_and_max       legacy Rust link — read as /rust/min_and_max and
@@ -15,7 +16,12 @@ import type { Language } from './api.js';
 
 export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust'];
 
+/** A page that is not a track: the dashboard or the history explorer. */
+export type Page = 'dashboard' | 'history';
+
 export interface Location {
+  /** Set when the path is a page rather than a track. */
+  page: Page | null;
   language: Language | null;
   slug: string | null;
   /** The path was a legacy shape and should be replaced with pathFor(). */
@@ -44,16 +50,18 @@ function cleanSlug(raw: string | undefined): string | null {
 export function parsePath(pathname: string): Location {
   const parts = pathname.replace(/\/+$/, '').split('/').filter(Boolean);
   const [first, second, ...rest] = parts;
+  const home: Location = { page: 'dashboard', language: null, slug: null, legacy: false };
+  if (first === 'history' && second === undefined) return { ...home, page: 'history' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
-    return slug ? { language: 'rust', slug, legacy: true } : { language: null, slug: null, legacy: false };
+    return slug ? { page: null, language: 'rust', slug, legacy: true } : home;
   }
   if (isLanguage(first)) {
-    if (second === undefined) return { language: first, slug: null, legacy: false };
+    if (second === undefined) return { page: null, language: first, slug: null, legacy: false };
     const slug = rest.length ? null : cleanSlug(second);
-    return { language: first, slug, legacy: false };
+    return { page: null, language: first, slug, legacy: false };
   }
-  return { language: null, slug: null, legacy: false };
+  return home;
 }
 
 export function readLocation(): Location {
@@ -81,6 +89,14 @@ export function navigate(language: Language | null, slug: string | null, { repla
   if (next === window.location.pathname) return;
   if (replace) window.history.replaceState({ language, slug }, '', next);
   else window.history.pushState({ language, slug }, '', next);
+}
+
+/** Go to a page (dashboard or history). */
+export function navigatePage(page: Page, { replace = false } = {}): void {
+  const next = page === 'history' ? '/history' : '/';
+  if (next === window.location.pathname) return;
+  if (replace) window.history.replaceState({ page }, '', next);
+  else window.history.pushState({ page }, '', next);
 }
 
 /** Subscribe to Back and Forward. Returns an unsubscribe. */

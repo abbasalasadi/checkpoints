@@ -16,7 +16,7 @@ import { config } from '../../src/config/index.ts';
 // Tests sign in with fake users; the app keeps dev-login off unless opted in (D17).
 config.devLoginOptIn = true;
 import { closeDatabase, getDb, migrate, openDatabase } from '../../src/db/index.ts';
-import { hashToken, progress, sessions, users } from '../../src/repositories/index.ts';
+import { attempts, hashToken, progress, sessions, users } from '../../src/repositories/index.ts';
 import { handle } from '../../src/routes/index.ts';
 import { listExercises } from '../../src/services/exercises.ts';
 import { setRunnerModule, type SubmitInput } from '../../src/services/runs.ts';
@@ -266,4 +266,52 @@ test('preferences: defaults, partial update, invalid values ignored, per user (D
   assert.equal(again.json.preferences.keybindings, 'vim');
 
   assert.equal((await call('/api/preferences', { cookie: b })).json.preferences.keybindings, 'default');
+});
+
+test('dashboard and history: per-track totals, recent activity, filters, paging, ownership', async () => {
+  const a = await devLogin('fake_hist_a');
+  const b = await devLogin('fake_hist_b');
+  const ua = users.upsertOnLogin('fake_hist_a', null, null);
+  const goSlug = listExercises('go')[0]!.slug;
+  const rsSlug = listExercises('rust')[0]!.slug;
+  progress.save(ua.id, 'go', goSlug, { status: 'passed' });
+  for (let i = 0; i < 3; i++) {
+    attempts.record({ userId: ua.id, language: 'go', slug: goSlug, kind: 'run', outcome: 'failed', exitCode: 1, durationMs: 10, files: { 'main.go': `v${i}` }, output: `out${i}` });
+  }
+  attempts.record({ userId: ua.id, language: 'go', slug: goSlug, kind: 'test', outcome: 'passed', exitCode: 0, durationMs: 20, files: { 'main.go': 'ok' }, output: 'PASS' });
+  attempts.record({ userId: ua.id, language: 'rust', slug: rsSlug, kind: 'test', outcome: 'failed', exitCode: 1, durationMs: 30 });
+
+  const d = await call('/api/dashboard', { cookie: a });
+  assert.equal(d.status, 200);
+  const go = d.json.tracks.find((t: any) => t.language === 'go');
+  assert.equal(go.passed, 1);
+  assert.equal(go.total, listExercises('go').length);
+  assert.equal(go.resume.slug, goSlug);
+  assert.equal(go.runs, 3);
+  assert.equal(go.submits, 1);
+  assert.equal(go.submitsPassed, 1);
+  assert.ok(go.gates.length > 0 && go.gates.some((g: any) => g.passed === 1));
+  assert.equal(d.json.recent.length, 5);
+  assert.equal(d.json.recent[0].language, 'rust');
+
+  const page1 = await call('/api/history?limit=2', { cookie: a });
+  assert.equal(page1.json.attempts.length, 2);
+  assert.ok(page1.json.next);
+  const page2 = await call(`/api/history?limit=2&before=${page1.json.next}`, { cookie: a });
+  assert.equal(page2.json.attempts.length, 2);
+  assert.ok(page2.json.attempts[0].id < page1.json.attempts[1].id);
+  const onlyTests = await call('/api/history?kind=test&language=go', { cookie: a });
+  assert.equal(onlyTests.json.attempts.length, 1);
+  assert.equal(onlyTests.json.next, null);
+  assert.equal((await call('/api/history?language=cobol', { cookie: a })).status, 400);
+
+  const id = onlyTests.json.attempts[0].id;
+  const det = await call(`/api/history/${id}`, { cookie: a });
+  assert.equal(det.status, 200);
+  assert.deepEqual(det.json.files, { 'main.go': 'ok' });
+  assert.equal(det.json.output, 'PASS');
+  // Another student cannot read it, and sees none of it in their history.
+  assert.equal((await call(`/api/history/${id}`, { cookie: b })).status, 404);
+  assert.equal((await call('/api/history', { cookie: b })).json.attempts.length, 0);
+  assert.equal((await call('/api/dashboard')).status, 401);
 });
