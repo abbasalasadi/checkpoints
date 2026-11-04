@@ -1,3 +1,7 @@
+enum TaskStatus {
+    NEW, IN_PROGRESS, COMPLETED
+}
+
 public class Task {
     private String description;
     private TaskStatus status;

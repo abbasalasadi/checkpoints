@@ -6,12 +6,10 @@
   "kind": "class",
   "argv": false,
   "expectedFiles": [
-    "TaskStatus.java",
     "Task.java",
     "TodoList.java"
   ],
   "editorFiles": [
-    "TaskStatus.java",
     "Task.java",
     "TodoList.java",
     "ExerciseRunner.java"
@@ -19,7 +17,6 @@
   "files": {
     "subject": "README.md",
     "starter": [
-      "TaskStatus.java",
       "Task.java",
       "TodoList.java"
     ],

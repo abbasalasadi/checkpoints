@@ -85,6 +85,17 @@ const EXTRA_TYPES: Record<string, string[]> = {
   'builder-blueprint': ['RegexBuilder'], // "public ... RegexBuilder {"
 };
 
+/** The program's expectedFiles where they differ from the README's types (list.json, 2026-11-04). */
+const EXPECTED_FILES: Record<string, string[]> = {
+  'todo-list': ['Task.java', 'TodoList.java'], // TaskStatus lives in Task.java
+};
+
+/** README runner examples that do not compile (Submit compiles ExerciseRunner too); fixed on import. */
+const RUNNER_FIXES: Record<string, [string, string]> = {
+  digitlen: ['digitlen(9989898878)', 'digitlen(9989898878L)'],
+  'singleton-blueprint': ['Singleton.get???()', 'Singleton.getInstance()'],
+};
+
 const exercises: unknown[] = [];
 const placements: unknown[] = [];
 const provenance: Record<string, string> = {};
@@ -117,13 +128,14 @@ for (const slug of allSlugs) {
 
   const blocks = javaBlocks(md);
   const runner = [...blocks].reverse().find((b) => /class\s+ExerciseRunner\b/.test(b));
-  if (runner) write(join(dir, 'ExerciseRunner.java'), runner);
+  const fix = RUNNER_FIXES[slug];
+  if (runner) write(join(dir, 'ExerciseRunner.java'), fix ? runner.replace(fix[0], fix[1]) : runner);
   else review.push(`${slug}: no ExerciseRunner block`);
 
   const types = [...typesIn(blocks.filter((b) => b !== runner).join('\n')), ...(EXTRA_TYPES[slug] ?? [])];
   if (types.length === 0) review.push(`${slug}: no types found in the expected block`);
   if (types.length > 1) review.push(`${slug}: ${types.length} types (${types.join(', ')}) — check expectedFiles`);
-  const expectedFiles = (types.length ? types : [cls]).map((t) => `${t}.java`);
+  const expectedFiles = EXPECTED_FILES[slug] ?? (types.length ? types : [cls]).map((t) => `${t}.java`);
 
   const title = /^##\s+(.+)$/m.exec(md)?.[1]?.trim() ?? slug;
   const meta = {
