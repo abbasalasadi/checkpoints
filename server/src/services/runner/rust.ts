@@ -214,7 +214,11 @@ export class RustBackend implements Backend {
     try {
       const exec = await container.exec({
         // Wrapped so the run has a process group to signal (`kill` is a shell builtin).
-        Cmd: ['/bin/sh', '-c', `echo $$ > ${PGID_FILE}; exec ${shellQuote(cmd)}`],
+        // `touch` first: the tar stamps whole seconds, so code written within a
+        // second of the last build looked older than it and cargo reused that
+        // build (a starter graded on the previous solution). Now-to-the-nanosecond
+        // is always newer.
+        Cmd: ['/bin/sh', '-c', `${touchCommand(files.map((f) => f.path))}echo $$ > ${PGID_FILE}; exec ${shellQuote(cmd)}`],
         WorkingDir: cwd ?? '/workspace',
         AttachStdout: true,
         AttachStderr: true,
@@ -253,6 +257,12 @@ export class RustBackend implements Backend {
       this.log.warn('runner.terminate_failed', { containerId: containerId.slice(0, 12), error: String(err) });
     }
   }
+}
+
+/** Re-stamp the files just written with the container's clock (see run()). */
+export function touchCommand(paths: string[]): string {
+  if (!paths.length) return '';
+  return `touch -c -- ${shellQuote(paths.map((p) => `/workspace/${p.replace(/^\/+/, '')}`))}; `;
 }
 
 /** The reference's commands: `cargo test` in <slug>_test, `cargo run -- args` in <slug>. */
