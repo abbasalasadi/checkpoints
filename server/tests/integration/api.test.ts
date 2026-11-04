@@ -16,7 +16,7 @@ import { config } from '../../src/config/index.ts';
 // Tests sign in with fake users; the app keeps dev-login off unless opted in (D17).
 config.devLoginOptIn = true;
 import { closeDatabase, getDb, migrate, openDatabase } from '../../src/db/index.ts';
-import { attempts, hashToken, progress, sessions, users } from '../../src/repositories/index.ts';
+import { attempts, hashToken, progress, sessions, snapshots, users } from '../../src/repositories/index.ts';
 import { handle } from '../../src/routes/index.ts';
 import { listExercises } from '../../src/services/exercises.ts';
 import { setRunnerModule, type SubmitInput } from '../../src/services/runs.ts';
@@ -314,4 +314,36 @@ test('dashboard and history: per-track totals, recent activity, filters, paging,
   assert.equal((await call(`/api/history/${id}`, { cookie: b })).status, 404);
   assert.equal((await call('/api/history', { cookie: b })).json.attempts.length, 0);
   assert.equal((await call('/api/dashboard')).status, 401);
+});
+
+test('vault and exercise report: passing copy, Markdown download, ownership', async () => {
+  const a = await devLogin('fake_vault_a');
+  const b = await devLogin('fake_vault_b');
+  const ua = users.upsertOnLogin('fake_vault_a', null, null);
+  const ex = listExercises('rust').find((e) => e.kind === 'lib') ?? listExercises('rust')[0]!;
+  const sol = 'pub fn answer() -> u8 { 42 }\n// ``` inside code\n';
+  snapshots.savePassing(ua.id, 'rust', ex.slug, { 'src/lib.rs': sol, 'src/main.rs': 'fn main() {}' });
+  attempts.record({ userId: ua.id, language: 'rust', slug: ex.slug, kind: 'test', outcome: 'passed', exitCode: 0, durationMs: 5 });
+
+  const v = await call('/api/vault', { cookie: a });
+  assert.equal(v.status, 200);
+  assert.equal(v.json.items.length, 1);
+  assert.equal(v.json.items[0].slug, ex.slug);
+  assert.equal((await call('/api/vault', { cookie: b })).json.items.length, 0);
+
+  const r = await fetch(`${base}/api/rust/exercises/${ex.slug}/report`, { headers: { cookie: a } });
+  assert.equal(r.status, 200);
+  assert.match(r.headers.get('content-type') ?? '', /text\/markdown/);
+  assert.match(r.headers.get('content-disposition') ?? '', new RegExp(`rust-${ex.slug}\\.md`));
+  const md = await r.text();
+  assert.match(md, /## Subject/);
+  assert.match(md, /## Solution/);
+  assert.ok(md.includes('pub fn answer()'));
+  assert.ok(md.includes('````rust'), 'fence grows past backticks in the code');
+  assert.match(md, /last passing copy/);
+  // Another student gets their own (empty) draft, never this solution.
+  const rb = await (await fetch(`${base}/api/rust/exercises/${ex.slug}/report`, { headers: { cookie: b } })).text();
+  assert.ok(!rb.includes('pub fn answer()'));
+  assert.equal((await fetch(`${base}/api/rust/exercises/${ex.slug}/report`)).status, 401);
+  assert.equal((await fetch(`${base}/api/rust/exercises/no_such_thing/report`, { headers: { cookie: a } })).status, 404);
 });

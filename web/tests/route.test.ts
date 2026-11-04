@@ -74,3 +74,9 @@ describe('building paths', () => {
     expect(pathFor(null, null)).toBe('/');
   });
 });
+
+describe('the solutions vault route (V2)', () => {
+  test('/vault is its own page', () => {
+    expect(parsePath('/vault')).toMatchObject({ page: 'vault', language: null });
+  });
+});

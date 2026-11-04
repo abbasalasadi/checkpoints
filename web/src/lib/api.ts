@@ -199,6 +199,20 @@ export interface TrackSummary {
   submitsPassed: number;
 }
 
+/** A passing copy in the solutions vault (V2). */
+export interface VaultItem {
+  language: Language;
+  slug: string;
+  title: string;
+  passedAt: string;
+  files: Record<string, string>;
+}
+
+/** Same-origin download link for the single-exercise Markdown report (D22). */
+export function reportUrl(language: Language, slug: string): string {
+  return `/api/${language}/exercises/${encodeURIComponent(slug)}/report`;
+}
+
 export interface HistoryFilter {
   language?: Language;
   slug?: string;
@@ -216,6 +230,7 @@ export const api = {
     return request<{ attempts: AttemptSummary[]; next: number | null }>(`/api/history?${q.toString()}`);
   },
   attempt: (id: number) => request<AttemptDetail>(`/api/history/${id}`),
+  vault: () => request<{ items: VaultItem[] }>('/api/vault'),
   preferences: () => request<{ preferences: Preferences }>('/api/preferences'),
   savePreferences: (patch: Partial<Preferences>) =>
     request<{ preferences: Preferences }>('/api/preferences', {

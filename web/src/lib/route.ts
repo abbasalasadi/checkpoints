@@ -7,6 +7,7 @@
  *
  *   /                    the dashboard (V2): tracks, resume, recent activity
  *   /history             the history explorer (V2)
+ *   /vault               the solutions vault (V2)
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
  *   /e/min_and_max       legacy Rust link — read as /rust/min_and_max and
@@ -17,7 +18,7 @@ import type { Language } from './api.js';
 export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust'];
 
 /** A page that is not a track: the dashboard or the history explorer. */
-export type Page = 'dashboard' | 'history';
+export type Page = 'dashboard' | 'history' | 'vault';
 
 export interface Location {
   /** Set when the path is a page rather than a track. */
@@ -52,6 +53,7 @@ export function parsePath(pathname: string): Location {
   const [first, second, ...rest] = parts;
   const home: Location = { page: 'dashboard', language: null, slug: null, legacy: false };
   if (first === 'history' && second === undefined) return { ...home, page: 'history' };
+  if (first === 'vault' && second === undefined) return { ...home, page: 'vault' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
     return slug ? { page: null, language: 'rust', slug, legacy: true } : home;
@@ -93,7 +95,7 @@ export function navigate(language: Language | null, slug: string | null, { repla
 
 /** Go to a page (dashboard or history). */
 export function navigatePage(page: Page, { replace = false } = {}): void {
-  const next = page === 'history' ? '/history' : '/';
+  const next = page === 'dashboard' ? '/' : `/${page}`;
   if (next === window.location.pathname) return;
   if (replace) window.history.replaceState({ page }, '', next);
   else window.history.pushState({ page }, '', next);

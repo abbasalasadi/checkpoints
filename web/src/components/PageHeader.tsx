@@ -6,9 +6,10 @@ import { Logo } from './Icon.js';
 
 interface Props {
   identifier: string;
-  current: 'dashboard' | 'history';
+  current: 'dashboard' | 'history' | 'vault';
   onDashboard: () => void;
   onHistory: () => void;
+  onVault: () => void;
   onPreferences: () => void;
   onSignOut: () => void;
 }
@@ -25,7 +26,7 @@ const link = (active: boolean): React.CSSProperties => ({
   boxShadow: active ? 'inset 0 -2px 0 var(--accent)' : 'none',
 });
 
-export function PageHeader({ identifier, current, onDashboard, onHistory, onPreferences, onSignOut }: Props) {
+export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onPreferences, onSignOut }: Props) {
   return (
     <header style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap' }}>
       <span style={{ color: 'var(--accent-text)', display: 'flex' }}>
@@ -38,6 +39,9 @@ export function PageHeader({ identifier, current, onDashboard, onHistory, onPref
         </button>
         <button type="button" style={link(current === 'history')} aria-current={current === 'history' ? 'page' : undefined} onClick={onHistory}>
           History
+        </button>
+        <button type="button" style={link(current === 'vault')} aria-current={current === 'vault' ? 'page' : undefined} onClick={onVault}>
+          Solutions
         </button>
       </nav>
       <span style={{ marginLeft: 'auto', color: 'var(--text-muted)', fontSize: '.82rem' }}>{identifier}</span>

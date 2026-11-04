@@ -260,6 +260,22 @@ export const snapshots = {
     ).map(toSnapshot);
   },
 
+  /** Every passing copy the student holds, newest first (the solutions vault). */
+  passingAll(userId: number): Snapshot[] {
+    return (
+      getDb()
+        .prepare(`SELECT * FROM snapshots WHERE user_id = ? AND kind = 'passing' ORDER BY created_at DESC, id DESC`)
+        .all(userId) as SnapshotRow[]
+    ).map(toSnapshot);
+  },
+
+  passing(userId: number, language: Language, slug: string): Snapshot | undefined {
+    const row = getDb()
+      .prepare(`SELECT * FROM snapshots WHERE user_id = ? AND language = ? AND exercise_slug = ? AND kind = 'passing' ORDER BY id DESC LIMIT 1`)
+      .get(userId, language, slug) as SnapshotRow | undefined;
+    return row ? toSnapshot(row) : undefined;
+  },
+
   /** Undefined for another student's snapshot, so it reads as missing. */
   byId(userId: number, id: number): Snapshot | undefined {
     const row = getDb().prepare('SELECT * FROM snapshots WHERE id = ? AND user_id = ?').get(id, userId) as

@@ -7,6 +7,7 @@ import {
   api,
   ApiFailure,
   filesOf,
+  reportUrl,
   runSocketUrl,
   type ExerciseDetail,
   type ExerciseSummary,
@@ -35,6 +36,7 @@ import { logger } from './logger.js';
 import { isLanguage, navigate, navigatePage, onNavigate, readLocation, type Page } from './lib/route.js';
 import { Dashboard } from './components/Dashboard.js';
 import { History } from './components/History.js';
+import { Vault } from './components/Vault.js';
 import { PageHeader } from './components/PageHeader.js';
 
 type Screen = 'loading' | 'login' | 'app';
@@ -187,10 +189,17 @@ function SignedIn({
         current={page}
         onDashboard={() => goPage('dashboard')}
         onHistory={() => goPage('history')}
+        onVault={() => goPage('vault')}
         onPreferences={() => setSettingsOpen(true)}
         onSignOut={() => void signOut()}
       />
-      {page === 'history' ? <History onOpen={(l, s) => openTrack(l, s)} /> : <Dashboard onOpen={openTrack} onHistory={() => goPage('history')} />}
+      {page === 'history' ? (
+        <History onOpen={(l, s) => openTrack(l, s)} />
+      ) : page === 'vault' ? (
+        <Vault onOpen={(l, s) => openTrack(l, s)} />
+      ) : (
+        <Dashboard onOpen={openTrack} onHistory={() => goPage('history')} />
+      )}
       <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
       {dialog}
     </div>
@@ -1118,6 +1127,18 @@ function Workbench({
                   })),
                 ],
                 [
+                  {
+                    label: 'Export report',
+                    disabled: !detail || !slug,
+                    onSelect: () =>
+                      void flush().then(() => {
+                        if (!slug) return;
+                        const link = document.createElement('a');
+                        link.href = reportUrl(language, slug);
+                        link.download = `${language}-${slug}.md`;
+                        link.click();
+                      }),
+                  },
                   { label: 'History', onSelect: () => void flush().then(onHistory) },
                   { label: 'Preferences', onSelect: () => setSettingsOpen(true) },
                   { label: 'About', onSelect: () => setAboutOpen(true) },

@@ -74,6 +74,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (path === '/api/preferences' && method === 'GET') return getPreferences(req, res);
   if (path === '/api/dashboard' && method === 'GET') return dashboard(req, res);
   if (path === '/api/history' && method === 'GET') return history(req, res, url.searchParams);
+  if (path === '/api/vault' && method === 'GET') return vault(req, res);
   const historyMatch = /^\/api\/history\/(\d{1,12})$/.exec(path);
   if (historyMatch?.[1] && method === 'GET') return historyDetail(req, res, Number(historyMatch[1]));
   if (path === '/api/preferences' && method === 'PUT') return putPreferences(req, res);
@@ -106,6 +107,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
           return execute(req, res, p, action === 'run' ? 'run' : 'test');
         }
         if (action === 'attempts' && !sub && method === 'GET') return listAttempts(req, res, p);
+        if (action === 'report' && !sub && method === 'GET') return report(req, res, p);
         if (action === 'snapshots' && !sub && method === 'GET') return listSnapshots(req, res, p);
         if (action === 'snapshots' && !sub && method === 'POST') return createSnapshot(req, res, p);
         if (action === 'snapshots' && sub === 'restore' && method === 'POST') return restoreSnapshot(req, res, p);
@@ -356,6 +358,78 @@ function historyDetail(req: IncomingMessage, res: ServerResponse, id: number): v
     files = {};
   }
   sendJson(res, 200, { ...attemptView(a), exitCode: a.exit_code, files, output: a.output ?? '' });
+}
+
+/** The solutions vault: every exercise with a passing copy, across tracks. */
+function vault(req: IncomingMessage, res: ServerResponse): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const items = snapshots
+    .passingAll(caller.user.id)
+    .filter((s) => getExercise(s.language, s.exercise_slug))
+    .map((s) => ({ language: s.language, slug: s.exercise_slug, title: titleOf(s.language, s.exercise_slug), passedAt: s.created_at, files: s.files }));
+  sendJson(res, 200, { items });
+}
+
+const FENCE_LANG: Record<Language, string> = { go: 'go', js: 'javascript', rust: 'rust' };
+
+/** A fence longer than any backtick run inside the code, so the block cannot end early. */
+function fenced(code: string, lang: string): string {
+  const longest = Math.max(2, ...(code.match(/`+/g) ?? []).map((m) => m.length));
+  const fence = '`'.repeat(longest + 1);
+  return `${fence}${lang}\n${code.replace(/\n$/, '')}\n${fence}`;
+}
+
+/**
+ * D22: one exercise as a Markdown report — subject, provided file(s), the
+ * student's solution (passing copy if any, else the current draft) and result.
+ */
+export function buildReport(ex: Exercise, solution: Record<string, string>, source: 'passing' | 'draft', result: { outcome: string | null; at: string } | null, who: string): string {
+  const lang = FENCE_LANG[ex.language];
+  const provided = ex.editorFiles.filter((f) => !ex.expectedFiles.includes(f) && ex.starter[f]);
+  const out: string[] = [
+    `# ${ex.title} (${ex.language === 'js' ? 'JavaScript' : ex.language === 'go' ? 'Go' : 'Rust'})`,
+    '',
+    `- Student: ${who}`,
+    `- Exported: ${new Date().toISOString()}`,
+    `- Solution: ${source === 'passing' ? 'last passing copy' : 'current draft (not yet passed)'}`,
+    `- Result: ${result ? `${result.outcome ?? 'unknown'} (${result.at})` : 'not submitted'}`,
+    '',
+    '## Subject',
+    '',
+    ex.readme.trim().replace(/^(#+)/gm, '#$1'),
+    '',
+  ];
+  if (provided.length) {
+    out.push('## Provided files', '');
+    for (const f of provided) out.push(`### ${f}`, '', fenced(ex.starter[f] ?? '', lang), '');
+  }
+  out.push('## Solution', '');
+  for (const f of ex.expectedFiles) out.push(`### ${f}`, '', fenced(solution[f] ?? '', lang), '');
+  return out.join('\n');
+}
+
+function report(req: IncomingMessage, res: ServerResponse, p: Params): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  const ex = getExercise(p.lang, p.slug);
+  if (!ex) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  const pass = snapshots.passing(caller.user.id, p.lang, p.slug);
+  const draft = progress.get(caller.user.id, p.lang, p.slug);
+  const solution = pass?.files ?? workingFiles(ex, draft?.files);
+  const last = (attempts.listForExercise(caller.user.id, p.lang, p.slug, 50) as { kind: string; outcome: string | null; created_at: string }[]).find(
+    (a) => a.kind === 'test',
+  );
+  const md = buildReport(ex, solution, pass ? 'passing' : 'draft', last ? { outcome: last.outcome, at: last.created_at } : null, caller.user.identifier_normalized);
+  res.writeHead(200, {
+    'Content-Type': 'text/markdown; charset=utf-8',
+    'Content-Disposition': `attachment; filename="${p.lang}-${p.slug}.md"`,
+    'Cache-Control': 'no-store',
+  });
+  res.end(md);
 }
 
 // ── content ──────────────────────────────────────────────────────────────────
