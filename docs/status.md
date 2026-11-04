@@ -1,6 +1,6 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V3 planned (docs/release.md), step 1 next · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V3 in progress, steps 1-6 done, step 7 (Java) designed, 7a next · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
@@ -8,6 +8,8 @@ As of: 2026-11-04 · Version: V3 planned (docs/release.md), step 1 next · Run m
 | — | — | — | — |
 
 ## Done
+- V3 steps 1-6 built (2026-11-04): mock exam (levels open one at a time, top bar, reports show only seen levels), hints 129/129, assertion card, palette, shortcuts, focus mode, breadcrumbs, next-exercise prompt; About thanks card. Result check: server 43/43, web 136/136, browser checks of exam flow (pass moves to next level) — pass. Owner: happy with the app (2026-11-04)
+- V3 step 7 Java designed: docs/01_design/07_java_track.md, D30-D33. 45/45 exercises matched to subjects and tests
 - V2 deployed 2026-11-04 to checkpoint.appsyss.com after owner approval: prod DB backup, migrations 004/005 applied, service healthy, old sites 200 (untouched). Result check: deploy rc 0, health ok, /api/vault 401 unauthenticated as expected, migrations logged — pass. Tagged v2.0
 - V2 steps 1-8 built (2026-11-04), step 9 self-audit pass (docs/audits/v2.0-2026-11-04.md). Result check: lan_vm1 build, server 0 fail, web 116/116, Go parity 60/60 with read-only root; laptop server 40/40, web 117/117; browser checks per step in release.md — pass. Waiting for the owner's local test (D20); no deploy before it
 - V1 self-audit (2026-11-03): first pass Fail (F1 blocking: setup needed .env.example); fixed in 8e9c919; re-audit on clean lan_vm1 copy: setup, build, 145 tests pass; F2 fixed; F3 (Go read-only rootfs) moved to V2. Report: docs/audits/v1.0-2026-11-03.md
@@ -22,7 +24,7 @@ As of: 2026-11-04 · Version: V3 planned (docs/release.md), step 1 next · Run m
 ## Blocked
 - <item> — <cause> — <what unblocks it; sweep state if a result was wrong>
 
-- Local `.env` and production `.env.vm`: cooldowns 15/60 (D19). DEV_LOGIN off locally.
+- Local `.env` and production `.env.vm`: cooldowns 15/60 (D19). DEV_LOGIN ON locally (browser tests) and fake users fake_v3_ui, fake_exam_ui present: removed in step 8.
 
 ## Needed from the owner
 1. **Leaked secrets in the reference repos:** `/home/abbas/Documents/js-checkpoints`, `/home/abbas/Documents/go-checkpoints` and `/home/abbas/Documents/rust` have `.env` and `.env.vm` tracked in git (Go's STATUS.md says the only secret there is `SESSION_SIGNING_KEY`, which the new app does not use). Rotate every key in them, then remove them from git and its history (about 20 minutes). Not touched by this project.

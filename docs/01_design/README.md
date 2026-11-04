@@ -32,6 +32,7 @@ The design is organized into modular engineering documents:
 | [**04_execution_engine_and_runners.md**](04_execution_engine_and_runners.md) | Execution Engine & Runners | `RunnerDispatcher` FIFO queue, concurrency ceilings, language-specific grading pipelines (Go, JS, Rust), and Docker vs. Cloud Run backends. |
 | [**05_frontend_architecture_and_components.md**](05_frontend_architecture_and_components.md) | Frontend Architecture & Components | React 18 + Vite SPA, context state graph, component hierarchy, responsive multi-breakpoint layout, Monaco integration, and mobile touch ergonomics. |
 | [**06_deployment_and_operations.md**](06_deployment_and_operations.md) | Deployment & Operations | Host ports (`API_PORT=8157`), Nginx reverse proxy, SSL, legacy subdomain 301 redirects, systemd service unit, and production cutover runbook. |
+| [**07_java_track.md**](07_java_track.md) | Java Track | Fourth track (V3 step 7): content import from the official image, runner image, Cloud Run, migration 007, web and verification. |
 
 ---
 

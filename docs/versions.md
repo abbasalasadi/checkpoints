@@ -45,6 +45,7 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 3. Command palette and keyboard shortcut sheet.
 4. Assertion diff card on failed tests.
 5. Focus (zen) mode, font controls, post-pass "next exercise" prompt, breadcrumbs.
+6. Java as the fourth track: 45 checkpoint exercises, 3 checkpoints × 5 levels, same methods as Go/JS/Rust (D30–D33).
 
 **Done when:** same pattern, tagged `v3.0`.
 

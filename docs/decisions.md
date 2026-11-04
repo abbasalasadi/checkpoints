@@ -86,3 +86,6 @@ History lists one row per exercise (result, runs, submits, time spent, last acti
 
 ## D27–D29 (2026-11-04) — V3 exam and hints
 D27: mock exam results stay separate from practice progress. D28: exam rules like the real exam (no hints, Solutions or other exercises during it). D29: hints ship without owner review. Owner answers to the V3 plan questions.
+
+## D30–D33 (2026-11-04) — Java track
+D30: Java joins V3 as step 7, before the final tests and clean-up (owner). 45 checkpoint exercises from the owner's list, 3 checkpoints × 5 levels; level 5 ("optional" on the platform) is treated as a normal level everywhere, including the mock exam. D31: only the 45 checkpoint exercises; the 66 piscine tests in the image are left out. D32: Java runs on Cloud Run like Go and JS, inside the unified app (no separate site). D33: same methods as the other tracks — tests and harness verbatim from the official image, our own runner image, reference solutions verified against the official tests. Design: `docs/01_design/07_java_track.md`.
