@@ -44,6 +44,12 @@ const paths = {
       <path d="M8 12.2l2.8 2.8L16 9" />
     </>
   ),
+  /** Delete. */
+  trash: <path d="M4 7h16M9 7V4.5h6V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6" />,
+  /** Open in the editor: an arrow out of a box. */
+  open: <path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" />,
+  /** Export / download. */
+  download: <path d="M12 4v11M7 10.5l5 5 5-5M5 20h14" />,
 } as const;
 
 export type IconName = keyof typeof paths;

@@ -10,6 +10,8 @@ import { LANGUAGE_LABEL, ago, kindLabel, outcomeColor, outcomeLabel } from '../l
 import { fmtSpent, groupTimeline, resultText, lineDiff, runLabel, summariseRuns, type TimelineItem } from '../lib/timeline.js';
 import { logger } from '../logger.js';
 import { Skeleton } from './Skeleton.js';
+import { useConfirm } from './Dialog.js';
+import { Icon } from './Icon.js';
 
 interface Props {
   onOpen: (language: Language, slug: string) => void;
@@ -27,6 +29,10 @@ const panel: React.CSSProperties = {
 const pre: React.CSSProperties = {
   background: 'var(--code-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '.6rem .7rem',
   margin: 0, fontSize: '.78rem', lineHeight: 1.5, overflow: 'auto', maxHeight: '22rem', whiteSpace: 'pre',
+};
+const iconBtn: React.CSSProperties = {
+  background: 'transparent', color: 'var(--danger)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)',
+  padding: '.2rem .3rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', lineHeight: 0,
 };
 const btn: React.CSSProperties = {
   background: 'transparent', color: 'var(--text)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)',
@@ -137,7 +143,7 @@ function Compare({ from, to, onClose }: { from: number; to: number; onClose: () 
 
 type Open = { kind: 'view'; id: number } | { kind: 'compare'; from: number; to: number } | null;
 
-function Item({ item, open, setOpen }: { item: TimelineItem; open: Open; setOpen: (o: Open) => void }) {
+function Item({ item, open, setOpen, onDelete }: { item: TimelineItem; open: Open; setOpen: (o: Open) => void; onDelete: (id: number, what: string) => void }) {
   const [expanded, setExpanded] = useState(false);
   const row: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: '.6rem', flexWrap: 'wrap', padding: '.35rem 0' };
   const viewing = (id: number) => open?.kind === 'view' && open.id === id;
@@ -165,6 +171,9 @@ function Item({ item, open, setOpen }: { item: TimelineItem; open: Open; setOpen
                   <span style={{ fontSize: '.8rem', color: r.outcome === 'passed' || r.outcome === null ? 'var(--text-muted)' : 'var(--warning)' }}>{runLabel(r.outcome)}</span>
                   <button type="button" style={{ ...btn, padding: '.1rem .5rem', fontSize: '.75rem' }} onClick={() => setOpen(viewing(r.id) ? null : { kind: 'view', id: r.id })}>
                     {viewing(r.id) ? 'Hide' : 'View'}
+                  </button>
+                  <button type="button" style={iconBtn} onClick={() => onDelete(r.id, 'this run')} aria-label="Delete run" title="Delete">
+                    <Icon name="trash" size={13} />
                   </button>
                 </div>
                 {viewing(r.id) && <Detail id={r.id} onClose={() => setOpen(null)} />}
@@ -199,6 +208,9 @@ function Item({ item, open, setOpen }: { item: TimelineItem; open: Open; setOpen
               {comparing ? 'Hide changes' : 'Compare with previous'}
             </button>
           )}
+          <button type="button" style={iconBtn} onClick={() => onDelete(a.id, `Submit ${item.n}`)} aria-label="Delete submit" title="Delete">
+            <Icon name="trash" size={13} />
+          </button>
         </span>
       </div>
       {viewing(a.id) && <Detail id={a.id} onClose={() => setOpen(null)} />}
@@ -211,6 +223,19 @@ function Item({ item, open, setOpen }: { item: TimelineItem; open: Open; setOpen
 function Timeline({ ex, onOpen, onBack }: { ex: ExerciseHistory; onOpen: Props['onOpen']; onBack: () => void }) {
   const [items, setItems] = useState<TimelineItem[] | null>(null);
   const [open, setOpen] = useState<Open>(null);
+  const [reload, setReload] = useState(0);
+  const { confirm, dialog } = useConfirm();
+  async function remove(id: number, what: string) {
+    const ok = await confirm({ title: `Delete ${what}?`, body: 'Its code and output are removed from your history. This cannot be undone.', confirmLabel: 'Delete', destructive: true });
+    if (!ok) return;
+    try {
+      await api.deleteAttempt(id);
+      setOpen(null);
+      setReload((n) => n + 1);
+    } catch (err) {
+      logger.warn('history.delete_failed', { error: String(err) });
+    }
+  }
   useEffect(() => {
     let live = true;
     api
@@ -223,7 +248,7 @@ function Timeline({ ex, onOpen, onBack }: { ex: ExerciseHistory; onOpen: Props['
     return () => {
       live = false;
     };
-  }, [ex.language, ex.slug]);
+  }, [ex.language, ex.slug, reload]);
 
   // Day headings: a timeline over several days is otherwise ambiguous.
   const withDays = useMemo(() => {
@@ -259,10 +284,11 @@ function Timeline({ ex, onOpen, onBack }: { ex: ExerciseHistory; onOpen: Props['
           typeof it === 'string' ? (
             <li key={`d${i}`} style={{ listStyle: 'none', color: 'var(--text-dim)', fontSize: '.74rem', margin: '.5rem 0 .1rem' }}>{it}</li>
           ) : (
-            <Item key={it.type === 'runs' ? `r${it.attempts[0]!.id}` : `s${it.attempt.id}`} item={it} open={open} setOpen={setOpen} />
+            <Item key={it.type === 'runs' ? `r${it.attempts[0]!.id}` : `s${it.attempt.id}`} item={it} open={open} setOpen={setOpen} onDelete={(id, what) => void remove(id, what)} />
           ),
         )}
       </ul>
+      {dialog}
     </section>
   );
 }

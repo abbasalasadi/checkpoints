@@ -83,6 +83,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   const examMatch = /^\/api\/exams\/(\d{1,12})(?:\/(end))?$/.exec(path);
   if (examMatch?.[1] && !examMatch[2] && method === 'GET') return getExam(req, res, Number(examMatch[1]));
   if (examMatch?.[1] && examMatch[2] && method === 'POST') return endExam(req, res, Number(examMatch[1]));
+  if (examMatch?.[1] && !examMatch[2] && method === 'DELETE') return deleteOwn(req, res, (u) => exams.delete(u, Number(examMatch[1])));
 
   // D28: while an exam is open, only its own exercises and the basics answer.
   const examCaller = resolveCaller(req);
@@ -102,6 +103,13 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (tl?.[1] && tl[2] && method === 'GET') return exerciseTimeline(req, res, tl[1], tl[2]);
   const historyMatch = /^\/api\/history\/(\d{1,12})$/.exec(path);
   if (historyMatch?.[1] && method === 'GET') return historyDetail(req, res, Number(historyMatch[1]));
+  if (historyMatch?.[1] && method === 'DELETE') return deleteOwn(req, res, (u) => attempts.delete(u, Number(historyMatch[1])));
+  const vaultMatch = /^\/api\/vault\/([a-z]+)\/([^/]+)$/.exec(path);
+  if (vaultMatch?.[1] && vaultMatch[2] && method === 'DELETE') {
+    const [, lang, slug] = vaultMatch;
+    if (!isLanguage(lang) || !SLUG_PATTERN.test(slug)) return sendError(res, 400, 'invalid_request', 'Invalid exercise.');
+    return deleteOwn(req, res, (u) => snapshots.deletePassing(u, lang, slug));
+  }
   if (path === '/api/preferences' && method === 'PUT') return putPreferences(req, res);
 
   // ── runs, not language-scoped (the id is enough)
@@ -455,6 +463,14 @@ function historyDetail(req: IncomingMessage, res: ServerResponse, id: number): v
     files = {};
   }
   sendJson(res, 200, { ...attemptView(a), exitCode: a.exit_code, files, output: a.output ?? '' });
+}
+
+/** Owner-requested deletes (history, vault, exam reports): the caller's own rows only. */
+function deleteOwn(req: IncomingMessage, res: ServerResponse, del: (userId: number) => boolean): void {
+  const caller = requireCaller(req, res);
+  if (!caller) return;
+  if (!del(caller.user.id)) return sendError(res, 404, 'not_found', 'Not found.');
+  sendJson(res, 200, { deleted: true });
 }
 
 /** The solutions vault: every exercise with a passing copy, across tracks. */

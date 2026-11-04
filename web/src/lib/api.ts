@@ -280,6 +280,9 @@ export const api = {
   timeline: (language: Language, slug: string) =>
     request<{ attempts: AttemptSummary[] }>(`/api/history/exercises/${language}/${encodeURIComponent(slug)}`),
   vault: () => request<{ items: VaultItem[] }>('/api/vault'),
+  deleteSolution: (lang: Language, slug: string) => request<{ deleted: true }>(`/api/vault/${lang}/${enc(slug)}`, { method: 'DELETE' }),
+  deleteAttempt: (id: number) => request<{ deleted: true }>(`/api/history/${id}`, { method: 'DELETE' }),
+  deleteExam: (id: number) => request<{ deleted: true }>(`/api/exams/${id}`, { method: 'DELETE' }),
   hint: (language: Language, slug: string) => request<{ hint: string | null }>(`/api/${language}/exercises/${encodeURIComponent(slug)}/hint`),
   exams: () => request<{ active: ExamView | null; past: ExamView[] }>('/api/exams'),
   exam: (id: number) => request<ExamView>(`/api/exams/${id}`),

@@ -276,6 +276,15 @@ export const snapshots = {
     return row ? toSnapshot(row) : undefined;
   },
 
+  /** Delete a passing copy (the vault's delete). The exercise stays passed. */
+  deletePassing(userId: number, language: Language, slug: string): boolean {
+    return (
+      getDb()
+        .prepare(`DELETE FROM snapshots WHERE user_id = ? AND language = ? AND exercise_slug = ? AND kind = 'passing'`)
+        .run(userId, language, slug).changes > 0
+    );
+  },
+
   /** Undefined for another student's snapshot, so it reads as missing. */
   byId(userId: number, id: number): Snapshot | undefined {
     const row = getDb().prepare('SELECT * FROM snapshots WHERE id = ? AND user_id = ?').get(id, userId) as
@@ -331,6 +340,11 @@ export const attempts = {
         now(),
         a.examId ?? null,
       );
+  },
+
+  /** Delete one practice attempt of the caller (the history's delete). */
+  delete(userId: number, id: number): boolean {
+    return getDb().prepare('DELETE FROM attempts WHERE id = ? AND user_id = ? AND exam_id IS NULL').run(id, userId).changes > 0;
   },
 
   listForExercise(userId: number, language: Language, slug: string, limit = 20) {
@@ -559,6 +573,19 @@ export const exams = {
       .run(status, status === 'expired' ? null : now(), id, userId);
     // An expired exam ended at its deadline, not when it was noticed.
     if (status === 'expired') getDb().prepare('UPDATE exams SET ended_at = ends_at WHERE id = ? AND ended_at IS NULL').run(id);
+  },
+
+  /** Delete a finished exam, its items and its attempts. An active exam is kept. */
+  delete(userId: number, id: number): boolean {
+    const db = getDb();
+    return db.transaction(() => {
+      const e = db.prepare("SELECT id FROM exams WHERE id = ? AND user_id = ? AND status != 'active'").get(id, userId);
+      if (!e) return false;
+      db.prepare('DELETE FROM attempts WHERE exam_id = ? AND user_id = ?').run(id, userId);
+      db.prepare('DELETE FROM exam_items WHERE exam_id = ?').run(id);
+      db.prepare('DELETE FROM exams WHERE id = ?').run(id);
+      return true;
+    })();
   },
 
   items(examId: number): ExamItem[] {

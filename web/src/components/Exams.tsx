@@ -13,6 +13,8 @@ import { logger } from '../logger.js';
 import { MarkRing, fmtPercent } from './MarkRing.js';
 import { Modal } from './Modal.js';
 import { Skeleton } from './Skeleton.js';
+import { useConfirm } from './Dialog.js';
+import { Icon } from './Icon.js';
 
 interface Props {
   /** Called once an exam has started (or one is already running). */
@@ -50,10 +52,11 @@ export function examSpent(e: ExamView): number {
   return Math.max(0, end - Date.parse(e.startedAt));
 }
 
-export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boolean; onToggle: () => void }) {
+export function ExamReport({ exam, open, onToggle, onDelete }: { exam: ExamView; open: boolean; onToggle: () => void; onDelete?: () => void }) {
   const allPassed = exam.total > 0 && exam.passed === exam.total;
   return (
     <li style={{ ...panel, listStyle: 'none', padding: '.55rem .9rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
       <button
         type="button"
         onClick={onToggle}
@@ -70,6 +73,18 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
         <span style={{ color: 'var(--text-dim)', fontSize: '.8rem' }}>{STATUS_LABEL[exam.status]}</span>
         <span style={{ marginLeft: 'auto', color: 'var(--text-dim)', fontSize: '.78rem' }}>{ago(exam.startedAt)}</span>
       </button>
+      {onDelete && (
+        <button
+          type="button"
+          onClick={onDelete}
+          aria-label="Delete report"
+          title="Delete"
+          style={{ background: 'transparent', color: 'var(--danger)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)', padding: '.2rem .3rem', cursor: 'pointer', display: 'inline-flex', lineHeight: 0, flex: 'none' }}
+        >
+          <Icon name="trash" size={13} />
+        </button>
+      )}
+      </div>
       {open && (
         <div style={{ marginTop: '.6rem', display: 'flex', flexDirection: 'column', gap: '.45rem', fontSize: '.78rem' }}>
           <div style={{ color: 'var(--text-muted)', fontSize: '.8rem' }}>
@@ -142,6 +157,22 @@ export function ExamResult({ exam, onClose, onDashboard }: { exam: ExamView; onC
 
 export function Exams({ onStarted, focus, result, onResultSeen, onDashboard }: Props) {
   const [past, setPast] = useState<ExamView[] | null>(null);
+  const { confirm, dialog } = useConfirm();
+  async function removeExam(e: ExamView) {
+    const ok = await confirm({
+      title: 'Delete this exam report?',
+      body: 'The report, its code and its mark are removed; the dashboard best exam is recalculated. This cannot be undone.',
+      confirmLabel: 'Delete',
+      destructive: true,
+    });
+    if (!ok) return;
+    try {
+      await api.deleteExam(e.id);
+      setPast((prev) => (prev ?? []).filter((x) => x.id !== e.id));
+    } catch (err) {
+      logger.warn('exams.delete_failed', { error: String(err) });
+    }
+  }
   const [language, setLanguage] = useState<Language>('go');
   const [checkpoints, setCheckpoints] = useState<{ checkpoint: string; levels: number }[]>([]);
   const [checkpoint, setCheckpoint] = useState('');
@@ -257,6 +288,7 @@ export function Exams({ onStarted, focus, result, onResultSeen, onDashboard }: P
               <ExamReport
                 key={e.id}
                 exam={e}
+                onDelete={() => void removeExam(e)}
                 open={open.has(e.id)}
                 onToggle={() =>
                   setOpen((prev) => {
@@ -269,6 +301,7 @@ export function Exams({ onStarted, focus, result, onResultSeen, onDashboard }: P
               />
             ))}
           </ul>
+          {dialog}
         </section>
       </div>
     </main>

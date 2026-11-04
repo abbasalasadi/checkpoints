@@ -8,6 +8,8 @@ import { LANGUAGE_LABEL, ago } from '../lib/format.js';
 import { LANGUAGES } from '../lib/route.js';
 import { logger } from '../logger.js';
 import { Skeleton } from './Skeleton.js';
+import { useConfirm } from './Dialog.js';
+import { Icon } from './Icon.js';
 
 interface Props {
   onOpen: (language: Language, slug: string) => void;
@@ -24,12 +26,16 @@ const btn: React.CSSProperties = {
   background: 'transparent', color: 'var(--text)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)',
   padding: '.3rem .7rem', font: 'inherit', fontSize: '.8rem', cursor: 'pointer', textDecoration: 'none',
 };
+const iconBtn: React.CSSProperties = {
+  background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)',
+  padding: '.3rem .4rem', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', lineHeight: 0, textDecoration: 'none',
+};
 const input: React.CSSProperties = {
   background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)',
   padding: '.3rem .5rem', font: 'inherit', fontSize: '.82rem', maxWidth: '100%',
 };
 
-function Item({ item, onOpen }: { item: VaultItem; onOpen: Props['onOpen'] }) {
+function Item({ item, onOpen, onDelete }: { item: VaultItem; onOpen: Props['onOpen']; onDelete: () => void }) {
   const [open, setOpen] = useState(false);
   const names = Object.keys(item.files);
   const [file, setFile] = useState(names[0] ?? '');
@@ -43,12 +49,15 @@ function Item({ item, onOpen }: { item: VaultItem; onOpen: Props['onOpen'] }) {
           {LANGUAGE_LABEL[item.language]} · passed {ago(item.passedAt)}
         </span>
         <span style={{ marginLeft: 'auto', display: 'flex', gap: '.4rem' }}>
-          <button type="button" style={btn} onClick={() => onOpen(item.language, item.slug)}>
-            Open
+          <button type="button" style={iconBtn} onClick={() => onOpen(item.language, item.slug)} aria-label="Open" title="Open">
+            <Icon name="open" size={15} />
           </button>
-          <a style={btn} href={reportUrl(item.language, item.slug)} download={`${item.language}-${item.slug}.md`}>
-            Export report
+          <a style={iconBtn} href={reportUrl(item.language, item.slug)} download={`${item.language}-${item.slug}.md`} aria-label="Export report" title="Export report">
+            <Icon name="download" size={15} />
           </a>
+          <button type="button" style={{ ...iconBtn, color: 'var(--danger)' }} onClick={onDelete} aria-label="Delete solution" title="Delete">
+            <Icon name="trash" size={15} />
+          </button>
         </span>
       </div>
       {open && (
@@ -74,6 +83,23 @@ export function Vault({ onOpen }: Props) {
   const [failed, setFailed] = useState(false);
   const [lang, setLang] = useState<Language | ''>('');
   const [q, setQ] = useState('');
+  const { confirm, dialog } = useConfirm();
+
+  async function remove(i: VaultItem) {
+    const ok = await confirm({
+      title: 'Delete this solution?',
+      body: `The saved passing copy of ${i.title} is deleted. The exercise stays passed. This cannot be undone.`,
+      confirmLabel: 'Delete',
+      destructive: true,
+    });
+    if (!ok) return;
+    try {
+      await api.deleteSolution(i.language, i.slug);
+      setItems((prev) => (prev ?? []).filter((x) => !(x.language === i.language && x.slug === i.slug)));
+    } catch (err) {
+      logger.warn('vault.delete_failed', { error: String(err) });
+    }
+  }
 
   useEffect(() => {
     let live = true;
@@ -115,9 +141,10 @@ export function Vault({ onOpen }: Props) {
       )}
       <ul style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
         {shown.map((i) => (
-          <Item key={`${i.language}/${i.slug}`} item={i} onOpen={onOpen} />
+          <Item key={`${i.language}/${i.slug}`} item={i} onOpen={onOpen} onDelete={() => void remove(i)} />
         ))}
       </ul>
+      {dialog}
     </main>
   );
 }
