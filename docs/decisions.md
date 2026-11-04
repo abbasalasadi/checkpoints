@@ -56,3 +56,6 @@ Documents not applicable: <list, one reason each>
 | D17 | 2026-11-04 | Sign-in uses the real Reboot01 username and password. The username-only dev login is off by default; it turns on only with `DEV_LOGIN=true` in a dev/test `APP_ENV`, and never in production. Automated tests and the VM smoke test opt in with fake users. Amends D14 | "login is running without actual username and password. let us correct it to use proper login username and password of reboot account" | Owner instruction |
 
 Reversals are new rows pointing at the old id. Accepted security risks are recorded here with the owner's confirmation.
+
+## D18 (2026-11-04) — One shared cooldown for Run and Submit
+Owner: after Run or Submit, both buttons stay blocked until that one wait ends (30 s after Run, 90 s after Submit), and only one timer is shown. Amends D16's per-mode Rust behaviour. Server enforces the same rule.

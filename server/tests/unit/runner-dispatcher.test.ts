@@ -91,7 +91,7 @@ test('global concurrency: at most maxConcurrent run, the rest queue in order', a
   assert.deepEqual(fake.started.map((j) => j.user), ['a', 'b', 'c', 'd']);
 });
 
-test('cooldown counts from run end, per user per mode', async () => {
+test('cooldown counts from run end, per user, shared by Run and Submit (D18)', async () => {
   let now = 1_000_000;
   const fake = new FakeBackend('go');
   const d = track(new Dispatcher(limits(), [fake], undefined, () => now));
@@ -99,8 +99,7 @@ test('cooldown counts from run end, per user per mode', async () => {
   // While in flight the whole window is still ahead.
   assert.equal(d.cooldownRemaining(1, 'run'), 30);
   assert.throws(() => d.submitRun(input(1, 'run')), CooldownError);
-  // Other mode and other users are independent.
-  assert.equal(d.cooldownRemaining(1, 'test'), 0);
+  // Other users are independent.
   assert.equal(d.cooldownRemaining(2, 'run'), 0);
 
   await tick();
@@ -108,6 +107,9 @@ test('cooldown counts from run end, per user per mode', async () => {
   fake.finish(id);
   await d.waitFor(id);
   assert.equal(d.cooldownRemaining(1, 'run'), 30);
+  // One shared wait: Submit is blocked by the Run window too.
+  assert.equal(d.cooldownRemaining(1, 'test'), 30);
+  assert.throws(() => d.submitRun(input(1, 'test')), CooldownError);
   now += 29_500;
   assert.equal(d.cooldownRemaining(1, 'run'), 1);
   now += 500;
@@ -120,6 +122,7 @@ test('cooldown counts from run end, per user per mode', async () => {
   fake.finish(t, { exitCode: 1 });
   await d.waitFor(t);
   assert.equal(d.cooldownRemaining(1, 'test'), 90);
+  assert.equal(d.cooldownRemaining(1, 'run'), 90);
 });
 
 test('cancel a queued run: removed from the queue, done=cancelled, positions reindexed', async () => {

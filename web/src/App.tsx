@@ -825,8 +825,10 @@ function Workbench({
   }
 
   const running = phase === 'running' || phase === 'starting' || phase === 'queued';
-  const cooling = cool.run > 0 || cool.test > 0;
-  const blocked = { run: running || cool.run > 0, test: running || cool.test > 0 };
+  // One shared wait (D18): after Run or Submit, both stay blocked until it ends.
+  const wait = Math.max(cool.run, cool.test);
+  const cooling = wait > 0;
+  const blocked = { run: running || cooling, test: running || cooling };
   const passingSnap = snaps.find((s) => s.kind === 'passing');
   const manualSnaps = snaps.filter((s) => s.kind === 'manual');
   // Rust shows arguments only where the exercise reads argv; Go and JS
@@ -1133,17 +1135,14 @@ function Workbench({
           )}
           {cooling && (
             <span style={{ color: 'var(--text-muted)', fontSize: '.8rem', fontVariantNumeric: 'tabular-nums' }}>
-              {[
-                cool.run > 0 ? `Run ready in ${fmtWait(cool.run)}` : null,
-                cool.test > 0 ? `Test ready in ${fmtWait(cool.test)}` : null,
-              ].filter(Boolean).join(' · ')}
+              {`Ready in ${fmtWait(wait)}`}
             </span>
           )}
 
           <span style={{ marginLeft: 'auto' }}>
             <RunState
               phase={phase}
-              seconds={cool[lastKind]}
+              seconds={wait}
               elapsed={elapsed}
               timeoutSeconds={limits.timeoutSeconds}
               queuePosition={queuePosition}

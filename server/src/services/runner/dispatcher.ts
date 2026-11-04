@@ -97,10 +97,20 @@ export class Dispatcher extends EventEmitter {
     return mode === 'test' ? this.limits.cooldownTestSeconds : this.limits.cooldownRunSeconds;
   }
 
-  /** Seconds still to wait before `user` may start a `mode` run; 0 when free. */
+  /**
+   * Seconds still to wait before `user` may start any run; 0 when free. One
+   * shared wait (D18): a Run blocks Submit for the Run window and vice versa.
+   */
   cooldownRemaining(user: string | number, mode: RunMode): number {
+    const other: RunMode = mode === 'run' ? 'test' : 'run';
+    return Math.max(this.remainingFor(user, mode, true), this.remainingFor(user, other, false));
+  }
+
+  // An in-flight run of the OTHER mode is the backend's call (BusyError on
+  // exclusive backends), not a cooldown.
+  private remainingFor(user: string | number, mode: RunMode, countInFlight: boolean): number {
     const key = `${String(user)}:${mode}`;
-    if (this.inFlight.has(key)) return this.cooldownFor(mode);
+    if (countInFlight && this.inFlight.has(key)) return this.cooldownFor(mode);
     const last = this.lastEnd.get(key);
     if (last === undefined) return 0;
     const left = this.cooldownFor(mode) * 1000 - (this.now() - last);
