@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "1",
-      "level": 1
+      "level": 1,
+      "baseXp": 2800,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 1
+      "level": 1,
+      "baseXp": 7600,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_1/min_and_max"

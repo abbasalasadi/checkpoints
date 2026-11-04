@@ -10,7 +10,9 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 6
+      "level": 6,
+      "baseXp": 33000,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_3/Level_6/car_rental"

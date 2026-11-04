@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 6
+      "level": 6,
+      "baseXp": 33000,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 6
+      "level": 6,
+      "baseXp": 45600,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_6/lunch_queue"

@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 5
+      "level": 5,
+      "baseXp": 27500,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 5
+      "level": 5,
+      "baseXp": 38000,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_5/blood_types_s"

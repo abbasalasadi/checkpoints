@@ -10,7 +10,9 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 4
+      "level": 4,
+      "baseXp": 22000,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_3/Level_4/organize_garage"

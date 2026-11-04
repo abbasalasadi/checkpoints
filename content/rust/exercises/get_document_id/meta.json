@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "2",
-      "level": 3
+      "level": 3,
+      "baseXp": 12900,
+      "category": "required"
     },
     {
       "checkpoint": "3",
-      "level": 2
+      "level": 2,
+      "baseXp": 11000,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_3/Level_2/get_document_id"

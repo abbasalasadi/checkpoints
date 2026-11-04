@@ -10,7 +10,9 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "baseXp": 16500,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_3/Level_3/negative_spelling"

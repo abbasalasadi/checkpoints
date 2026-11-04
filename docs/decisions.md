@@ -90,3 +90,6 @@ D27: mock exam results stay separate from practice progress. D28: exam rules lik
 ## D30–D33 (2026-11-04) — Java track
 D30: Java joins V3 as step 7, before the final tests and clean-up (owner). 45 checkpoint exercises from the owner's list, 3 checkpoints × 5 levels; level 5 ("optional" on the platform) is treated as a normal level everywhere, including the mock exam. D31: only the 45 checkpoint exercises; the 66 piscine tests in the image are left out. D32: Java runs on Cloud Run like Go and JS, inside the unified app (no separate site). D33: same methods as the other tracks — tests and harness verbatim from the official image, our own runner image, reference solutions verified against the official tests. Design: `docs/01_design/07_java_track.md`.
 D34: the program's `list.json` (owner, 2026-11-04) is the source for the Java placements; breakdown-url is not in it and was removed, leaving 44 exercises.
+
+## D35 (2026-11-04) — Weighted marks
+Owner: weights (`baseXp`) from the program list decide marks, progress and exam results, per checkpoint placement. Shown only as percentages; optional adds above 100%. Design `docs/01_design/08_marks.md`. V3 closed without a deploy; V4 next.

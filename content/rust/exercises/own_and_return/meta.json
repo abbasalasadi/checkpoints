@@ -10,7 +10,9 @@
   "placements": [
     {
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "baseXp": 8600,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_2/Level_2/own_and_return"

@@ -10,7 +10,9 @@
   "placements": [
     {
       "checkpoint": "3",
-      "level": 5
+      "level": 5,
+      "baseXp": 27500,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_3/Level_5/moving_targets"

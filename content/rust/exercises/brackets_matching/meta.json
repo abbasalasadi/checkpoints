@@ -15,7 +15,9 @@
   "placements": [
     {
       "checkpoint": "final",
-      "level": 9
+      "level": 9,
+      "baseXp": 68400,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_9/brackets_matching"

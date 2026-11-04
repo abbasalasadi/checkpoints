@@ -10,15 +10,21 @@
   "placements": [
     {
       "checkpoint": "1",
-      "level": 3
+      "level": 3,
+      "baseXp": 8400,
+      "category": "required"
     },
     {
       "checkpoint": "3",
-      "level": 1
+      "level": 1,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 2
+      "level": 2,
+      "baseXp": 15200,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_2/counting_words"

@@ -454,463 +454,617 @@
       "exercise": "matrix_multiplication",
       "checkpoint": "1",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 2800,
+      "category": "required"
     },
     {
       "exercise": "min_and_max",
       "checkpoint": "1",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 2800,
+      "category": "required"
     },
     {
       "exercise": "modify_letter",
       "checkpoint": "1",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 5600,
+      "category": "required"
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "1",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 5600,
+      "category": "required"
     },
     {
       "exercise": "smallest",
       "checkpoint": "1",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 5600,
+      "category": "required"
     },
     {
       "exercise": "counting_words",
       "checkpoint": "1",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 8400,
+      "category": "required"
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "1",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 8400,
+      "category": "required"
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "1",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 8400,
+      "category": "required"
     },
     {
       "exercise": "insertion_sort",
       "checkpoint": "1",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 11200,
+      "category": "required"
     },
     {
       "exercise": "rpn",
       "checkpoint": "1",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 11200,
+      "category": "required"
     },
     {
       "exercise": "nextprime",
       "checkpoint": "2",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 4300,
+      "category": "required"
     },
     {
       "exercise": "previousprime",
       "checkpoint": "2",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 4300,
+      "category": "required"
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "2",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 4300,
+      "category": "required"
     },
     {
       "exercise": "count_factorial_steps",
       "checkpoint": "2",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 8600,
+      "category": "required"
     },
     {
       "exercise": "lucas_number",
       "checkpoint": "2",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 8600,
+      "category": "required"
     },
     {
       "exercise": "matrix_determinant",
       "checkpoint": "2",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 8600,
+      "category": "required"
     },
     {
       "exercise": "own_and_return",
       "checkpoint": "2",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 8600,
+      "category": "required"
     },
     {
       "exercise": "check_user_name",
       "checkpoint": "2",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 12900,
+      "category": "required"
     },
     {
       "exercise": "dress_code",
       "checkpoint": "2",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 12900,
+      "category": "required"
     },
     {
       "exercise": "get_document_id",
       "checkpoint": "2",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 12900,
+      "category": "required"
     },
     {
       "exercise": "order_books",
       "checkpoint": "2",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 17200,
+      "category": "required"
     },
     {
       "exercise": "prime_checker",
       "checkpoint": "2",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 17200,
+      "category": "required"
     },
     {
       "exercise": "rot21",
       "checkpoint": "2",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 17200,
+      "category": "required"
     },
     {
       "exercise": "queens",
       "checkpoint": "2",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 21500,
+      "category": "required"
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "2",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 21500,
+      "category": "required"
     },
     {
       "exercise": "counting_words",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "nextprime",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "previousprime",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "3",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 5500,
+      "category": "required"
     },
     {
       "exercise": "check_user_name",
       "checkpoint": "3",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 11000,
+      "category": "required"
     },
     {
       "exercise": "dress_code",
       "checkpoint": "3",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 11000,
+      "category": "required"
     },
     {
       "exercise": "get_document_id",
       "checkpoint": "3",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 11000,
+      "category": "required"
     },
     {
       "exercise": "negative_spelling",
       "checkpoint": "3",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 16500,
+      "category": "required"
     },
     {
       "exercise": "queens",
       "checkpoint": "3",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 16500,
+      "category": "required"
     },
     {
       "exercise": "rpn",
       "checkpoint": "3",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 16500,
+      "category": "required"
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "3",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 16500,
+      "category": "required"
     },
     {
       "exercise": "matrix_display",
       "checkpoint": "3",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 22000,
+      "category": "required"
     },
     {
       "exercise": "office_worker",
       "checkpoint": "3",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 22000,
+      "category": "required"
     },
     {
       "exercise": "organize_garage",
       "checkpoint": "3",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 22000,
+      "category": "required"
     },
     {
       "exercise": "blood_types_s",
       "checkpoint": "3",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 27500,
+      "category": "required"
     },
     {
       "exercise": "format_me",
       "checkpoint": "3",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 27500,
+      "category": "required"
     },
     {
       "exercise": "moving_targets",
       "checkpoint": "3",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 27500,
+      "category": "required"
     },
     {
       "exercise": "car_rental",
       "checkpoint": "3",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 33000,
+      "category": "required"
     },
     {
       "exercise": "drop_the_blog",
       "checkpoint": "3",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 33000,
+      "category": "required"
     },
     {
       "exercise": "lunch_queue",
       "checkpoint": "3",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 33000,
+      "category": "required"
     },
     {
       "exercise": "count_factorial_steps",
       "checkpoint": "final",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 7600,
+      "category": "required"
     },
     {
       "exercise": "matrix_multiplication",
       "checkpoint": "final",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 7600,
+      "category": "required"
     },
     {
       "exercise": "min_and_max",
       "checkpoint": "final",
       "level": 1,
-      "order": null
+      "order": null,
+      "baseXp": 7600,
+      "category": "required"
     },
     {
       "exercise": "counting_words",
       "checkpoint": "final",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 15200,
+      "category": "required"
     },
     {
       "exercise": "modify_letter",
       "checkpoint": "final",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 15200,
+      "category": "required"
     },
     {
       "exercise": "reverse_it",
       "checkpoint": "final",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 15200,
+      "category": "required"
     },
     {
       "exercise": "smallest",
       "checkpoint": "final",
       "level": 2,
-      "order": null
+      "order": null,
+      "baseXp": 15200,
+      "category": "required"
     },
     {
       "exercise": "inv_pyramid",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "nextprime",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "partial_sums",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "previousprime",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "prime_checker",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "profanity_filter",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "scytale_decoder",
       "checkpoint": "final",
       "level": 3,
-      "order": null
+      "order": null,
+      "baseXp": 22800,
+      "category": "required"
     },
     {
       "exercise": "insertion_sort",
       "checkpoint": "final",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 30400,
+      "category": "required"
     },
     {
       "exercise": "matrix_determinant",
       "checkpoint": "final",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 30400,
+      "category": "required"
     },
     {
       "exercise": "order_books",
       "checkpoint": "final",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 30400,
+      "category": "required"
     },
     {
       "exercise": "rot21",
       "checkpoint": "final",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 30400,
+      "category": "required"
     },
     {
       "exercise": "rpn",
       "checkpoint": "final",
       "level": 4,
-      "order": null
+      "order": null,
+      "baseXp": 30400,
+      "category": "required"
     },
     {
       "exercise": "blood_types_s",
       "checkpoint": "final",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 38000,
+      "category": "required"
     },
     {
       "exercise": "office_worker",
       "checkpoint": "final",
       "level": 5,
-      "order": null
+      "order": null,
+      "baseXp": 38000,
+      "category": "required"
     },
     {
       "exercise": "lunch_queue",
       "checkpoint": "final",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 45600,
+      "category": "required"
     },
     {
       "exercise": "matrix_display",
       "checkpoint": "final",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 45600,
+      "category": "required"
     },
     {
       "exercise": "queens",
       "checkpoint": "final",
       "level": 6,
-      "order": null
+      "order": null,
+      "baseXp": 45600,
+      "category": "required"
     },
     {
       "exercise": "display_table",
       "checkpoint": "final",
       "level": 7,
-      "order": null
+      "order": null,
+      "baseXp": 53200,
+      "category": "required"
     },
     {
       "exercise": "drop_the_blog",
       "checkpoint": "final",
       "level": 7,
-      "order": null
+      "order": null,
+      "baseXp": 53200,
+      "category": "required"
     },
     {
       "exercise": "filter_table",
       "checkpoint": "final",
       "level": 7,
-      "order": null
+      "order": null,
+      "baseXp": 53200,
+      "category": "required"
     },
     {
       "exercise": "flat_tree",
       "checkpoint": "final",
       "level": 8,
-      "order": null
+      "order": null,
+      "baseXp": 60800,
+      "category": "required"
     },
     {
       "exercise": "brackets_matching",
       "checkpoint": "final",
       "level": 9,
-      "order": null
+      "order": null,
+      "baseXp": 68400,
+      "category": "required"
     },
     {
       "exercise": "brain_fuck",
       "checkpoint": "final",
       "level": 9,
-      "order": null
+      "order": null,
+      "baseXp": 68400,
+      "category": "required"
     }
   ]
 }

@@ -10,15 +10,21 @@
   "placements": [
     {
       "checkpoint": "1",
-      "level": 4
+      "level": 4,
+      "baseXp": 11200,
+      "category": "required"
     },
     {
       "checkpoint": "3",
-      "level": 3
+      "level": 3,
+      "baseXp": 16500,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "baseXp": 30400,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_4/rpn"

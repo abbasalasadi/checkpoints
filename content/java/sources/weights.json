@@ -1,0 +1,187 @@
+{
+  "source": "program list (owner, 2026-11-04, D35)",
+  "checkpoints": {
+    "1": {
+      "goodbye-mars": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "system-logger": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "universal-greeting": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "multiplication-table": {
+        "baseXp": 5600,
+        "category": "required"
+      },
+      "average-calc": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "unit-converter": {
+        "baseXp": 5600,
+        "category": "required"
+      },
+      "strlen": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "count-char": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "digitlen": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "rotate-array": {
+        "baseXp": 11200,
+        "category": "required"
+      },
+      "reverse-array": {
+        "baseXp": 11200,
+        "category": "required"
+      },
+      "sort-array": {
+        "baseXp": 11200,
+        "category": "required"
+      },
+      "almost-palindrom": {
+        "baseXp": 14000,
+        "category": "optional"
+      },
+      "factorial": {
+        "baseXp": 14000,
+        "category": "optional"
+      },
+      "next-prime": {
+        "baseXp": 14000,
+        "category": "optional"
+      }
+    },
+    "2": {
+      "todo-list": {
+        "baseXp": 3700,
+        "category": "required"
+      },
+      "time-tracker": {
+        "baseXp": 3700,
+        "category": "required"
+      },
+      "date-formatter": {
+        "baseXp": 3700,
+        "category": "required"
+      },
+      "area-calculator": {
+        "baseXp": 7400,
+        "category": "required"
+      },
+      "factorial-master": {
+        "baseXp": 7400,
+        "category": "required"
+      },
+      "flexisort": {
+        "baseXp": 7400,
+        "category": "required"
+      },
+      "double-linked-list": {
+        "baseXp": 11100,
+        "category": "required"
+      },
+      "circular-linked-list": {
+        "baseXp": 11100,
+        "category": "required"
+      },
+      "single-linked-list": {
+        "baseXp": 11100,
+        "category": "required"
+      },
+      "harmonious-fusion": {
+        "baseXp": 14800,
+        "category": "required"
+      },
+      "distinct-substring-length": {
+        "baseXp": 14800,
+        "category": "required"
+      },
+      "is-anagram": {
+        "baseXp": 14800,
+        "category": "required"
+      },
+      "spiral-matrix": {
+        "baseXp": 18500,
+        "category": "optional"
+      },
+      "maximal-square": {
+        "baseXp": 18500,
+        "category": "optional"
+      },
+      "steady-sequence": {
+        "baseXp": 18500,
+        "category": "optional"
+      }
+    },
+    "3": {
+      "day-of-week": {
+        "baseXp": 4600,
+        "category": "required"
+      },
+      "monthly-period": {
+        "baseXp": 4600,
+        "category": "required"
+      },
+      "age-finder": {
+        "baseXp": 4600,
+        "category": "required"
+      },
+      "html-validator": {
+        "baseXp": 9200,
+        "category": "required"
+      },
+      "config-protector": {
+        "baseXp": 9200,
+        "category": "required"
+      },
+      "singleton-blueprint": {
+        "baseXp": 13800,
+        "category": "required"
+      },
+      "builder-blueprint": {
+        "baseXp": 13800,
+        "category": "required"
+      },
+      "factory-blueprint": {
+        "baseXp": 13800,
+        "category": "required"
+      },
+      "top-frequents": {
+        "baseXp": 18400,
+        "category": "required"
+      },
+      "longest-common-prefix": {
+        "baseXp": 18400,
+        "category": "required"
+      },
+      "first-unique": {
+        "baseXp": 18400,
+        "category": "required"
+      },
+      "valid-sudoku": {
+        "baseXp": 23000,
+        "category": "optional"
+      },
+      "armstrong-number": {
+        "baseXp": 23000,
+        "category": "optional"
+      },
+      "perfect-number": {
+        "baseXp": 23000,
+        "category": "optional"
+      }
+    }
+  }
+}

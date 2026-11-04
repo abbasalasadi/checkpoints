@@ -1,0 +1,591 @@
+{
+  "source": "program list (owner, 2026-11-04, D35)",
+  "checkpoints": {
+    "1": {
+      "onlya": {
+        "baseXp": 3400,
+        "category": "required"
+      },
+      "onlyz": {
+        "baseXp": 3400,
+        "category": "required"
+      },
+      "onlyf": {
+        "baseXp": 3400,
+        "category": "required"
+      },
+      "only1": {
+        "baseXp": 3400,
+        "category": "required"
+      },
+      "onlyb": {
+        "baseXp": 3400,
+        "category": "required"
+      },
+      "rectperimeter": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "countcharacter": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "checknumber": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "countalpha": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "printif": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "printifnot": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "retainfirsthalf": {
+        "baseXp": 6800,
+        "category": "required"
+      },
+      "digitlen": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "fishandchips": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "gcd": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "hashcode": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "lastword": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "firstword": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "printrevcomb": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "repeatalpha": {
+        "baseXp": 10200,
+        "category": "required"
+      },
+      "findprevprime": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "cameltosnakecase": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "thirdtimeisacharm": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "weareunique": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "itoa": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "iscapitalized": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "fromto": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "zipstring": {
+        "baseXp": 13600,
+        "category": "required"
+      },
+      "concatalternate": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "reversestrcap": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "concatslice": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "inter": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "union": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "saveandmiss": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "chunk": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "addprimesum": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "fprime": {
+        "baseXp": 17000,
+        "category": "optional"
+      },
+      "canjump": {
+        "baseXp": 17000,
+        "category": "optional"
+      }
+    },
+    "2": {
+      "onlya": {
+        "baseXp": 5800,
+        "category": "required"
+      },
+      "onlyz": {
+        "baseXp": 5800,
+        "category": "required"
+      },
+      "onlyf": {
+        "baseXp": 5800,
+        "category": "required"
+      },
+      "only1": {
+        "baseXp": 5800,
+        "category": "required"
+      },
+      "onlyb": {
+        "baseXp": 5800,
+        "category": "required"
+      },
+      "rectperimeter": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "countcharacter": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "checknumber": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "countalpha": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "printif": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "printifnot": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "retainfirsthalf": {
+        "baseXp": 11600,
+        "category": "required"
+      },
+      "digitlen": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "fishandchips": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "gcd": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "hashcode": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "lastword": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "firstword": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "repeatalpha": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "searchreplace": {
+        "baseXp": 17400,
+        "category": "required"
+      },
+      "findprevprime": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "thirdtimeisacharm": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "printrevcomb": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "weareunique": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "itoa": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "iscapitalized": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "fromto": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "zipstring": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "expandstr": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "cleanstr": {
+        "baseXp": 23200,
+        "category": "required"
+      },
+      "concatalternate": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "reversestrcap": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "wdmatch": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "hiddenp": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "concatslice": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "inter": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "union": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "saveandmiss": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "chunk": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "addprimesum": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "fprime": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "canjump": {
+        "baseXp": 29000,
+        "category": "required"
+      },
+      "notdecimal": {
+        "baseXp": 34800,
+        "category": "required"
+      },
+      "slice": {
+        "baseXp": 34800,
+        "category": "required"
+      },
+      "fifthandskip": {
+        "baseXp": 34800,
+        "category": "required"
+      },
+      "revconcatalternate": {
+        "baseXp": 34800,
+        "category": "required"
+      },
+      "wordflip": {
+        "baseXp": 40600,
+        "category": "optional"
+      },
+      "revwstr": {
+        "baseXp": 40600,
+        "category": "optional"
+      },
+      "rostring": {
+        "baseXp": 40600,
+        "category": "optional"
+      },
+      "findpairs": {
+        "baseXp": 40600,
+        "category": "optional"
+      }
+    },
+    "3": {
+      "onlya": {
+        "baseXp": 8200,
+        "category": "required"
+      },
+      "onlyz": {
+        "baseXp": 8200,
+        "category": "required"
+      },
+      "onlyf": {
+        "baseXp": 8200,
+        "category": "required"
+      },
+      "only1": {
+        "baseXp": 8200,
+        "category": "required"
+      },
+      "onlyb": {
+        "baseXp": 8200,
+        "category": "required"
+      },
+      "rectperimeter": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "countcharacter": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "checknumber": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "countalpha": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "printif": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "printifnot": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "retainfirsthalf": {
+        "baseXp": 16400,
+        "category": "required"
+      },
+      "digitlen": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "fishandchips": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "cameltosnakecase": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "gcd": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "hashcode": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "lastword": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "firstword": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "repeatalpha": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "searchreplace": {
+        "baseXp": 24600,
+        "category": "required"
+      },
+      "findprevprime": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "thirdtimeisacharm": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "printrevcomb": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "weareunique": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "itoa": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "iscapitalized": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "fromto": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "zipstring": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "expandstr": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "cleanstr": {
+        "baseXp": 32800,
+        "category": "required"
+      },
+      "concatalternate": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "reversestrcap": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "wdmatch": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "hiddenp": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "concatslice": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "inter": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "union": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "saveandmiss": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "chunk": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "addprimesum": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "fprime": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "canjump": {
+        "baseXp": 41000,
+        "category": "required"
+      },
+      "notdecimal": {
+        "baseXp": 49200,
+        "category": "required"
+      },
+      "slice": {
+        "baseXp": 49200,
+        "category": "required"
+      },
+      "fifthandskip": {
+        "baseXp": 49200,
+        "category": "required"
+      },
+      "revconcatalternate": {
+        "baseXp": 49200,
+        "category": "required"
+      },
+      "wordflip": {
+        "baseXp": 57400,
+        "category": "required"
+      },
+      "revwstr": {
+        "baseXp": 57400,
+        "category": "required"
+      },
+      "rostring": {
+        "baseXp": 57400,
+        "category": "required"
+      },
+      "findpairs": {
+        "baseXp": 57400,
+        "category": "required"
+      },
+      "options": {
+        "baseXp": 65600,
+        "category": "required"
+      },
+      "romannumbers": {
+        "baseXp": 65600,
+        "category": "required"
+      },
+      "piglatin": {
+        "baseXp": 65600,
+        "category": "required"
+      },
+      "itoabase": {
+        "baseXp": 65600,
+        "category": "required"
+      },
+      "rpncalc": {
+        "baseXp": 73800,
+        "category": "optional"
+      },
+      "brackets": {
+        "baseXp": 73800,
+        "category": "optional"
+      }
+    }
+  }
+}

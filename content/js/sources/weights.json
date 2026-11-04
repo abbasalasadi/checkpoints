@@ -1,0 +1,305 @@
+{
+  "source": "program list (owner, 2026-11-04, D35)",
+  "checkpoints": {
+    "1": {
+      "js-factorial": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-fibonacci": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-even-sum": {
+        "baseXp": 4600,
+        "category": "required"
+      },
+      "js-divisor-finder": {
+        "baseXp": 9200,
+        "category": "required"
+      },
+      "js-perfect-num": {
+        "baseXp": 9200,
+        "category": "required"
+      },
+      "js-palindromic-chains": {
+        "baseXp": 13800,
+        "category": "required"
+      },
+      "js-sentence-pyramid": {
+        "baseXp": 13800,
+        "category": "required"
+      },
+      "js-array-chunk-reversal": {
+        "baseXp": 18400,
+        "category": "required"
+      },
+      "js-nested-array-reverser": {
+        "baseXp": 18400,
+        "category": "required"
+      },
+      "js-insertion-sort-analyzer": {
+        "baseXp": 23000,
+        "category": "required"
+      }
+    },
+    "2": {
+      "js-factorial": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-grid-word-finder": {
+        "baseXp": 18300,
+        "category": "required"
+      },
+      "js-insertion-sort-analyzer": {
+        "baseXp": 24400,
+        "category": "required"
+      },
+      "js-grid-word-finder2": {
+        "baseXp": 30500,
+        "category": "required"
+      },
+      "js-snakepath-validator": {
+        "baseXp": 30500,
+        "category": "required"
+      },
+      "js-pipeline": {
+        "baseXp": 30500,
+        "category": "required"
+      },
+      "js-fibonacci": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-even-sum": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-perfect-num": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-divisor-finder": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-array-chunk-reversal": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-palindromic-chains": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-sentence-pyramid": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-nested-array-reverser": {
+        "baseXp": 50,
+        "category": "required"
+      }
+    },
+    "3": {
+      "js-factorial": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-deep-clone": {
+        "baseXp": 35000,
+        "category": "required"
+      },
+      "js-deep-equal": {
+        "baseXp": 35000,
+        "category": "required"
+      },
+      "js-deep-find": {
+        "baseXp": 35000,
+        "category": "required"
+      },
+      "js-deep-freeze": {
+        "baseXp": 35000,
+        "category": "required"
+      },
+      "js-fibonacci": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-even-sum": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-perfect-num": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-divisor-finder": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-array-chunk-reversal": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-palindromic-chains": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-sentence-pyramid": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-grid-word-finder": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-nested-array-reverser": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-insertion-sort-analyzer": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-snakepath-validator": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-grid-word-finder2": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-object-lab": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-election-mix": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-flat-object": {
+        "baseXp": 50,
+        "category": "optional"
+      }
+    },
+    "final": {
+      "js-factorial": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-fibonacci": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-even-sum": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-perfect-num": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-divisor-finder": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-array-chunk-reversal": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-palindromic-chains": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-sentence-pyramid": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-grid-word-finder": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-nested-array-reverser": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-insertion-sort-analyzer": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-snakepath-validator": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-grid-word-finder2": {
+        "baseXp": 50,
+        "category": "required"
+      },
+      "js-object-lab": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-election-mix": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-flat-object": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-pipeline": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-sleep-breaker": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-final-attempt": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-exam-grader": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-zoo-race": {
+        "baseXp": 50,
+        "category": "optional"
+      },
+      "js-deep-clone": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-deep-equal": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-deep-find": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-deep-freeze": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-flatten-object": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-swappable-object": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-transform-keys": {
+        "baseXp": 100,
+        "category": "optional"
+      },
+      "js-trap-object": {
+        "baseXp": 100,
+        "category": "optional"
+      }
+    }
+  }
+}

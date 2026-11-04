@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "2",
-      "level": 2
+      "level": 2,
+      "baseXp": 8600,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 1
+      "level": 1,
+      "baseXp": 7600,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_1/count_factorial_steps"

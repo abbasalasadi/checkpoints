@@ -421,7 +421,8 @@
       "level": 1,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 2800
     },
     {
       "exercise": "system-logger",
@@ -429,7 +430,8 @@
       "level": 1,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 2800
     },
     {
       "exercise": "universal-greeting",
@@ -437,7 +439,8 @@
       "level": 1,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 2800
     },
     {
       "exercise": "average-calc",
@@ -445,7 +448,8 @@
       "level": 1,
       "index": 3,
       "order": 3,
-      "category": "required"
+      "category": "required",
+      "baseXp": 2800
     },
     {
       "exercise": "multiplication-table",
@@ -453,7 +457,8 @@
       "level": 2,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 5600
     },
     {
       "exercise": "unit-converter",
@@ -461,7 +466,8 @@
       "level": 2,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 5600
     },
     {
       "exercise": "strlen",
@@ -469,7 +475,8 @@
       "level": 3,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 8400
     },
     {
       "exercise": "count-char",
@@ -477,7 +484,8 @@
       "level": 3,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 8400
     },
     {
       "exercise": "digitlen",
@@ -485,7 +493,8 @@
       "level": 3,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 8400
     },
     {
       "exercise": "rotate-array",
@@ -493,7 +502,8 @@
       "level": 4,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11200
     },
     {
       "exercise": "reverse-array",
@@ -501,7 +511,8 @@
       "level": 4,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11200
     },
     {
       "exercise": "sort-array",
@@ -509,7 +520,8 @@
       "level": 4,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11200
     },
     {
       "exercise": "almost-palindrom",
@@ -517,7 +529,8 @@
       "level": 5,
       "index": 0,
       "order": 0,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 14000
     },
     {
       "exercise": "factorial",
@@ -525,7 +538,8 @@
       "level": 5,
       "index": 1,
       "order": 1,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 14000
     },
     {
       "exercise": "next-prime",
@@ -533,7 +547,8 @@
       "level": 5,
       "index": 2,
       "order": 2,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 14000
     },
     {
       "exercise": "todo-list",
@@ -541,7 +556,8 @@
       "level": 1,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 3700
     },
     {
       "exercise": "time-tracker",
@@ -549,7 +565,8 @@
       "level": 1,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 3700
     },
     {
       "exercise": "date-formatter",
@@ -557,7 +574,8 @@
       "level": 1,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 3700
     },
     {
       "exercise": "area-calculator",
@@ -565,7 +583,8 @@
       "level": 2,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 7400
     },
     {
       "exercise": "factorial-master",
@@ -573,7 +592,8 @@
       "level": 2,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 7400
     },
     {
       "exercise": "flexisort",
@@ -581,7 +601,8 @@
       "level": 2,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 7400
     },
     {
       "exercise": "double-linked-list",
@@ -589,7 +610,8 @@
       "level": 3,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11100
     },
     {
       "exercise": "circular-linked-list",
@@ -597,7 +619,8 @@
       "level": 3,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11100
     },
     {
       "exercise": "single-linked-list",
@@ -605,7 +628,8 @@
       "level": 3,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11100
     },
     {
       "exercise": "harmonious-fusion",
@@ -613,7 +637,8 @@
       "level": 4,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 14800
     },
     {
       "exercise": "distinct-substring-length",
@@ -621,7 +646,8 @@
       "level": 4,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 14800
     },
     {
       "exercise": "is-anagram",
@@ -629,7 +655,8 @@
       "level": 4,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 14800
     },
     {
       "exercise": "spiral-matrix",
@@ -637,7 +664,8 @@
       "level": 5,
       "index": 0,
       "order": 0,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 18500
     },
     {
       "exercise": "maximal-square",
@@ -645,7 +673,8 @@
       "level": 5,
       "index": 1,
       "order": 1,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 18500
     },
     {
       "exercise": "steady-sequence",
@@ -653,7 +682,8 @@
       "level": 5,
       "index": 2,
       "order": 2,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 18500
     },
     {
       "exercise": "day-of-week",
@@ -661,7 +691,8 @@
       "level": 1,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 4600
     },
     {
       "exercise": "monthly-period",
@@ -669,7 +700,8 @@
       "level": 1,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 4600
     },
     {
       "exercise": "age-finder",
@@ -677,7 +709,8 @@
       "level": 1,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 4600
     },
     {
       "exercise": "html-validator",
@@ -685,7 +718,8 @@
       "level": 2,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 9200
     },
     {
       "exercise": "config-protector",
@@ -693,7 +727,8 @@
       "level": 2,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 9200
     },
     {
       "exercise": "singleton-blueprint",
@@ -701,7 +736,8 @@
       "level": 3,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 13800
     },
     {
       "exercise": "builder-blueprint",
@@ -709,7 +745,8 @@
       "level": 3,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 13800
     },
     {
       "exercise": "factory-blueprint",
@@ -717,7 +754,8 @@
       "level": 3,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 13800
     },
     {
       "exercise": "top-frequents",
@@ -725,7 +763,8 @@
       "level": 4,
       "index": 0,
       "order": 0,
-      "category": "required"
+      "category": "required",
+      "baseXp": 18400
     },
     {
       "exercise": "longest-common-prefix",
@@ -733,7 +772,8 @@
       "level": 4,
       "index": 1,
       "order": 1,
-      "category": "required"
+      "category": "required",
+      "baseXp": 18400
     },
     {
       "exercise": "first-unique",
@@ -741,7 +781,8 @@
       "level": 4,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 18400
     },
     {
       "exercise": "valid-sudoku",
@@ -749,7 +790,8 @@
       "level": 5,
       "index": 0,
       "order": 0,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 23000
     },
     {
       "exercise": "armstrong-number",
@@ -757,7 +799,8 @@
       "level": 5,
       "index": 1,
       "order": 1,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 23000
     },
     {
       "exercise": "perfect-number",
@@ -765,7 +808,8 @@
       "level": 5,
       "index": 2,
       "order": 2,
-      "category": "optional"
+      "category": "optional",
+      "baseXp": 23000
     }
   ]
 }

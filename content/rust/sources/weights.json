@@ -1,0 +1,321 @@
+{
+  "source": "program list (owner, 2026-11-04, D35)",
+  "checkpoints": {
+    "1": {
+      "min_and_max": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "matrix_multiplication": {
+        "baseXp": 2800,
+        "category": "required"
+      },
+      "reverse_it": {
+        "baseXp": 5600,
+        "category": "required"
+      },
+      "smallest": {
+        "baseXp": 5600,
+        "category": "required"
+      },
+      "modify_letter": {
+        "baseXp": 5600,
+        "category": "required"
+      },
+      "counting_words": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "partial_sums": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "inv_pyramid": {
+        "baseXp": 8400,
+        "category": "required"
+      },
+      "insertion_sort": {
+        "baseXp": 11200,
+        "category": "required"
+      },
+      "rpn": {
+        "baseXp": 11200,
+        "category": "required"
+      }
+    },
+    "2": {
+      "previousprime": {
+        "baseXp": 4300,
+        "category": "required"
+      },
+      "nextprime": {
+        "baseXp": 4300,
+        "category": "required"
+      },
+      "reverse_it": {
+        "baseXp": 4300,
+        "category": "required"
+      },
+      "count_factorial_steps": {
+        "baseXp": 8600,
+        "category": "required"
+      },
+      "lucas_number": {
+        "baseXp": 8600,
+        "category": "required"
+      },
+      "own_and_return": {
+        "baseXp": 8600,
+        "category": "required"
+      },
+      "matrix_determinant": {
+        "baseXp": 8600,
+        "category": "required"
+      },
+      "check_user_name": {
+        "baseXp": 12900,
+        "category": "required"
+      },
+      "get_document_id": {
+        "baseXp": 12900,
+        "category": "required"
+      },
+      "dress_code": {
+        "baseXp": 12900,
+        "category": "required"
+      },
+      "rot21": {
+        "baseXp": 17200,
+        "category": "required"
+      },
+      "order_books": {
+        "baseXp": 17200,
+        "category": "required"
+      },
+      "prime_checker": {
+        "baseXp": 17200,
+        "category": "required"
+      },
+      "queens": {
+        "baseXp": 21500,
+        "category": "required"
+      },
+      "scytale_decoder": {
+        "baseXp": 21500,
+        "category": "required"
+      }
+    },
+    "3": {
+      "counting_words": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "partial_sums": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "inv_pyramid": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "previousprime": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "nextprime": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "reverse_it": {
+        "baseXp": 5500,
+        "category": "required"
+      },
+      "check_user_name": {
+        "baseXp": 11000,
+        "category": "required"
+      },
+      "get_document_id": {
+        "baseXp": 11000,
+        "category": "required"
+      },
+      "dress_code": {
+        "baseXp": 11000,
+        "category": "required"
+      },
+      "negative_spelling": {
+        "baseXp": 16500,
+        "category": "required"
+      },
+      "rpn": {
+        "baseXp": 16500,
+        "category": "required"
+      },
+      "queens": {
+        "baseXp": 16500,
+        "category": "required"
+      },
+      "scytale_decoder": {
+        "baseXp": 16500,
+        "category": "required"
+      },
+      "office_worker": {
+        "baseXp": 22000,
+        "category": "required"
+      },
+      "matrix_display": {
+        "baseXp": 22000,
+        "category": "required"
+      },
+      "organize_garage": {
+        "baseXp": 22000,
+        "category": "required"
+      },
+      "moving_targets": {
+        "baseXp": 27500,
+        "category": "required"
+      },
+      "format_me": {
+        "baseXp": 27500,
+        "category": "required"
+      },
+      "blood_types_s": {
+        "baseXp": 27500,
+        "category": "required"
+      },
+      "car_rental": {
+        "baseXp": 33000,
+        "category": "required"
+      },
+      "drop_the_blog": {
+        "baseXp": 33000,
+        "category": "required"
+      },
+      "lunch_queue": {
+        "baseXp": 33000,
+        "category": "required"
+      }
+    },
+    "final": {
+      "min_and_max": {
+        "baseXp": 7600,
+        "category": "required"
+      },
+      "count_factorial_steps": {
+        "baseXp": 7600,
+        "category": "required"
+      },
+      "matrix_multiplication": {
+        "baseXp": 7600,
+        "category": "required"
+      },
+      "reverse_it": {
+        "baseXp": 15200,
+        "category": "required"
+      },
+      "counting_words": {
+        "baseXp": 15200,
+        "category": "required"
+      },
+      "smallest": {
+        "baseXp": 15200,
+        "category": "required"
+      },
+      "modify_letter": {
+        "baseXp": 15200,
+        "category": "required"
+      },
+      "partial_sums": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "inv_pyramid": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "previousprime": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "nextprime": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "profanity_filter": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "prime_checker": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "scytale_decoder": {
+        "baseXp": 22800,
+        "category": "required"
+      },
+      "insertion_sort": {
+        "baseXp": 30400,
+        "category": "required"
+      },
+      "rpn": {
+        "baseXp": 30400,
+        "category": "required"
+      },
+      "rot21": {
+        "baseXp": 30400,
+        "category": "required"
+      },
+      "order_books": {
+        "baseXp": 30400,
+        "category": "required"
+      },
+      "matrix_determinant": {
+        "baseXp": 30400,
+        "category": "required"
+      },
+      "office_worker": {
+        "baseXp": 38000,
+        "category": "required"
+      },
+      "blood_types_s": {
+        "baseXp": 38000,
+        "category": "required"
+      },
+      "matrix_display": {
+        "baseXp": 45600,
+        "category": "required"
+      },
+      "queens": {
+        "baseXp": 45600,
+        "category": "required"
+      },
+      "lunch_queue": {
+        "baseXp": 45600,
+        "category": "required"
+      },
+      "drop_the_blog": {
+        "baseXp": 53200,
+        "category": "required"
+      },
+      "filter_table": {
+        "baseXp": 53200,
+        "category": "required"
+      },
+      "display_table": {
+        "baseXp": 53200,
+        "category": "required"
+      },
+      "flat_tree": {
+        "baseXp": 60800,
+        "category": "required"
+      },
+      "brackets_matching": {
+        "baseXp": 68400,
+        "category": "required"
+      },
+      "brain_fuck": {
+        "baseXp": 68400,
+        "category": "required"
+      }
+    }
+  }
+}

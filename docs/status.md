@@ -1,11 +1,11 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V3 in progress, steps 1-8 done; waiting for the owner's local test (D20), then deploy with approval · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V4 in progress (V3 closed by the owner, no deploy) · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
 |---|---|---|---|
-| (none) | | | |
+| V4 step 1 weights | checkpoint_main | 2026-11-04 | main |
 
 ## Done
 - V3 step 8 (2026-11-04): lan_vm1 server 45/45, web 141/141; parity Go 60/60, JS 29/29, Rust 40/40 ×3 (after fixing a Rust stale-build race: whole-second tar mtimes let cargo reuse the previous build; files now re-stamped before cargo), Java image 132/132, Java Cloud Run wrapper 133/133. Self-audit pass, F1-F3 minor fixed (docs/audits/v3.0-2026-11-04.md). DEV_LOGIN off locally (never on in production); fake users fake_v3_ui, fake_exam_ui deleted with their exams, plus orphan rows of earlier fake users (backup var/db/app.pre-step8.bak). Release note draft docs/releases/v3.0.md. Result check: every gate's own count read from its log — pass

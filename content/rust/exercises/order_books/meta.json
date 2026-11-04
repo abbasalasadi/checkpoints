@@ -10,11 +10,15 @@
   "placements": [
     {
       "checkpoint": "2",
-      "level": 4
+      "level": 4,
+      "baseXp": 17200,
+      "category": "required"
     },
     {
       "checkpoint": "final",
-      "level": 4
+      "level": 4,
+      "baseXp": 30400,
+      "category": "required"
     }
   ],
   "sourcedFrom": "Checkpoint_final/Level_4/order_books"

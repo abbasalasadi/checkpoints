@@ -40,7 +40,8 @@
       "level": 4,
       "index": 2,
       "order": 2,
-      "category": "required"
+      "category": "required",
+      "baseXp": 11200
     }
   ]
 }
