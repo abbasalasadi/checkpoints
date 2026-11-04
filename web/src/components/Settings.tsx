@@ -3,7 +3,7 @@
  * saved to the account; there is no Save button to forget.
  */
 import { Modal } from './Modal.js';
-import { FONT_SIZE_MAX, FONT_SIZE_MIN, type Preferences } from '../lib/preferences.js';
+import { DEFAULT_PREFERENCES, FONT_SIZE_MAX, FONT_SIZE_MIN, type Preferences } from '../lib/preferences.js';
 
 interface Props {
   open: boolean;
@@ -23,7 +23,7 @@ export function Settings({ open, onClose, prefs, onChange }: Props) {
           Preferences
         </h2>
         <div style={{ fontSize: '.88rem' }}>
-          <label style={row}>
+          <label title="Size of the code text in the editor, in pixels." style={row}>
             Font size
             <input
               type="number"
@@ -37,7 +37,7 @@ export function Settings({ open, onClose, prefs, onChange }: Props) {
               }}
             />
           </label>
-          <label style={row}>
+          <label title="How many columns a tab (or one indent level) takes in the editor." style={row}>
             Tab size
             <select style={control} value={prefs.tabSize} onChange={(e) => onChange({ tabSize: Number(e.target.value) as Preferences['tabSize'] })}>
               <option value={2}>2</option>
@@ -45,11 +45,11 @@ export function Settings({ open, onClose, prefs, onChange }: Props) {
               <option value={8}>8</option>
             </select>
           </label>
-          <label style={row}>
+          <label title="Wrap long lines to fit the editor width instead of scrolling sideways." style={row}>
             Word wrap
             <input type="checkbox" checked={prefs.wordWrap} onChange={(e) => onChange({ wordWrap: e.target.checked })} />
           </label>
-          <label style={{ ...row, borderBottom: 'none' }}>
+          <label title="Editor keyboard style: Default, or Vim modal editing." style={{ ...row, borderBottom: 'none' }}>
             Keybindings
             <select style={control} value={prefs.keybindings} onChange={(e) => onChange({ keybindings: e.target.value as Preferences['keybindings'] })}>
               <option value="default">Default</option>
@@ -58,7 +58,10 @@ export function Settings({ open, onClose, prefs, onChange }: Props) {
           </label>
         </div>
         <p style={{ margin: '.6rem 0 0', color: 'var(--text-dim)', fontSize: '.76rem' }}>Saved to your account, on every device.</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '.9rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '.9rem' }}>
+          <button type="button" title="Put every preference back to its default value" onClick={() => onChange({ ...DEFAULT_PREFERENCES })} style={{ ...control, cursor: 'pointer', padding: '.35rem .9rem' }}>
+            Reset to defaults
+          </button>
           <button type="button" onClick={onClose} style={{ ...control, cursor: 'pointer', padding: '.35rem .9rem' }}>
             Done
           </button>
