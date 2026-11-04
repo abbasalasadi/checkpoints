@@ -133,6 +133,32 @@ function loadGeneric(language: Language, dir: string, slug: string, meta: Record
   };
 }
 
+/**
+ * Java (D33): one starter file per public type, ExerciseRunner.java for Run,
+ * and the official test under test/ (V3 step 7, docs/01_design/07_java_track.md §3).
+ */
+function loadJava(dir: string, slug: string, meta: Record<string, unknown>): Exercise {
+  const expectedFiles = meta.expectedFiles as string[];
+  const editorFiles = Array.isArray(meta.editorFiles) ? (meta.editorFiles as string[]) : [...expectedFiles, 'ExerciseRunner.java'];
+  const starter: Record<string, string> = {};
+  for (const f of editorFiles) starter[f] = readIf(join(dir, f)) ?? '';
+  const className = (meta.test as { className?: string } | undefined)?.className ?? slug;
+  return {
+    language: 'java',
+    slug,
+    title: typeof meta.title === 'string' ? meta.title : slug,
+    kind: 'class',
+    argv: false,
+    readme: readFileSync(join(dir, 'README.md'), 'utf8'),
+    placements: Array.isArray(meta.placements) ? (meta.placements as PlacementRef[]) : [],
+    expectedFiles,
+    editorFiles,
+    starter,
+    test: readIf(join(dir, 'test', `${className}_test.java`)),
+    meta,
+  };
+}
+
 /** (Re)load every language. Exported so tests can point CONTENT_DIR elsewhere. */
 export function loadContent(root = config.contentDir): void {
   catalogue.clear();
@@ -182,7 +208,8 @@ export function loadContent(root = config.contentDir): void {
           ? (JSON.parse(readFileSync(metaPath, 'utf8')) as Record<string, unknown>)
           : // Rust index.json carries meta inline.
             ((index.exercises?.find((e) => e.slug === slug) ?? {}) as Record<string, unknown>);
-        const ex = language === 'rust' ? loadRust(dir, slug, meta) : loadGeneric(language, dir, slug, meta);
+        const ex =
+          language === 'rust' ? loadRust(dir, slug, meta) : language === 'java' ? loadJava(dir, slug, meta) : loadGeneric(language, dir, slug, meta);
         exercises.set(slug, ex);
       } catch (err) {
         logger.error('content.exercise_skipped', { language, slug, error: String(err) });
@@ -321,11 +348,12 @@ export function filesForRunner(ex: Exercise, files: Record<string, string>, mode
   return files;
 }
 
-/** Exercise facts the Go and JS runner entrypoints need. */
-export function runnerExerciseMeta(ex: Exercise): { expectedFiles: string[]; editorFiles: string[]; allowedFunctions?: string[] } {
+/** Exercise facts the Go, JS and Java runner entrypoints need. */
+export function runnerExerciseMeta(ex: Exercise): { expectedFiles: string[]; editorFiles: string[]; allowedFunctions?: string[]; className?: string } {
   return {
     expectedFiles: ex.expectedFiles,
     editorFiles: ex.editorFiles,
     allowedFunctions: Array.isArray(ex.meta.allowedFunctions) ? (ex.meta.allowedFunctions as string[]) : undefined,
+    className: ex.language === 'java' ? (ex.meta.test as { className?: string } | undefined)?.className : undefined,
   };
 }

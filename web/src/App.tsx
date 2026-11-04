@@ -56,7 +56,7 @@ type Screen = 'loading' | 'login' | 'app';
 /** Autosave fires this long after typing stops. */
 export const AUTOSAVE_MS = 900;
 
-const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust' };
+const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust', java: 'Java' };
 const LAST_LANGUAGE_KEY = 'cp.language';
 
 function lastLanguage(): Language {

@@ -1,7 +1,7 @@
 /** Labels and formatting shared by the dashboard, history and workbench. */
 import type { Language } from './api.js';
 
-export const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust' };
+export const LANGUAGE_LABEL: Record<Language, string> = { go: 'Go', js: 'JavaScript', rust: 'Rust', java: 'Java' };
 
 const OUTCOME_LABEL: Record<string, string> = {
   passed: 'Passed',

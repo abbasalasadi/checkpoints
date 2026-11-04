@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Assemble the runner build contexts and (optionally) build the images.
 //
-//   node scripts/build-runner-images.mjs [--no-build] [--only go,js,rust]
+//   node scripts/build-runner-images.mjs [--no-build] [--only go,js,rust,java]
 //
 // Ported from the references' tools/build-image.mjs (go-checkpoints and
 // js-checkpoints). content/<lang>/ keeps one canonical copy per exercise; the
@@ -25,7 +25,7 @@ const BUILD = path.join(ROOT, 'var/build');
 
 const argv = process.argv.slice(2);
 const NO_BUILD = argv.includes('--no-build');
-const onlyArg = argv.includes('--only') ? argv[argv.indexOf('--only') + 1] : 'go,js,rust';
+const onlyArg = argv.includes('--only') ? argv[argv.indexOf('--only') + 1] : 'go,js,rust,java';
 const ONLY = new Set(onlyArg.split(',').map((s) => s.trim()).filter(Boolean));
 
 const env = (name, fallback) => (process.env[name] && process.env[name].trim()) || fallback;
@@ -33,6 +33,7 @@ const TAGS = {
   rust: env('RUNNER_IMAGE', 'rust-checkpoints-runner:latest'),
   go: env('RUNNER_GO_IMAGE', 'go-checkpoints-runner:dev'),
   js: env('RUNNER_JS_IMAGE', 'js-checkpoints-runner:dev'),
+  java: env('RUNNER_JAVA_IMAGE', 'java-checkpoints-runner:dev'),
 };
 
 const write = (p, s) => {
@@ -143,6 +144,31 @@ function jsContext() {
   return CTX;
 }
 
+// ── Java ─────────────────────────────────────────────────────────────────────
+
+// The official layout: /app/{pom.xml,entrypoint.sh}, /app/tests/<Class>_test/ and the
+// two harness classes beside them (tests reference /app/tests/... by absolute path).
+function javaContext() {
+  const CONTENT = path.join(ROOT, 'content/java');
+  const CTX = fresh(path.join(BUILD, 'runner-java'));
+  const index = JSON.parse(fs.readFileSync(path.join(CONTENT, 'index.json'), 'utf8'));
+  const harness = path.join(CONTENT, 'sources/harness');
+  fs.mkdirSync(path.join(CTX, 'app/tests'), { recursive: true });
+  fs.copyFileSync(path.join(harness, 'pom.xml'), path.join(CTX, 'app/pom.xml'));
+  fs.copyFileSync(path.join(harness, 'entrypoint.sh'), path.join(CTX, 'app/entrypoint.sh'));
+  fs.copyFileSync(path.join(ROOT, 'docker/runner-java/run.sh'), path.join(CTX, 'app/run.sh'));
+  for (const f of ['TestRunnerMain.java', 'StopAfterFailureExtension.java']) fs.copyFileSync(path.join(harness, f), path.join(CTX, 'app/tests', f));
+  fs.copyFileSync(path.join(ROOT, 'docker/runner-java/Dockerfile'), path.join(CTX, 'Dockerfile'));
+  for (const e of index.exercises) {
+    const dir = path.join(CONTENT, e.dir ?? `exercises/${e.slug}`);
+    fs.cpSync(path.join(dir, 'test'), path.join(CTX, 'app/tests', `${e.className}_test`), { recursive: true });
+  }
+  // One reference solution fills the offline Maven repository at build time.
+  fs.cpSync(path.join(CONTENT, 'exercises/factorial/solution'), path.join(CTX, 'app/warm'), { recursive: true });
+  console.log(`java: harness + ${index.exercises.length} tests -> ${path.relative(ROOT, CTX)}`);
+  return CTX;
+}
+
 // ── Rust ─────────────────────────────────────────────────────────────────────
 
 function rustContext() {
@@ -154,9 +180,9 @@ function rustContext() {
 
 // ── main ─────────────────────────────────────────────────────────────────────
 
-const contexts = { go: goContext, js: jsContext, rust: rustContext };
+const contexts = { go: goContext, js: jsContext, rust: rustContext, java: javaContext };
 let failed = false;
-for (const lang of ['go', 'js', 'rust']) {
+for (const lang of ['go', 'js', 'rust', 'java']) {
   if (!ONLY.has(lang)) continue;
   const ctx = contexts[lang]();
   if (NO_BUILD) continue;

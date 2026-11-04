@@ -458,7 +458,7 @@ function vault(req: IncomingMessage, res: ServerResponse): void {
   sendJson(res, 200, { items });
 }
 
-const FENCE_LANG: Record<Language, string> = { go: 'go', js: 'javascript', rust: 'rust' };
+const FENCE_LANG: Record<Language, string> = { go: 'go', js: 'javascript', rust: 'rust', java: 'java' };
 
 /** A fence longer than any backtick run inside the code, so the block cannot end early. */
 function fenced(code: string, lang: string): string {

@@ -1,6 +1,6 @@
 /**
  * The runner module (V1 contract): one global dispatcher in front of the
- * rust / go / js backends.
+ * rust / go / js / java backends.
  *
  *   const id = submitRun({ user, language, slug, files, args, mode: 'run' | 'test', exercise })
  *   const off = subscribeRun(id, (event) => ws.send(JSON.stringify(event)))   // /ws/runs/:id
@@ -14,6 +14,7 @@ import { logger } from '../../logger.js';
 import { runnerUsage } from '../../repositories/index.js';
 import { Dispatcher } from './dispatcher.js';
 import { GoBackend } from './go.js';
+import { JavaBackend } from './java.js';
 import { JsBackend } from './js.js';
 import { LegacyRustRunner } from './legacy.js';
 import { RustBackend } from './rust.js';
@@ -41,7 +42,7 @@ export const rustBackend = new RustBackend(
 
 export const dispatcher = new Dispatcher(
   runnerLimits,
-  [rustBackend, new GoBackend(runnerSettings, logger), new JsBackend(runnerSettings, logger)],
+  [rustBackend, new GoBackend(runnerSettings, logger), new JsBackend(runnerSettings, logger), new JavaBackend(runnerSettings, logger)],
   logger,
 );
 
@@ -59,7 +60,7 @@ export const cooldownRemaining = (user: string | number, mode: RunMode): number 
   dispatcher.cooldownRemaining(user, mode);
 
 /** Check every backend; throws naming each one that is not usable. */
-export async function preflightRunners(languages: Language[] = ['rust', 'go', 'js']): Promise<void> {
+export async function preflightRunners(languages: Language[] = ['rust', 'go', 'js', 'java']): Promise<void> {
   const failures: string[] = [];
   for (const lang of languages) {
     try {

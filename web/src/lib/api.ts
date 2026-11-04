@@ -37,7 +37,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return body as T;
 }
 
-export type Language = 'go' | 'js' | 'rust';
+export type Language = 'go' | 'js' | 'rust' | 'java';
 
 export interface ExerciseSummary {
   slug: string;

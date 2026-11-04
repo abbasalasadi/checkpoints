@@ -8,7 +8,7 @@
 import type { EventEmitter } from 'node:events';
 
 /** Mirrors `Language` in server/src/languages.ts (V1 contract). Kept local so this module has no app imports. */
-export type Language = 'go' | 'js' | 'rust';
+export type Language = 'go' | 'js' | 'rust' | 'java';
 
 /** What the student pressed. `test` is the graded submit (cooldown 90 s); `run` executes (30 s). */
 export type RunMode = 'run' | 'test';
@@ -48,6 +48,8 @@ export interface ExerciseMeta {
   editorFiles?: string[];
   /** Go only: functions `rc` allows. */
   allowedFunctions?: string[];
+  /** Java only: the official test class (EXERCISE for the entrypoint), e.g. AlmostPalindrome. */
+  className?: string;
 }
 
 export interface SubmitRunInput {
