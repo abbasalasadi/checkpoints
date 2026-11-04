@@ -944,12 +944,12 @@ function examFiles(ex: Exercise, exam: Exam): Record<string, string> {
 }
 
 /**
- * Levels open one at a time, like the real exam: while it runs, a student
- * sees the levels passed so far and the current one, never what comes next.
+ * Levels open one at a time, like the real exam: a student sees the levels
+ * passed and the current one, never what comes next — during the exam and in
+ * its report afterwards.
  */
 function revealedItems(exam: Exam) {
   const all = exams.items(exam.id);
-  if (exam.status !== 'active') return all;
   const current = all.findIndex((i) => i.passed_at === null);
   return current === -1 ? all : all.slice(0, current + 1);
 }
