@@ -1710,7 +1710,9 @@ function Workbench({
           !cancelling &&
           !stuckDismissed &&
           limits.warnSeconds !== undefined &&
-          elapsed >= limits.warnSeconds
+          // Java builds with Maven: a normal Submit takes 10-20 s on a cold
+          // runner, so the 20 s warning flashed just before a pass landed.
+          elapsed >= (language === 'java' ? Math.max(limits.warnSeconds, 40) : limits.warnSeconds)
         }
         elapsed={elapsed}
         timeoutSeconds={limits.timeoutSeconds ?? 60}
