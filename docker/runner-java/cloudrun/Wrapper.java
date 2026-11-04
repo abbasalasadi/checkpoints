@@ -76,7 +76,8 @@ public class Wrapper {
         names.add(name);
       }
       List<String> editorFiles = new ArrayList<>();
-      if (body.get("editorFiles") instanceof List<?> l) for (Object o : l) editorFiles.add(String.valueOf(o));
+      // Only names that were written above: the list reaches the entrypoint's shell.
+      if (body.get("editorFiles") instanceof List<?> l) for (Object o : l) if (names.contains(String.valueOf(o))) editorFiles.add(String.valueOf(o));
       if (editorFiles.isEmpty()) editorFiles = names;
 
       ProcessBuilder pb = new ProcessBuilder("/app/run.sh").redirectErrorStream(true);

@@ -97,6 +97,9 @@ export function migrate(handle: Db = getDb()): string[] {
     } finally {
       handle.pragma(`foreign_keys = ${fk ? 'ON' : 'OFF'}`);
     }
+    // Rows whose parent is gone are kept, not dropped, but they are counted.
+    const orphans = (handle.pragma('foreign_key_check') as unknown[]).length;
+    if (orphans) logger.warn('db.migration.orphans', { version, rows: orphans });
 
     justApplied.push(version);
     logger.info('db.migration.applied', { version });
