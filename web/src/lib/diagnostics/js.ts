@@ -63,7 +63,7 @@ const RULES: Rule[] = [
     test: /Identifier '([^']+)' has already been declared/,
     build: (m) => ({
       title: `"${m[1]}" is declared twice`,
-      hint: `The test file already defines ${m[1]} at the top level. Rename yours, or move it inside your function.`,
+      hint: `${m[1]} is defined more than once. Look for a leftover empty starter line (function ${m[1]}(…) {}) above your code and delete it. If your file has only one, the test file already defines ${m[1]}: rename yours or move it inside your function.`,
       tone: 'error',
     }),
   },
