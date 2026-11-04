@@ -31,7 +31,7 @@ import { ShortcutSheet } from './components/ShortcutSheet.js';
 import { keysFor, matchShortcut } from './lib/shortcuts.js';
 import { parseAssertion, type AssertionDiff } from './lib/assertion.js';
 import { fmtCountdown } from './lib/format.js';
-import { Exams, STATUS_LABEL } from './components/Exams.js';
+import { Exams } from './components/Exams.js';
 import { Settings } from './components/Settings.js';
 import { usePreferences, type Preferences } from './lib/preferences.js';
 import { StuckDialog } from './components/StuckDialog.js';
@@ -1001,7 +1001,15 @@ function Workbench({
     setCool((c) => ({ ...c, [kind]: m.cooldownSeconds ?? startCooldown }));
     const didPass = m.passed ?? (kind === 'test' && canonical === 'passed');
     if (exam && kind === 'test') {
-      void api.exam(exam.id).then(setExam).catch(() => undefined);
+      // A pass opens the next level; move straight to it.
+      void api
+        .exam(exam.id)
+        .then((e) => {
+          setExam(e);
+          const next = e.items.find((i) => !i.passed);
+          if (didPass && next && next.slug !== exerciseSlug) select(next.slug);
+        })
+        .catch(() => undefined);
     } else if (kind === 'test' && didPass && lang === language) {
       setList((prev) => prev.map((e) => (e.slug === exerciseSlug ? { ...e, passed: true, status: 'passed' } : e)));
       const next = nextInOrder(placements, list, exerciseSlug);
@@ -1185,7 +1193,11 @@ function Workbench({
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: compact ? 'column' : 'row', height: '100dvh', width: '100vw', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100dvh', width: '100vw', overflow: 'hidden' }}>
+    {exam && (
+      <ExamBar exam={exam} onEnd={() => void endExam()} onExpired={() => void endExam(true)} />
+    )}
+    <div style={{ display: 'flex', flexDirection: compact ? 'column' : 'row', flex: '1 1 0', minHeight: 0, width: '100%', overflow: 'hidden' }}>
       {compact && (
         <nav aria-label="Workbench panes" role="tablist" style={{ display: 'flex', borderBottom: '1px solid var(--border)', flex: '0 0 auto', background: 'var(--surface)' }}>
           {MOBILE_PANES.map(([id, label]) => (
@@ -1206,7 +1218,7 @@ function Workbench({
         </nav>
       )}
       {/* ── left: exercise tree, or the compact rail (V2) ─────────────────── */}
-      {rail && !focus && !compact && (
+      {!exam && rail && !focus && !compact && (
         <nav
           aria-label="Compact sidebar"
           style={{ width: '2.6rem', flex: '0 0 auto', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.6rem 0' }}
@@ -1225,9 +1237,9 @@ function Workbench({
         </nav>
       )}
       <aside
-        hidden={compact ? pane !== 'list' : rail || focus}
+        hidden={exam ? true : compact ? pane !== 'list' : rail || focus}
         style={{
-          display: (compact ? pane !== 'list' : rail || focus) ? 'none' : undefined,
+          display: (exam ? true : compact ? pane !== 'list' : rail || focus) ? 'none' : undefined,
           width: compact ? '100%' : left.size,
           flex: compact ? '1 1 0' : '0 0 auto',
           borderRight: '1px solid var(--border)',
@@ -1236,15 +1248,6 @@ function Workbench({
           minWidth: 0,
         }}
       >
-        {exam && (
-          <ExamPanel
-            exam={exam}
-            current={slug}
-            onSelect={select}
-            onEnd={() => void endExam()}
-            onExpired={() => void endExam(true)}
-          />
-        )}
         {!exam && (
         <>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.6rem' }}>
@@ -1375,7 +1378,7 @@ function Workbench({
         )}
       </aside>
 
-      {!rail && !focus && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
+      {!exam && !rail && !focus && !compact && <Splitter axis="x" label="Resize the exercise list" onDelta={left.nudge} onCommit={left.persist} />}
 
       {/* ── centre: instructions ─────────────────────────────────────────
         * No title bar: every README opens with the exercise's own heading, so a
@@ -1384,7 +1387,7 @@ function Workbench({
         */}
       <section style={{ flex: '1 1 0', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0, ...hideIf(compact ? pane !== 'subject' : focus) }}>
         <div className="markdown" style={{ flex: '1 1 0', overflowY: 'auto', padding: '1.1rem 1.3rem' }}>
-          {detail && slug && <Breadcrumbs language={language} detail={detail} exam={exam} list={list} />}
+          {detail && slug && !exam && <Breadcrumbs language={language} detail={detail} exam={exam} list={list} />}
           {detail && slug && !exam && (
             <div style={{ marginBottom: '.8rem' }}>
               <HintBox key={`${language}/${slug}`} language={language} slug={slug} />
@@ -1701,6 +1704,7 @@ function Workbench({
         }}
       />
     </div>
+    </div>
   );
 }
 
@@ -1970,8 +1974,12 @@ function ExerciseRow({ slug, current, done, star, onSelect, onStar, indent }: {
 }
 
 /** The exam's side panel (V3): timer, the exercises by level, End exam. */
-function ExamPanel({ exam, current, onSelect, onEnd, onExpired }: {
-  exam: ExamView; current: string | null; onSelect: (slug: string) => void; onEnd: () => void; onExpired: () => void;
+/**
+ * The exam's top bar: progress, timer and End exam. Levels open one at a
+ * time (D28); a pass moves straight to the next one.
+ */
+function ExamBar({ exam, onEnd, onExpired }: {
+  exam: ExamView; onEnd: () => void; onExpired: () => void;
 }) {
   const [now, setNow] = useState(() => Date.now());
   const left = Date.parse(exam.endsAt) - now;
@@ -1988,48 +1996,29 @@ function ExamPanel({ exam, current, onSelect, onEnd, onExpired }: {
   }, [left, onExpired]);
   const low = left < 10 * 60_000;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }} aria-label="Mock exam">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <strong style={{ fontSize: '.85rem' }}>
-          Mock exam · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
-        </strong>
-      </div>
-      <div
+    <header
+      aria-label="Mock exam"
+      title="Hints, solutions and other exercises are closed until the exam ends. Your practice code is set aside and comes back afterwards."
+      style={{ display: 'flex', alignItems: 'center', gap: '.8rem', padding: '.4rem .8rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap', flex: '0 0 auto' }}
+    >
+      <strong style={{ fontSize: '.85rem' }}>
+        Mock exam · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
+      </strong>
+      <span style={{ marginLeft: 'auto', fontSize: '.78rem', color: 'var(--text-muted)' }}>
+        {exam.passed} / {exam.total} passed
+      </span>
+      <span
         role="timer"
         aria-live="off"
         title={`Ends at ${new Date(exam.endsAt).toLocaleTimeString()}`}
-        style={{ fontSize: '1.6rem', fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: low ? 'var(--danger)' : 'var(--text)' }}
+        style={{ fontSize: '1.15rem', fontVariantNumeric: 'tabular-nums', fontWeight: 600, color: low ? 'var(--danger)' : 'var(--text)' }}
       >
         {fmtCountdown(left)}
-      </div>
-      <div style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>
-        {exam.passed} / {exam.total} passed · {STATUS_LABEL[exam.status]}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
-        {exam.items.map((i) => (
-          <button
-            key={i.slug}
-            type="button"
-            onClick={() => onSelect(i.slug)}
-            aria-current={current === i.slug ? 'true' : undefined}
-            style={{
-              ...treeRow(current === i.slug ? 'var(--accent-text)' : 'var(--text)', '.8rem'),
-              background: current === i.slug ? 'var(--raised)' : 'transparent',
-            }}
-          >
-            <span style={{ color: 'var(--text-dim)', width: '3.6rem', flex: 'none' }}>Level {i.level}</span>
-            <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{i.title}</span>
-            {i.passed && <span style={{ color: 'var(--success)' }}>✓</span>}
-          </button>
-        ))}
-      </div>
-      <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '.74rem', lineHeight: 1.45 }}>
-        Hints, solutions and other exercises are closed until the exam ends. Your practice code is set aside and comes back afterwards.
-      </p>
-      <button type="button" onClick={onEnd} style={{ ...ghostBtn, border: '1px solid var(--border-strong)', padding: '.35rem .6rem', fontSize: '.8rem' }}>
+      </span>
+      <button type="button" onClick={onEnd} style={{ ...ghostBtn, border: '1px solid var(--border-strong)', padding: '.3rem .6rem', fontSize: '.8rem' }}>
         End exam
       </button>
-    </div>
+    </header>
   );
 }
 

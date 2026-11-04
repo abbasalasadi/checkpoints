@@ -137,8 +137,8 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
         if (action === 'snapshots' && sub === 'restore' && method === 'POST') return restoreSnapshot(req, res, p);
       }
       // Rust reference shapes, language-prefixed.
-      if (group === 'progress' && !action && method === 'PUT') return saveCode(req, res, p);
-      if (group === 'progress' && !action && method === 'DELETE') return resetCode(req, res, p);
+      if (group === 'progress' && !action && method === 'PUT') return exam ? examSave(req, res, p, exam) : saveCode(req, res, p);
+      if (group === 'progress' && !action && method === 'DELETE') return exam ? examReset(req, res, p, exam) : resetCode(req, res, p);
       if (group === 'snapshots' && !action && method === 'GET') return listSnapshots(req, res, p);
       if (group === 'snapshots' && !action && method === 'POST') return createSnapshot(req, res, p);
       if (group === 'snapshots' && action === 'restore' && !sub && method === 'POST') return restoreSnapshot(req, res, p);
@@ -927,9 +927,12 @@ const EXAM_MINUTES_MAX = 360;
 function examAllows(exam: Exam, path: string, method: string): boolean {
   if (path === '/api/runner' || path === '/api/languages' || path.startsWith('/api/runs/')) return true;
   if (path === '/api/preferences') return true;
+  // The editor saves and resets through /progress; inside an exam that is the exam's copy.
+  const pr = /^\/api\/([a-z]+)\/progress\/([^/]+)$/.exec(path);
+  if (pr) return pr[1] === exam.language && (method === 'PUT' || method === 'DELETE') && revealedItems(exam).some((i) => i.exercise_slug === pr[2]);
   const m = /^\/api\/([a-z]+)\/exercises\/([^/]+)(?:\/([a-z]+))?$/.exec(path);
   if (!m) return false;
-  if (m[1] !== exam.language || !exams.items(exam.id).some((i) => i.exercise_slug === m[2])) return false;
+  if (m[1] !== exam.language || !revealedItems(exam).some((i) => i.exercise_slug === m[2])) return false;
   const action = m[3];
   if (!action) return method === 'GET';
   return ['code', 'reset', 'format', 'run', 'test', 'submit'].includes(action);
@@ -940,8 +943,20 @@ function examFiles(ex: Exercise, exam: Exam): Record<string, string> {
   return workingFiles(ex, item?.files ?? null);
 }
 
+/**
+ * Levels open one at a time, like the real exam: while it runs, a student
+ * sees the levels passed so far and the current one, never what comes next.
+ */
+function revealedItems(exam: Exam) {
+  const all = exams.items(exam.id);
+  if (exam.status !== 'active') return all;
+  const current = all.findIndex((i) => i.passed_at === null);
+  return current === -1 ? all : all.slice(0, current + 1);
+}
+
 function examView(exam: Exam) {
-  const items = exams.items(exam.id).map((i) => ({
+  const total = exams.items(exam.id).length;
+  const items = revealedItems(exam).map((i) => ({
     level: i.level,
     slug: i.exercise_slug,
     title: titleOf(exam.language, i.exercise_slug),
@@ -959,7 +974,7 @@ function examView(exam: Exam) {
     endedAt: exam.ended_at,
     status: exam.status,
     passed: items.filter((i) => i.passed).length,
-    total: items.length,
+    total,
     items,
   };
 }

@@ -409,11 +409,15 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   const s = await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1' } });
   assert.equal(s.status, 200);
   assert.equal(s.json.minutes, 180);
-  const levels = s.json.items.map((i: any) => i.level);
-  assert.deepEqual(levels, [...new Set(levels)].sort((x: number, y: number) => x - y), 'one exercise per level');
+  // Levels open one at a time: only the first is shown at the start.
+  assert.equal(s.json.items.length, 1, 'later levels stay hidden');
+  assert.ok(s.json.total >= 1);
   assert.equal((await call('/api/exams', { method: 'POST', cookie: a, body: { language: 'go', checkpoint: '1' } })).status, 409);
 
   const slug = s.json.items[0].slug;
+  // The editor's own save route writes the exam copy (not practice) while the exam runs.
+  const exFiles = (await call(`/api/go/exercises/${slug}`, { cookie: a })).json.editorFiles as string[];
+  assert.equal((await call(`/api/go/progress/${slug}`, { method: 'PUT', cookie: a, body: { files: { [exFiles[0]!]: 'package main\n' } } })).status, 200);
   // Practice draft set aside: the exam starts from the starter, and practice is untouched.
   const ua = users.upsertOnLogin('fake_exam_a', null, null);
   progress.save(ua.id, 'go', slug, { files: { practice: 'mine' } as any });
@@ -439,6 +443,7 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   const v = await call(`/api/exams/${s.json.id}`, { cookie: a });
   assert.equal(v.json.items[0].passed, true);
   assert.equal(v.json.items[0].submits, 1);
+  assert.equal(v.json.items.length, Math.min(2, v.json.total), 'a pass opens the next level');
   // D27: practice progress did not move, and the practice draft survived.
   assert.notEqual(progress.get(ua.id, 'go', slug)?.status, 'passed');
   assert.deepEqual(progress.get(ua.id, 'go', slug)?.files, { practice: 'mine' });
@@ -446,6 +451,9 @@ test('mock exam: one per level, locked routes, separate from practice, end and r
   assert.equal((await call(`/api/exams/${s.json.id}`, { cookie: b })).status, 404);
   const end = await call(`/api/exams/${s.json.id}/end`, { method: 'POST', cookie: a, body: {} });
   assert.equal(end.json.status, 'finished');
+  assert.equal(end.json.items.length, end.json.total, 'the report shows every level');
+  const levels = end.json.items.map((i: any) => i.level);
+  assert.deepEqual(levels, [...new Set(levels)].sort((x: number, y: number) => x - y), 'one exercise per level');
   assert.equal((await call('/api/vault', { cookie: a })).status, 200, 'unlocked after the exam');
   const list = await call('/api/exams', { cookie: a });
   assert.equal(list.json.active, null);
