@@ -46,3 +46,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - Result check: deploy health ok; old sites 200; Rust image v1.0 built on the VM (-j2), build cache pruned.
 
 - 2026-11-04: V1.0 tagged and redeployed (15/60 cooldowns). Result check: live 200, old sites 200, prod env 15/60, service active.
+- 2026-11-05: Go Format broken in prod (no local Go image in cloudrun mode); runner-image.sh now builds go,rust. Redeploy awaits owner approval.

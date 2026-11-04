@@ -15,9 +15,9 @@ rust_image="$(resolve_runner_image)"
 go_image="$(resolve_runner_go_image)"
 js_image="$(resolve_runner_js_image)"
 java_image="${RUNNER_JAVA_IMAGE:-java-checkpoints-runner:dev}"
-# Cloud Run serves Go, JS and Java; only Rust needs a local image then.
+# Cloud Run serves Go, JS and Java runs; Rust runs locally, and Go Format (gofumpt) needs the local Go image.
 only="go,js,rust,java"
-[ "${RUNNER_BACKEND:-docker}" = "cloudrun" ] && only="rust"
+[ "${RUNNER_BACKEND:-docker}" = "cloudrun" ] && only="go,rust"
 
 print_info "[VM] Building runner images (${only})"
 ssh "${SSH_ARGS[@]}" "$(resolve_ssh_target)" \
