@@ -168,7 +168,6 @@ function SignedIn({
   onSignedOut: (reason?: string) => void;
 }) {
   const [loc, setLoc] = useState(() => readLocation());
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [historyFocus, setHistoryFocus] = useState<{ language: Language; slug: string } | null>(null);
   const { confirm, dialog } = useConfirm();
   useEffect(() => onNavigate(setLoc), []);
@@ -224,7 +223,6 @@ function SignedIn({
           goPage('history');
         }}
         onVault={() => goPage('vault')}
-        onPreferences={() => setSettingsOpen(true)}
         onSignOut={() => void signOut()}
       />
       {page === 'history' ? (
@@ -240,7 +238,6 @@ function SignedIn({
           }}
         />
       )}
-      <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} prefs={prefs} onChange={onPrefs} />
       {dialog}
     </div>
   );
@@ -1297,6 +1294,16 @@ function Workbench({
                 {online ? 'Not saved — retrying' : 'Offline — kept in this browser'}
               </span>
             )}
+            {/* Preferences are the editor's own settings, so they live on the editor. */}
+            <button
+              type="button"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="Editor preferences"
+              title="Editor preferences"
+              style={{ ...ghostBtn, fontSize: '1rem', lineHeight: 1, padding: '.2rem .35rem' }}
+            >
+              ⚙
+            </button>
             <Menu
               note={savedAt ? `Saved ${timeAgo(savedAt)}` : undefined}
               /* Per-item rather than a `disabled` menu, so About stays
@@ -1328,7 +1335,6 @@ function Workbench({
                       }),
                   },
                   { label: 'History', onSelect: () => void flush().then(onHistory) },
-                  { label: 'Preferences', onSelect: () => setSettingsOpen(true) },
                   { label: 'About', onSelect: () => setAboutOpen(true) },
                 ],
               ]}
@@ -1372,6 +1378,8 @@ function Workbench({
               fontSize: prefs.fontSize,
               tabSize: prefs.tabSize,
               detectIndentation: false,
+              // Go is formatted with real tabs (gofmt, the Submit gate); JS and Rust with spaces.
+              insertSpaces: language !== 'go',
               wordWrap: prefs.wordWrap ? 'on' : 'off',
               scrollBeyondLastLine: false,
               automaticLayout: true,
