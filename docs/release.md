@@ -20,10 +20,10 @@ No deploy until the owner has tested locally (D20). Old sites are not touched (D
 - [x] Every feature above present and working
 - [x] Tests pass on the assigned VM; Go parity re-run after feature 8
 - [x] Secret scan clean
-- [ ] Owner tested locally (D20)
-- [ ] Deployed at checkpoint.appsyss.com after the owner's test
+- [x] Owner tested locally (D20)
+- [x] Deployed at checkpoint.appsyss.com after the owner's test (2026-11-04)
 - [x] Self-audit passed (`docs/audits/`)
-- [ ] Tagged `v2.0`, release note written
+- [x] Tagged `v2.0`, release note written
 
 ## Steps
 | # | Step | Features | State | Result check |

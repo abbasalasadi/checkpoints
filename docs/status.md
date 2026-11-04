@@ -1,6 +1,6 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V2 (built, owner testing) · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V2 released (deployed + tagged v2.0); next V3 · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
@@ -8,6 +8,7 @@ As of: 2026-11-04 · Version: V2 (built, owner testing) · Run mode: economy · 
 | — | — | — | — |
 
 ## Done
+- V2 deployed 2026-11-04 to checkpoint.appsyss.com after owner approval: prod DB backup, migrations 004/005 applied, service healthy, old sites 200 (untouched). Result check: deploy rc 0, health ok, /api/vault 401 unauthenticated as expected, migrations logged — pass. Tagged v2.0
 - V2 steps 1-8 built (2026-11-04), step 9 self-audit pass (docs/audits/v2.0-2026-11-04.md). Result check: lan_vm1 build, server 0 fail, web 116/116, Go parity 60/60 with read-only root; laptop server 40/40, web 117/117; browser checks per step in release.md — pass. Waiting for the owner's local test (D20); no deploy before it
 - V1 self-audit (2026-11-03): first pass Fail (F1 blocking: setup needed .env.example); fixed in 8e9c919; re-audit on clean lan_vm1 copy: setup, build, 145 tests pass; F2 fixed; F3 (Go read-only rootfs) moved to V2. Report: docs/audits/v1.0-2026-11-03.md
 - V1 steps 1-9 built and integrated (2026-11-03). Result check: lan_vm1 build + 145 tests (36 server, 109 web) — pass; runner images built (go 546 MB, js 109 MB, rust 1.25 GB); `make parity` — rust 40/40, go 60/60, js 29/29 solutions pass and starters fail, run + Go format ok — correct (matches the references)
