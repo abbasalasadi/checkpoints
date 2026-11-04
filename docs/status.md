@@ -35,3 +35,5 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 - DB = merge of the three live DBs snapshotted 2026-11-04 ~07:08 (274 users). Old sites keep taking writes, so re-snapshot and re-merge before the real cut-over.
 - Waiting on the owner: test with a real Reboot01 login (one Run/Submit per language).
 - Result check: deploy health ok; old sites 200; Rust image v1.0 built on the VM (-j2), build cache pruned.
+
+- 2026-11-04: V1.0 tagged and redeployed (15/60 cooldowns). Result check: live 200, old sites 200, prod env 15/60, service active.

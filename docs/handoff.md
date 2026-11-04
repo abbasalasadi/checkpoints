@@ -1,9 +1,7 @@
 # Handoff — 2026-11-04
 
-V1 is live at https://checkpoint.appsyss.com, running next to the old three sites (they are untouched, with no redirect).
+V1.0 is tagged and live at https://checkpoint.appsyss.com. The old sites run untouched alongside it, with no redirect.
+Cooldowns are 15 s Run / 60 s Submit, shared (D18, D19).
 
-Next action: the owner tests with a real Reboot01 login (Run and Submit in Go, JS and Rust). Then, once the owner decides on the cut-over:
-1. Put the old sites in maintenance and take fresh `sqlite3 .backup` snapshots of /opt/go-checkpoints, ~/js-checkpoints and ~/rust-checkpoints var/db/app.db.
-2. Run `make migrate-merge`, stop checkpoints.service, put the result at ~/checkpoints/var/db/app.db, and start the service again.
-3. Run `LEGACY_DISABLE=1 make nginx-setup` (redirects). Then tag v1.0 and finalize docs/releases/v1.0.md.
-Restore the local .env cooldowns (30/90) before release sign-off. Production already uses 30/90.
+Next action: plan V2 with the owner (docs/versions.md).
+Open item, for when the owner decides to switch over: re-snapshot and re-merge the three old databases, then `LEGACY_DISABLE=1 make nginx-setup`.
