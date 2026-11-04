@@ -25,9 +25,9 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 **Goal:** A student can see and reuse everything they have done across all three tracks.
 
 **Features:**
-1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics.
+1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics. The Go/JS/Rust track choice moves here, out of the workbench sidebar (D23).
 2. History explorer with filters and attempt detail (code + output).
-3. Solutions vault and ZIP export.
+3. Solutions vault, and an exercise report export per single exercise: subject (README), provided main file(s), student solution and result, as one Markdown file (D22).
 4. Preferences (theme, font size, tab size, word wrap, keybindings) synced to the account.
 5. Stars, sidebar search and status filters, compact sidebar rail.
 6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
@@ -49,4 +49,4 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 **Done when:** same pattern, tagged `v3.0`.
 
 ## After V3
-Full visual redesign (owner's plan).
+Redirect the three old sites to the new one, after re-merging their databases (D21). Then the full visual redesign (owner's plan).

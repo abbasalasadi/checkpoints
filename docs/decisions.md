@@ -62,3 +62,18 @@ Owner: after Run or Submit, both buttons stay blocked until that one wait ends (
 
 ## D19 (2026-11-04) — Cooldowns 15 s Run / 60 s Submit
 Owner: shorter waits. Defaults, `.env.example`, local `.env` and `.env.vm` all use 15/60. Amends D15.
+
+## D20 (2026-11-04) — No deploy before the owner tests locally
+Each version (and any change) reaches checkpoint.appsyss.com only after the owner has tested it locally. Owner: "Do not deploy unless i test locally".
+
+## D21 (2026-11-04) — Old sites untouched until after V3
+go-, js- and rust-checkpoints.appsyss.com keep running as they are; the redirect (with a fresh database re-merge) happens after V3 is deployed. Owner: "we will redirect old websites after we deploy v3".
+
+## D22 (2026-11-04) — Export is a single-exercise report, not a ZIP collection
+Replaces the V2 ZIP export. One exercise at a time: subject (README), the provided main/test file(s), the student's solution and their result, as a downloadable Markdown report (`<lang>-<slug>.md`, code in fenced blocks). Markdown chosen (owner left the format to us): readable as plain text, renders on GitHub and in editors, no extra library.
+
+## D23 (2026-11-04) — Track choice moves to the dashboard
+The Go/JS/Rust selector leaves the workbench left sidebar; students pick a track on the V2 dashboard. Owner suggestion.
+
+## D24 (2026-11-04) — Remaining V2 details as recommended
+Keybindings: Default and Vim. Stars private per student. Preferences per account. Go read-only hardening stays in V2 (affects Docker runs on laptop and VM; live Go uses Cloud Run). UI keeps the current look until the post-V3 redesign. Owner: "i will agree with your recommendations".

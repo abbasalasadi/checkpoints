@@ -1,42 +1,39 @@
-# Checkpoints — Current Release: V1
+# Checkpoints — Current Release: V2
 
 Copied from `versions.md` when this version started. **The only scope.** Scope test before every task: is it here? If not, do not do it.
 
-**Goal:** One app where a student signs in once and practises Go, JS and Rust exactly as on the three live testers today.
+**Goal:** A student can see and reuse everything they have done across all three tracks.
 
-Where the three references disagree on configuration, Rust's value is the default; exercise and content conflicts go to the owner (D16).
+No deploy until the owner has tested locally (D20). Old sites are not touched (D21).
 
 ## Features
-1. One sign-in with the Reboot01 username, valid for all three tracks; logout.
-2. Track switcher and routes `/go/:slug`, `/js/:slug`, `/rust/:slug`; per-track checkpoint → level tree with status.
-3. Workbench from the references: subject, Monaco editor, file tabs, args, Run, Submit, Cancel, Format (Go), autosave, reset, snapshots, stuck dialog, diagnostics.
-4. Grading identical to the references; one streaming WebSocket protocol for all three.
-5. One dispatcher: global queue, cooldowns 15 s Run / 60 s Submit from run end, shared (D15, D18, D19).
-6. One SQLite schema with `language` in every key; hashed session tokens (D6); attempts store files and output (D5).
-7. Migration script merging the three live databases (fake data only until deployment, D14).
-8. Deployment kit: systemd unit, nginx site with 301 redirects from the old subdomains, backups. Prepared, not run (D13).
+1. Dashboard: per-track progress cards, quick resume, recent activity, gate statistics. Track choice lives here; the workbench sidebar loses its Go/JS/Rust selector (D23).
+2. History explorer with filters and attempt detail (code + output).
+3. Solutions vault, and a per-exercise Markdown report export: subject, provided main file(s), student solution, result (D22).
+4. Preferences (theme, font size, tab size, word wrap, keybindings Default/Vim) synced to the account (D24).
+5. Stars (private), sidebar search and status filters, compact sidebar rail.
+6. Mobile and tablet layouts: tabbed single pane, plain-text terminal, symbol bar, undo/redo.
+7. Offline indicator with draft re-sync; loading skeletons.
+8. Hardening: Go run containers with a read-only root filesystem (Go cache and temp on tmpfs), then re-run Go parity (audit v1.0 F3).
 
 ## Definition of done
-- [ ] Runs from a clean checkout (`make setup`, `make run`)
-- [ ] Every reference solution passes and every starter fails, all three tracks
-- [ ] Tests pass on the assigned VM
-- [ ] Secret scan clean
-- [x] Cooldowns 15 s Run / 60 s Submit (D19): local `.env` and `.env.vm` both set
-- [ ] Deployed at checkpoints.appsyss.com after owner approval
 - [ ] Every feature above present and working
+- [ ] Tests pass on the assigned VM; Go parity re-run after feature 8
+- [ ] Secret scan clean
+- [ ] Owner tested locally (D20)
+- [ ] Deployed at checkpoint.appsyss.com after the owner's test
 - [ ] Self-audit passed (`docs/audits/`)
-- [ ] Tagged `v1.0`, release note written
+- [ ] Tagged `v2.0`, release note written
 
 ## Steps
 | # | Step | Features | State | Result check |
 |---|---|---|---|---|
-| 1 | Monorepo skeleton (Rust reference imported as base) | — | done | 5547614 |
-| 2 | Unified schema, migrations, empty DB, dev-only fake login | 1, 6 | done | lan_vm1 2026-11-03 |
-| 3 | Unified content tree for go/js/rust | 2 | done | lan_vm1 2026-11-03 |
-| 4 | Runner dispatcher, queue, cooldowns | 5 | done | lan_vm1 2026-11-03 |
-| 5 | Go, JS, Rust runners + WebSocket streaming | 4 | done | lan_vm1 2026-11-03 |
-| 6 | Content parity suite (solutions pass, starters fail) | 4 | done | parity: rust 40/40, go 60/60, js 29/29 |
-| 7 | Web app: sign-in, tree, workbench | 1, 2, 3 | done | lan_vm1 2026-11-03 |
-| 8 | Migration script tested on fake copies | 7 | done | lan_vm1 2026-11-03 |
-| 9 | Deploy kit + redirects (not run) | 8 | done | lan_vm1 2026-11-03 |
-| 10 | Self-audit, VM test run, release note | all | done (deploy + tag wait for owner) | docs/audits/v1.0-2026-11-03.md |
+| 1 | Preferences: schema, API, settings panel, applied to the editor | 4 | todo | |
+| 2 | Dashboard + track choice moved out of the sidebar | 1 | todo | |
+| 3 | History explorer and attempt detail | 2 | todo | |
+| 4 | Solutions vault + exercise report export | 3 | todo | |
+| 5 | Stars, sidebar search/filters, compact rail | 5 | todo | |
+| 6 | Offline indicator, draft re-sync, skeletons | 7 | todo | |
+| 7 | Mobile and tablet layouts | 6 | todo | |
+| 8 | Go read-only rootfs + Go parity on lan_vm1 | 8 | todo | |
+| 9 | Self-audit, VM test run, owner local test, release note | all | todo | |

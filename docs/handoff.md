@@ -1,7 +1,7 @@
 # Handoff — 2026-11-04
 
-V1.0 is tagged and live at https://checkpoint.appsyss.com. The old sites run untouched alongside it, with no redirect.
-Cooldowns are 15 s Run / 60 s Submit, shared (D18, D19).
+V1.0 is live at checkpoint.appsyss.com. The old sites are untouched until after V3 (D21).
+V2 has started: scope in docs/release.md, decisions D20–D24.
 
-Next action: plan V2 with the owner (docs/versions.md).
-Open item, for when the owner decides to switch over: re-snapshot and re-merge the three old databases, then `LEGACY_DISABLE=1 make nginx-setup`.
+Next action: V2 step 1, Preferences.
+No deploy until the owner tests locally (D20).
