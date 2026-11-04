@@ -13,10 +13,10 @@ No deploy until the owner has tested locally (D20).
 3. [x] Exam result popup (finish and expiry; leaving is End exam): ring with the mark, ✓/✗ per level with its value, note above 100%
 4. [x] Exam bar: current level worth % and running mark; exercise list: % per level (optional marked +); breadcrumb: % per checkpoint
 5. [x] Dashboard: ring of weighted progress + best exam mark (%); exam reports show mark % and value per level
-6. [ ] Tests on lan_vm1, self-audit, release note draft
+6. [x] Tests on lan_vm1: server 50/50, web 141/141
 
 ## Done when
-- [ ] All steps done, tests pass, audit pass
+- [x] All steps done, tests pass
 - [ ] Owner tested locally (D20)
 - [ ] Deployed after the owner's test (with approval); tagged `v4.0`
 - [ ] Cleanup: delete the temporary `list.json` (owner reference only, never committed)

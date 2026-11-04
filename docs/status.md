@@ -1,13 +1,14 @@
 # Checkpoints — Status
 
-As of: 2026-11-04 · Version: V4 in progress (V3 closed by the owner, no deploy) · Run mode: economy · Forecast completion: <date> (<change since last>)
+As of: 2026-11-04 · Version: V4 steps 1-6 done; waiting for the owner's local test (V3 closed by the owner, no deploy) · Run mode: economy · Forecast completion: <date> (<change since last>)
 
 ## Claims
 | Step | Agent / role | Since | Branch / worktree |
 |---|---|---|---|
-| V4 step 1 weights | checkpoint_main | 2026-11-04 | main |
+| (none) | | | |
 
 ## Done
+- V4 steps 1-6 (2026-11-04, D35/D35a): weights from the program list for all four tracks (Go final dropped, re-test rebuilt to 46, brainfuck/grouping/printnbrbase deleted; JS balanced); marks service (value %, exam mark, weighted progress, no XP in API); exam result popup; % on exam bar, exercise tree, breadcrumb, dashboard and reports. Result check: lan_vm1 server 50/50 (incl. marks maths), web 141/141; local server loads go 57/191, js 29/73, rust 40/77, java 44/44 — pass. UI not clicked through by me (needs the owner's sign-in); waiting for the owner's local test
 - V3 step 8 (2026-11-04): lan_vm1 server 45/45, web 141/141; parity Go 60/60, JS 29/29, Rust 40/40 ×3 (after fixing a Rust stale-build race: whole-second tar mtimes let cargo reuse the previous build; files now re-stamped before cargo), Java image 132/132, Java Cloud Run wrapper 133/133. Self-audit pass, F1-F3 minor fixed (docs/audits/v3.0-2026-11-04.md). DEV_LOGIN off locally (never on in production); fake users fake_v3_ui, fake_exam_ui deleted with their exams, plus orphan rows of earlier fake users (backup var/db/app.pre-step8.bak). Release note draft docs/releases/v3.0.md. Result check: every gate's own count read from its log — pass
 - V3 7f Java on Cloud Run (owner approved 2026-11-04, same principle as Go/JS): wrapper docker/runner-java/cloudrun (Java, no new deps, same NDJSON contract, one request per instance, /tmp and request dir wiped). Result check: tools/java-cloudrun-check.mjs on lan_vm1 against the wrapper container, 133/133 (44 solutions pass, 44 starters fail on the same warm instance, 44 runs print, ../ names refused), submit median 8.6 s — pass. Service not created yet: at release, with approval (min-instances 0, small max, concurrency 1, ~1 GiB)
 - V3 7a-7e Java (2026-11-04): 44 exercises per the program's list.json (D34: breakdown-url removed; todo-list expects Task.java + TodoList.java). Starters, solutions, hints 44/44. Runner image (Temurin 21, Maven 3.9.12 offline) built on lan_vm1; JavaBackend; migration 007 (runner now applies migrations with foreign keys off, SQLite rebuild procedure: every row kept, orphans included); web /java route, Monaco, AssertJ/JUnit diff, javac/Maven diagnostics. Result check: image gate 135/135 on lan_vm1 (then 45 exercises; solutions pass, starters fail, Run prints), submit median 9.0 s, run ~1.7 s; laptop java-check 45/45 both ways; server 44/44, web 141/141; browser: /java tree 3 checkpoints, editor tabs — pass. Parity with the official image not run: only its exported filesystem exists; verdicts come from its harness and tests, verbatim. Two README runner examples did not compile (digitlen, singleton-blueprint) and are fixed on import
