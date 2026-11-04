@@ -18,7 +18,8 @@ STUDENT_DIR="${STUDENT_DIR:-/run/student}"
 # entries, and a cold cache costs 23x on run time. A farm of symlinks in /tmp
 # keeps every warm entry readable and puts new ones on the tmpfs — no copy, so
 # the 63 MB cache does not count against the container's memory.
-if [ ! -w "$GOCACHE" ]; then
+# A real write probe: busybox `test -w` looks only at mode bits (0777 here).
+if ! touch "$GOCACHE/.probe" 2>/dev/null; then
 	RO_CACHE="$GOCACHE"
 	GOCACHE=/tmp/gocache
 	export GOCACHE
