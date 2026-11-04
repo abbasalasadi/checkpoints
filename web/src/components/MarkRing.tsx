@@ -41,12 +41,12 @@ export function MarkRing({ id, rings, size = 132, label, caption }: { id: string
           const first = Math.min(Math.max(r.value, 0), 100) / 100;
           const extra = Math.min(Math.max(r.value - 100, 0), 100) / 100;
           const arc = (frac: number, opacity: number, w: number) =>
-            frac > 0 && (
+            frac > 0 ? (
               <circle
                 cx="60" cy="60" r={rad} fill="none" stroke={`url(#${id}-g${i})`} strokeWidth={w} strokeLinecap="round" opacity={opacity}
                 strokeDasharray={`${frac * c} ${c}`} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dasharray .8s ease' }}
               />
-            );
+            ) : null;
           return (
             <g key={i}>
               <circle cx="60" cy="60" r={rad} fill="none" stroke="var(--raised)" strokeWidth={width[i]} />

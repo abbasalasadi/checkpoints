@@ -65,7 +65,7 @@ export function ExamReport({ exam, open, onToggle }: { exam: ExamView; open: boo
           {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
         </strong>
         <span style={{ color: allPassed ? 'var(--success)' : 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
-          {fmtPercent(exam.mark)}
+          {exam.marked === false ? 'Checkpoint removed' : fmtPercent(exam.mark)}
         </span>
         <span style={{ color: 'var(--text-dim)', fontSize: '.8rem' }}>{STATUS_LABEL[exam.status]}</span>
         <span style={{ marginLeft: 'auto', color: 'var(--text-dim)', fontSize: '.78rem' }}>{ago(exam.startedAt)}</span>
@@ -115,7 +115,7 @@ export function ExamResult({ exam, onClose, onDashboard }: { exam: ExamView; onC
         <h2 id="exam-result-title" style={{ margin: 0, fontSize: '1.05rem' }}>
           {STATUS_LABEL[exam.status]} · {LANGUAGE_LABEL[exam.language]} · Checkpoint {exam.checkpoint}
         </h2>
-        <MarkRing id={`exam-${exam.id}`} size={168} label={fmtPercent(exam.mark)} caption="your mark" rings={[{ value: exam.mark, from: color[0]!, to: color[1]! }]} />
+        <MarkRing id={`exam-${exam.id}`} size={168} label={exam.marked === false ? '—' : fmtPercent(exam.mark)} caption="your mark" rings={[{ value: exam.mark, from: color[0]!, to: color[1]! }]} />
         {bonus && <p style={{ margin: 0, color: 'var(--success)', fontSize: '.86rem' }}>Above 100%: the optional level counts on top.</p>}
         <ul style={{ listStyle: 'none', margin: 0, padding: 0, width: '100%', display: 'flex', flexDirection: 'column', gap: '.3rem', fontSize: '.85rem' }}>
           {exam.items.map((i) => (

@@ -42,7 +42,7 @@ import {
 } from '../services/exercises.js';
 import * as runs from '../services/runs.js';
 import { pickExamItems } from '../services/exams.js';
-import { examMark, examMaxMark, placementView, trackProgress, valueOf } from '../services/marks.js';
+import { examMark, examMaxMark, placementView, requiredWeight, trackProgress, valueOf } from '../services/marks.js';
 import type { Exam } from '../repositories/index.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
@@ -333,7 +333,7 @@ function dashboard(req: IncomingMessage, res: ServerResponse): void {
       // Percent, weighted (D35).
       progress: trackProgress(lang, [...known], passed),
       bestExamMark: finished
-        .filter((e) => e.language === lang)
+        .filter((e) => e.language === lang && requiredWeight(lang, e.checkpoint) > 0)
         .map((e) => examMark(lang, e.checkpoint, exams.items(e.id).map((i) => ({ slug: i.exercise_slug, passed: i.passed_at !== null }))))
         .reduce<number | null>((m, v) => (m === null || v > m ? v : m), null),
       started: rows.filter((p) => known.has(p.exercise_slug)).length,
@@ -988,6 +988,8 @@ function examView(exam: Exam) {
     total,
     // Percent (D35); optional pushes it above 100.
     mark: examMark(exam.language, exam.checkpoint, items),
+    // False when the checkpoint is no longer in the program (D35a): no mark.
+    marked: requiredWeight(exam.language, exam.checkpoint) > 0,
     maxMark: examMaxMark(exam.language, exam.checkpoint, all.map((i) => i.exercise_slug)),
     items,
   };

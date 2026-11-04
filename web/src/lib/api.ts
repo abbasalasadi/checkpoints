@@ -247,6 +247,8 @@ export interface ExamView {
   total: number;
   /** Percent of the checkpoint (D35); optional pushes it above 100. */
   mark: number;
+  /** False when the checkpoint was removed from the program (D35a). */
+  marked?: boolean;
   maxMark: number;
   items: { level: number; slug: string; title: string; value: number | null; submits: number; passed: boolean; passedAt: string | null }[];
 }
