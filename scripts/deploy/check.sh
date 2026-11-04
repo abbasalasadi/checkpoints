@@ -27,7 +27,7 @@ case "${REMOTE_ENV_FILE}" in
 esac
 
 [ -f "$ROOT_DIR/deploy/maintenance.html" ] || die "deploy/maintenance.html not found"
-[ -d "$ROOT_DIR/content/exercises" ] || die "content/ not found — run 'make content' first"
+for l in go js rust; do [ -f "$ROOT_DIR/content/$l/index.json" ] || die "content/$l/index.json not found"; done
 
 # ── Remote preflight ──────────────────────────────────────────────────────
 # This script used to validate only local files, and reported "ok" against a VM

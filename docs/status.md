@@ -29,3 +29,9 @@ As of: 2026-11-03 night · Version: V1 (scoping) · Run mode: economy · Forecas
 - checkpoints-c1 (approved, unused: sonnet and haiku overrides fail with API 404). checkpoints-c2 (manager approved 2026-11-03): default model, low effort, V1 self-audit — 1 sub-agent, 1 pass + 1 re-check.
 - <agent class> at <effort> (<reason if above medium>) — wall time, cost, outcome
 - Budget (paid resources only): spent <x> of <limit>
+
+## 2026-11-04 — V1 deployed side by side
+- Live at https://checkpoint.appsyss.com (health ok, dev login off, API needs sign-in). Old go-/js-/rust-checkpoints sites untouched and still serving (owner: no redirect for now). Deployed with `LEGACY_REDIRECT=0`.
+- DB = merge of the three live DBs snapshotted 2026-11-04 ~07:08 (274 users). Old sites keep taking writes, so re-snapshot and re-merge before the real cut-over.
+- Waiting on the owner: test with a real Reboot01 login (one Run/Submit per language).
+- Result check: deploy health ok; old sites 200; Rust image v1.0 built on the VM (-j2), build cache pruned.
