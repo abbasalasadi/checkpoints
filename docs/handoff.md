@@ -1,6 +1,6 @@
 # Handoff — 2026-11-05
 
-V4 tagged. DB sync DONE incl. redirect page (2026-11-05). Next: owner DNS redirect, then old apps sleep or delete (owner decides).
+V4 tagged. DB sync DONE; old apps asleep (services disabled), static moved page only (2026-11-05). Next: ~2026-11-19 archive old DBs + V4 dev DB off-VM, then delete old apps (owner approval; list + freed space first).
 
 Sequence (owner-approved order, option A: V4 data is dev testing, erased):
 1. `make legacy-maintenance-on` (the three old sites → 503 maintenance; no off, ever). Check no active exam; `make maintenance-on` for the new site during the swap.
