@@ -1,6 +1,6 @@
 # Handoff — 2026-11-05
 
-V4 deployed and tagged v4.0. DB sync prepared, waiting for the owner's go.
+V4 tagged. DB sync steps 1–2 DONE (2026-11-05). Next: owner tests the new site, then step 3 `make legacy-redirect`.
 
 Sequence (owner-approved order, option A: V4 data is dev testing, erased):
 1. `make legacy-maintenance-on` (the three old sites → 503 maintenance; no off, ever). Check no active exam; `make maintenance-on` for the new site during the swap.
