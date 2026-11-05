@@ -11,3 +11,4 @@ var/*
 !var/.gitkeep
 node_modules/
 dist/
+web/tsconfig.tsbuildinfo

@@ -1,3 +1,12 @@
-# Handoff — 2026-11-04
+# Handoff — 2026-11-05
 
-V3+V4 are live at checkpoint.appsyss.com (backup var/backups/app-20261104T204040Z-1540067.db.gz on the production VM; Java Cloud Run service java-checkpoints-runner). Next: the owner tests the live site. Then tag v4.0 and delete list.json. After that, the merge version (docs/versions.md "After V4"): read-only look at the three old DBs, merge script + dry run on lan_vm1 (tools exist: `make migrate-merge`), owner's A/B choice on erasing, announced window with maintenance on, and the old sites end on a redirect to the new main page (never maintenance-off). Note: on the production VM, run make targets with PATH=/opt/node20/bin:$PATH (default node is 18).
+**State:** V4 with the owner-test fixes is deployed to production (see `docs/release.md`, "Owner-test fixes"). The owner is testing the live site.
+
+**Next action:**
+1. When the owner confirms production: `git tag v4.0 && git push --tags`; mark the last box in `docs/release.md`.
+2. Merge of the three old sites' databases — planned only (docs/versions.md). Wait for the owner's go. Open question to the owner: erase A) all new-site data, B) only test data, C) only local data.
+   Old sites end on a redirect page to the new app, never maintenance-off.
+
+**Notes:**
+- `make send` ships the last commit: commit before any VM test.
+- Content is loaded at server start: restart the local server (`make kill && make run`) after content edits.

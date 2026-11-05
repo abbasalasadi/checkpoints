@@ -20,3 +20,13 @@ No deploy until the owner has tested locally (D20).
 - [x] Owner tested locally (D20), 2026-11-04
 - [x] Deployed 2026-11-04 (owner approved) · [ ] owner tests the live site · [ ] tag `v4.0`
 - [ ] Cleanup: delete the temporary `list.json` (owner reference only, never committed)
+
+## Owner-test fixes (2026-11-05)
+- [x] Go Format on Cloud Run deploys (local Go image built in cloudrun mode)
+- [x] Java starters = README templates exactly; solutions fill only the method bodies; gate on the Cloud Run image 0 bad
+- [x] Exams: blank start, no "Restore starting stub", output cleared on level change, refresh stays on the current level, Back/Forward locked
+- [x] Delete (icon) for history (per exercise and per entry), solutions and exam reports; icon-only Open/Export
+- [x] Progress popup (no red Stop) after 5 s; Sign out only in the title bar; `make kill`
+- [x] Cleanup: list.json deleted (numbers kept in content/*/sources/weights.json); tsbuildinfo untracked
+- Tests on lan_vm1 at the release commit: server 52/52, web 148/148
+- [ ] Owner tests production, then tag v4.0
