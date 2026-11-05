@@ -1,12 +1,9 @@
 # Handoff — 2026-11-05
 
-**State:** V4 with the owner-test fixes is deployed to production (see `docs/release.md`, "Owner-test fixes"). The owner is testing the live site.
+V4 deployed and tagged v4.0. DB sync prepared, waiting for the owner's go.
 
-**Next action:**
-1. When the owner confirms production: `git tag v4.0 && git push --tags`; mark the last box in `docs/release.md`.
-2. Merge of the three old sites' databases — planned only (docs/versions.md). Wait for the owner's go. Open question to the owner: erase A) all new-site data, B) only test data, C) only local data.
-   Old sites end on a redirect page to the new app, never maintenance-off.
-
-**Notes:**
-- `make send` ships the last commit: commit before any VM test.
-- Content is loaded at server start: restart the local server (`make kill && make run`) after content edits.
+Sequence (owner-approved order, option A: V4 data is dev testing, erased):
+1. `make legacy-maintenance-on` (the three old sites → 503 maintenance; no off, ever). Check no active exam; `make maintenance-on` for the new site during the swap.
+2. Final read-only copies of /opt/go-checkpoints/var/db/app.db, ~/js-checkpoints/var/db/app.db, ~/rust-checkpoints/var/db/app.db; `make backup`; `make migrate-merge` into a fresh DB; check counts; stop checkpoints, swap var/db/app.db, start, `make maintenance-off`; owner tests.
+3. `make legacy-redirect` (old vhosts → static "moved" page linking to https://checkpoint.appsyss.com/; old confs kept as *.conf.old). Deploys keep LEGACY_REDIRECT=0.
+Later: owner sets DNS redirect, then remove old apps from the VM (owner approval).

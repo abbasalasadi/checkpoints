@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := help
-.PHONY: help parity secrets-push secrets-pull setup run kill dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off
+.PHONY: help parity secrets-push secrets-pull setup run kill dev test build migrate-merge backup deploy-check deploy deploy-light nginx-setup runner-images images maintenance-on maintenance-off legacy-maintenance-on legacy-redirect
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-14s %s\n", $$1, $$2}'
@@ -75,3 +75,9 @@ maintenance-on: ## DEPLOY: show the maintenance page
 
 maintenance-off: ## DEPLOY: hide the maintenance page
 	@bash scripts/deploy/maintenance-off.sh
+
+legacy-maintenance-on: ## DEPLOY: old go-/js-/rust- sites to maintenance (no off)
+	@bash scripts/deploy/legacy-maintenance-on.sh
+
+legacy-redirect: ## DEPLOY: old sites show a "moved" page linking to the dashboard
+	@bash scripts/deploy/legacy-redirect.sh
