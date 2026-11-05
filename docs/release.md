@@ -29,4 +29,4 @@ No deploy until the owner has tested locally (D20).
 - [x] Progress popup (no red Stop) after 5 s; Sign out only in the title bar; `make kill`
 - [x] Cleanup: list.json deleted (numbers kept in content/*/sources/weights.json); tsbuildinfo untracked
 - Tests on lan_vm1 at the release commit: server 52/52, web 148/148
-- [ ] Owner tests production, then tag v4.0
+- [x] Owner tested production; tagged v4.0 (2026-11-05)
