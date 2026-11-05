@@ -60,3 +60,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-05 DB sync step 3 done: make legacy-redirect; go/js/rust-checkpoints serve the moved page (200, any path → link to dashboard). Old services still running. Next: owner DNS redirect, then sleep/delete decision.
 - 2026-11-05 Old apps asleep: go/js/rust-checkpoints services stopped + disabled (files and DBs kept on disk); nginx serves only the static moved page. New site healthy. Delete in ~2 weeks with owner approval (archive DBs off-VM first, remove certs too).
 - 2026-11-05 Project done per owner. Strategy doc sent to manager: https://claude.ai/artifact/GygjwZPT2qne7L5CF31w6A. DNS forwarding live (Squarespace); stale Cloud DNS records removed by owner.
+- 2026-11-05 lan_vm1 released at manager request: all checkpoints runner images removed (rebuildable), clean-task clean, [RELEASE] sent.
