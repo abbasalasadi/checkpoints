@@ -1082,7 +1082,9 @@ function UserProfile({
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "1.1rem",
+          gap: "1.3rem",
+          padding: "1.6rem 1.75rem 1.75rem",
+          boxSizing: "border-box",
           maxHeight: "82vh",
         }}
       >
