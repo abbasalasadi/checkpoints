@@ -73,3 +73,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-10 V5 D46 student summary popup redesign: web tsc clean, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
 - 2026-11-10 V5 D47 server charts two per row + response delay chart: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
 - 2026-11-10 V5 D48 server history ranges (var/metrics, 31 days): tsc clean, server 57/57, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Deploy note: var/metrics is created by the app; nothing to add to runtime.env.
+- 2026-11-10 02:34Z V5 deployed (light) with the owner's go: backup app-20261110T023317Z (4.8 MB) first, maintenance on/off by deploy-light, ADMIN_USERNAMES=abbhasan in runtime.env, healthz 200, admin API 404 without login, no warnings in the journal. 4 students online and 2 mock exams were running at the time (owner chose to deploy before the morning rush).
