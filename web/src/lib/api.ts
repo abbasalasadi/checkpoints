@@ -38,6 +38,7 @@ export interface AdminOverview {
     topExercises: { language: Language; slug: string; attempts: number; passes: number }[];
     exams: { started: number; active: number; finished: number; expired: number; abandoned: number };
   };
+  online: { username: string; lastSeenAt: string; language: Language | null; slug: string | null; inExam: boolean }[];
   performance: {
     languages: { language: Language; runs: number; submits: number; medianMs: number | null; p95Ms: number | null; systemFailureRate: number }[];
     busiestHours: number[];

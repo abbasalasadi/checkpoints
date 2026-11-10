@@ -60,32 +60,58 @@ function Legend({ items }: { items: { color: string; label: string }[] }) {
   );
 }
 
-/** Stacked bars: runs and submits per day. */
+/** A round axis maximum (1, 2, 5 x 10^n) at or above n. */
+function niceMax(n: number): number {
+  if (n <= 5) return 5;
+  const p = 10 ** Math.floor(Math.log10(n));
+  for (const m of [1, 2, 5, 10]) if (m * p >= n) return m * p;
+  return 10 * p;
+}
+
+const shortDay = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+
+/** Stacked bars, runs and submits per day, with a count axis and a date axis. */
 function DailyChart({ days }: { days: AdminOverview['usage']['days'] }) {
-  const max = Math.max(1, ...days.map((d) => d.runs + d.submits));
-  const w = 100 / days.length;
+  const top = niceMax(Math.max(0, ...days.map((d) => d.runs + d.submits)));
+  const ticks = [top, (top * 3) / 4, top / 2, top / 4, 0];
+  // Label every day for a week; for 30 days, about six labels.
+  const every = days.length <= 8 ? 1 : Math.ceil(days.length / 6);
+  const H = 170;
   return (
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" width="100%" height="160" role="img" aria-label="Runs and submits per day">
-      <defs>
-        <linearGradient id="adm-sub" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--success)" />
-          <stop offset="100%" stopColor="var(--accent)" />
-        </linearGradient>
-      </defs>
-      {days.map((d, i) => {
-        const hs = (d.submits / max) * 38;
-        const hr = (d.runs / max) * 38;
-        const x = i * w + w * 0.15;
-        const bw = w * 0.7;
-        return (
-          <g key={d.day}>
-            <title>{`${d.day}: ${d.runs} runs, ${d.submits} submits`}</title>
-            <rect x={x} y={40 - hs} width={bw} height={hs} rx={0.6} fill="url(#adm-sub)" />
-            <rect x={x} y={40 - hs - hr} width={bw} height={hr} rx={0.6} fill="var(--border-strong)" />
-          </g>
-        );
-      })}
-    </svg>
+    <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gridTemplateRows: `${H}px auto auto`, columnGap: '.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-end', ...muted, fontSize: '.72rem', ...num, transform: 'translateY(-.45em)', height: H }}>
+        {ticks.map((t) => (
+          <span key={t} style={{ lineHeight: 1 }}>{fmtInt(Math.round(t))}</span>
+        ))}
+      </div>
+      <div style={{ position: 'relative', height: H, borderLeft: '1px solid var(--border-strong)', borderBottom: '1px solid var(--border-strong)' }}>
+        {ticks.slice(0, -1).map((t) => (
+          <div key={t} style={{ position: 'absolute', left: 0, right: 0, top: `${(1 - t / top) * 100}%`, borderTop: '1px dashed var(--border)' }} />
+        ))}
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-end', gap: days.length > 14 ? 2 : 6, padding: '0 4px' }}>
+          {days.map((d) => (
+            <div
+              key={d.day}
+              title={`${shortDay(d.day)}: ${fmtInt(d.runs)} runs, ${fmtInt(d.submits)} submits`}
+              style={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', minWidth: 0 }}
+            >
+              <div style={{ height: `${(d.runs / top) * 100}%`, background: 'var(--border-strong)', borderRadius: '3px 3px 0 0' }} />
+              <div style={{ height: `${(d.submits / top) * 100}%`, background: 'linear-gradient(180deg, var(--success), var(--accent))', borderRadius: d.runs ? 0 : '3px 3px 0 0' }} />
+            </div>
+          ))}
+        </div>
+      </div>
+      <span />
+      <div style={{ display: 'flex', gap: days.length > 14 ? 2 : 6, padding: '0 4px', marginTop: '.35rem' }}>
+        {days.map((d, i) => (
+          <span key={d.day} style={{ flex: 1, minWidth: 0, textAlign: 'center', ...muted, fontSize: '.7rem', whiteSpace: 'nowrap', overflow: 'visible' }}>
+            {i % every === 0 ? shortDay(d.day) : ''}
+          </span>
+        ))}
+      </div>
+      <span />
+      <span style={{ ...muted, fontSize: '.72rem', textAlign: 'center', marginTop: '.2rem' }}>Day (UTC)</span>
+    </div>
   );
 }
 
@@ -153,12 +179,14 @@ function LanguageTable({ rows }: { rows: AdminOverview['performance']['languages
   );
 }
 
-function TopExercises({ rows }: { rows: AdminOverview['usage']['topExercises'] }) {
+const TOP = 10;
+
+function TopExercises({ rows, all }: { rows: AdminOverview['usage']['topExercises']; all: boolean }) {
   const max = Math.max(1, ...rows.map((r) => r.attempts));
   if (!rows.length) return <p style={{ ...muted, margin: 0 }}>No activity in this range.</p>;
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
-      {rows.map((r) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem', ...(all ? { maxHeight: '26rem', overflowY: 'auto', paddingRight: '.3rem' } : {}) }}>
+      {(all ? rows : rows.slice(0, TOP)).map((r) => (
         <div key={`${r.language}/${r.slug}`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto', gap: '.2rem .7rem', fontSize: '.82rem' }}>
           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             <span style={{ color: 'var(--text-dim)' }}>{LANGUAGE_LABEL[r.language]} · </span>
@@ -170,6 +198,26 @@ function TopExercises({ rows }: { rows: AdminOverview['usage']['topExercises'] }
           <div style={{ gridColumn: '1 / -1', height: 6, background: 'var(--raised)', borderRadius: 6, overflow: 'hidden' }}>
             <div style={{ width: `${(r.attempts / max) * 100}%`, height: '100%', background: LANG_COLOR[r.language], borderRadius: 6 }} />
           </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OnlineNow({ rows }: { rows: AdminOverview['online'] }) {
+  if (!rows.length) return <p style={{ ...muted, margin: 0 }}>Nobody is online right now.</p>;
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
+      {rows.map((o) => (
+        <div
+          key={o.username}
+          style={{ display: 'flex', alignItems: 'center', gap: '.55rem', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '.4rem .7rem', fontSize: '.82rem', minWidth: 0 }}
+        >
+          <span style={{ width: 8, height: 8, borderRadius: 8, background: 'var(--success)', boxShadow: '0 0 6px var(--success)', flex: 'none' }} />
+          <strong style={{ fontWeight: 600 }}>{o.username}</strong>
+          <span style={{ color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {o.inExam ? 'in a mock exam' : o.language && o.slug ? `${LANGUAGE_LABEL[o.language]} · ${o.slug}` : 'browsing'} · {ago(o.lastSeenAt)}
+          </span>
         </div>
       ))}
     </div>
@@ -206,6 +254,7 @@ export function Admin() {
   const [range, setRange] = useState<AdminRange>('7d');
   const [data, setData] = useState<AdminOverview | null>(null);
   const [error, setError] = useState(false);
+  const [allExercises, setAllExercises] = useState(false);
 
   useEffect(() => {
     let live = true;
@@ -256,6 +305,14 @@ export function Admin() {
           )}
         </section>
 
+        <section style={card} aria-label="Online now">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '1rem' }}>
+            <h2 style={h2}>Online now{data ? ` (${data.online.length})` : ''}</h2>
+            <span style={muted}>Active in the last 5 minutes</span>
+          </div>
+          {data ? <OnlineNow rows={data.online} /> : <Skeleton height="2.4rem" />}
+        </section>
+
         <section style={card} aria-label="Runs and submits per day">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '1rem', flexWrap: 'wrap' }}>
             <h2 style={h2}>Runs and submits per day</h2>
@@ -272,8 +329,15 @@ export function Admin() {
 
         <div style={grid(320)}>
           <section style={card} aria-label="Most used exercises">
-            <h2 style={h2}>Most used exercises</h2>
-            {u ? <TopExercises rows={u.topExercises} /> : <Skeleton height="12rem" />}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <h2 style={h2}>Most used exercises{u && allExercises ? ` (${u.topExercises.length})` : ''}</h2>
+              {u && u.topExercises.length > TOP && (
+                <button type="button" onClick={() => setAllExercises((v) => !v)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-text)', font: 'inherit', fontSize: '.84rem', cursor: 'pointer', padding: 0 }}>
+                  {allExercises ? 'Show top 10' : `See all ${u.topExercises.length} →`}
+                </button>
+              )}
+            </div>
+            {u ? <TopExercises rows={u.topExercises} all={allExercises} /> : <Skeleton height="12rem" />}
           </section>
           <section style={card} aria-label="Busiest hours">
             <h2 style={h2}>Busiest hours</h2>

@@ -12,7 +12,7 @@ Approved by the owner 2026-11-10.
 2. **Performance:** run and submit time per language (median and 95th percentile); share of system failures (timeout, runner error) versus wrong answers; busiest hours.
 3. **Server health:** uptime, process memory, database size, time of the last backup.
 
-Totals and charts only: no student code, no per-student list.
+Totals and charts, no student code. One list of names (D40): **Online now**, the usernames with a valid session used in the last 5 minutes, with the exercise last run in the last 30 minutes (or "in a mock exam").
 
 ## Data
 From existing tables only, no migration: `attempts` (language, slug, kind, outcome, duration_ms, created_at, exam_id), `users` (created_at, last_login_at), `sessions` (last_seen_at), `exams`. Computed on read in `services/admin.ts`; one route `GET /api/admin/overview?range=`.

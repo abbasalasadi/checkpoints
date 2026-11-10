@@ -528,9 +528,12 @@ test('admin overview: admins see totals, everyone else gets 404', async () => {
   assert.ok(r.json.usage.students >= 2);
   assert.equal(r.json.performance.languages.length, 4);
   assert.equal(r.json.performance.busiestHours.length, 24);
-  // Totals only (D37): no code or per-student rows anywhere in the answer.
-  const text = JSON.stringify(r.json);
-  assert.ok(!text.includes('files_json') && !text.includes('fake_student_v5'));
+  // No student code (D37); the only names are who is online now (D40).
+  assert.ok(!JSON.stringify(r.json).includes('files_json'));
+  const online = r.json.online.map((o: { username: string }) => o.username);
+  assert.ok(online.includes('fake_admin') && online.includes('fake_student_v5'));
+  const rest = JSON.stringify({ ...r.json, online: [] });
+  assert.ok(!rest.includes('fake_student_v5'));
   assert.equal((await call('/api/admin/overview?range=bogus', { cookie: admin })).json.range, '7d');
 });
 

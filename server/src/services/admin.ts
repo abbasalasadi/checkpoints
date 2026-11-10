@@ -3,7 +3,8 @@
  *
  * Read-only by construction: every query runs on a separate connection opened
  * with `readonly: true`, so nothing here can write, even by mistake. Totals
- * only: no student code, no per-student rows (D37).
+ * and charts, no student code (D37); the one list of names is who is online
+ * now (D40, owner 2026-11-10).
  */
 import Database from 'better-sqlite3';
 import { existsSync, readdirSync, statSync } from 'node:fs';
@@ -47,6 +48,9 @@ export function rangeStart(range: Range, now = new Date()): string {
 
 const percentile = (sorted: number[], p: number): number | null =>
   sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor((p / 100) * sorted.length))]! : null;
+
+/** Online = a valid session the browser used in the last ONLINE_MINUTES. */
+export const ONLINE_MINUTES = 5;
 
 /** Outcomes that mean the system failed, not the student's answer. */
 const SYSTEM_FAILURES = ['timeout', 'error'];
@@ -124,9 +128,30 @@ export function overview(range: Range, db = readOnlyDb(), now = new Date()) {
   const topExercises = db
     .prepare(
       `SELECT language, exercise_slug slug, COUNT(*) attempts, SUM(outcome = 'passed' AND kind = 'test') passes
-         FROM attempts WHERE created_at >= ? GROUP BY language, exercise_slug ORDER BY attempts DESC LIMIT 10`,
+         FROM attempts WHERE created_at >= ? GROUP BY language, exercise_slug ORDER BY attempts DESC, slug`,
     )
     .all(since) as { language: string; slug: string; attempts: number; passes: number }[];
+
+  const nowIso = now.toISOString();
+  const onlineSince = new Date(now.getTime() - ONLINE_MINUTES * 60_000).toISOString();
+  const recentSince = new Date(now.getTime() - 30 * 60_000).toISOString();
+  const online = db
+    .prepare(
+      `SELECT u.identifier_normalized username, MAX(s.last_seen_at) lastSeenAt,
+              (SELECT a.language FROM attempts a WHERE a.user_id = u.id AND a.created_at >= ? ORDER BY a.created_at DESC LIMIT 1) language,
+              (SELECT a.exercise_slug FROM attempts a WHERE a.user_id = u.id AND a.created_at >= ? ORDER BY a.created_at DESC LIMIT 1) slug,
+              (SELECT COUNT(*) FROM exams e WHERE e.user_id = u.id AND e.status = 'active') inExam
+         FROM sessions s JOIN users u ON u.id = s.user_id
+        WHERE s.last_seen_at >= ? AND s.revoked_at IS NULL AND s.expires_at > ?
+        GROUP BY u.id ORDER BY lastSeenAt DESC`,
+    )
+    .all(recentSince, recentSince, onlineSince, nowIso) as {
+    username: string;
+    lastSeenAt: string;
+    language: string | null;
+    slug: string | null;
+    inExam: number;
+  }[];
 
   const examRows = db
     .prepare(`SELECT status, COUNT(*) n FROM exams WHERE started_at >= ? GROUP BY status`)
@@ -159,6 +184,7 @@ export function overview(range: Range, db = readOnlyDb(), now = new Date()) {
       topExercises,
       exams,
     },
+    online: online.map((o) => ({ ...o, inExam: o.inExam > 0 })),
     performance: { languages, busiestHours: perHour },
     server: {
       uptimeSeconds: Math.round(process.uptime()),
