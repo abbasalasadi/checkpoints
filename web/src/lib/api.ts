@@ -46,6 +46,23 @@ export interface AdminOverview {
   server: { uptimeSeconds: number; memoryMb: number; dbSizeBytes: number; lastBackupAt: string | null };
 }
 
+export interface AdminUserRow {
+  username: string;
+  joinedAt: string;
+  lastActiveAt: string | null;
+  submits: number;
+  submitsPassed: number;
+  exercisesPassed: number;
+  exams: number;
+}
+export interface AdminUserProfile {
+  username: string;
+  joinedAt: string;
+  lastActiveAt: string | null;
+  tracks: { language: Language; total: number; passed: number; progress: number; runs: number; submits: number; submitsPassed: number; lastAt: string | null }[];
+  exams: { language: Language; checkpoint: string; minutes: number; startedAt: string; endedAt: string | null; status: string; levels: number; levelsPassed: number; mark: number | null; maxMark: number | null }[];
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
     ...init,
@@ -323,6 +340,8 @@ export const api = {
       body: JSON.stringify(patch),
     }),
   me: () => request<{ identifier?: string; login?: string; isAdmin?: boolean }>('/api/auth/me'),
+  adminUsers: () => request<{ users: AdminUserRow[] }>('/api/admin/users'),
+  adminUser: (username: string) => request<AdminUserProfile>(`/api/admin/users/${encodeURIComponent(username)}`),
   adminOverview: (range: AdminRange) => request<AdminOverview>(`/api/admin/overview?range=${range}`),
   login: (identifier: string, password: string) =>
     request<{ identifier?: string; login?: string }>('/api/auth/login', {

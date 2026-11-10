@@ -3,14 +3,16 @@
  *
  * Read-only by construction: every query runs on a separate connection opened
  * with `readonly: true`, so nothing here can write, even by mistake. Totals
- * and charts, no student code (D37); the one list of names is who is online
- * now (D40, owner 2026-11-10).
+ * and charts, no student code (D37); names appear only in who is online now
+ * (D40) and in the user summaries of submissions and exams (D41).
  */
 import Database from 'better-sqlite3';
 import { existsSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { config } from '../config/index.js';
-import { LANGUAGES } from '../languages.js';
+import { LANGUAGES, type Language } from '../languages.js';
+import { listExercises } from './exercises.js';
+import { examMark, examMaxMark, requiredWeight, trackProgress } from './marks.js';
 
 export type Range = 'today' | '7d' | '30d';
 export const RANGES: Range[] = ['today', '7d', '30d'];
@@ -193,4 +195,103 @@ export function overview(range: Range, db = readOnlyDb(), now = new Date()) {
       lastBackupAt: lastBackup(),
     },
   };
+}
+
+// ── user summaries (D41): submissions and exam results, no code ──────────────
+
+export interface UserRow {
+  username: string;
+  joinedAt: string;
+  lastActiveAt: string | null;
+  submits: number;
+  submitsPassed: number;
+  exercisesPassed: number;
+  exams: number;
+}
+
+/** Every student, one row each: submissions and exams in summary. */
+export function userList(db = readOnlyDb()): UserRow[] {
+  return db
+    .prepare(
+      `SELECT u.identifier_normalized username, u.created_at joinedAt,
+              MAX(COALESCE((SELECT MAX(created_at) FROM attempts WHERE user_id = u.id), ''),
+                  COALESCE((SELECT MAX(last_seen_at) FROM sessions WHERE user_id = u.id), ''),
+                  COALESCE(u.last_login_at, '')) lastActiveAt,
+              (SELECT COUNT(*) FROM attempts WHERE user_id = u.id AND kind = 'test') submits,
+              (SELECT COUNT(*) FROM attempts WHERE user_id = u.id AND kind = 'test' AND outcome = 'passed') submitsPassed,
+              (SELECT COUNT(*) FROM progress WHERE user_id = u.id AND status = 'passed') exercisesPassed,
+              (SELECT COUNT(*) FROM exams WHERE user_id = u.id AND status != 'active') exams
+         FROM users u ORDER BY lastActiveAt DESC`,
+    )
+    .all()
+    .map((r) => {
+      const row = r as UserRow;
+      return { ...row, lastActiveAt: row.lastActiveAt || null };
+    });
+}
+
+/** One student's summary per language and exam results; undefined if unknown. */
+export function userProfile(username: string, db = readOnlyDb()) {
+  const u = db.prepare('SELECT id, identifier_normalized username, created_at FROM users WHERE identifier_normalized = ?').get(username.trim().toLowerCase()) as
+    | { id: number; username: string; created_at: string }
+    | undefined;
+  if (!u) return undefined;
+  const summary = userList(db).find((r) => r.username === u.username)!;
+
+  const tracks = LANGUAGES.map((language: Language) => {
+    const known = listExercises(language).map((e) => e.slug);
+    const knownSet = new Set(known);
+    const passed = new Set(
+      (db.prepare(`SELECT exercise_slug s FROM progress WHERE user_id = ? AND language = ? AND status = 'passed'`).all(u.id, language) as { s: string }[])
+        .map((r) => r.s)
+        .filter((s) => knownSet.has(s)),
+    );
+    const c = db
+      .prepare(
+        `SELECT SUM(kind = 'run') runs, SUM(kind = 'test') submits, SUM(kind = 'test' AND outcome = 'passed') submitsPassed, MAX(created_at) lastAt
+           FROM attempts WHERE user_id = ? AND language = ?`,
+      )
+      .get(u.id, language) as { runs: number | null; submits: number | null; submitsPassed: number | null; lastAt: string | null };
+    return {
+      language,
+      total: known.length,
+      passed: passed.size,
+      progress: trackProgress(language, known, passed),
+      runs: c.runs ?? 0,
+      submits: c.submits ?? 0,
+      submitsPassed: c.submitsPassed ?? 0,
+      lastAt: c.lastAt,
+    };
+  });
+
+  const exams = (
+    db.prepare(`SELECT id, language, checkpoint, minutes, started_at, ended_at, status FROM exams WHERE user_id = ? ORDER BY started_at DESC`).all(u.id) as {
+      id: number;
+      language: Language;
+      checkpoint: string;
+      minutes: number;
+      started_at: string;
+      ended_at: string | null;
+      status: string;
+    }[]
+  ).map((e) => {
+    const items = (db.prepare('SELECT exercise_slug slug, passed_at FROM exam_items WHERE exam_id = ? ORDER BY level').all(e.id) as { slug: string; passed_at: string | null }[]).map(
+      (i) => ({ slug: i.slug, passed: i.passed_at !== null }),
+    );
+    const graded = requiredWeight(e.language, e.checkpoint) > 0;
+    return {
+      language: e.language,
+      checkpoint: e.checkpoint,
+      minutes: e.minutes,
+      startedAt: e.started_at,
+      endedAt: e.ended_at,
+      status: e.status,
+      levels: items.length,
+      levelsPassed: items.filter((i) => i.passed).length,
+      mark: graded ? examMark(e.language, e.checkpoint, items) : null,
+      maxMark: graded ? examMaxMark(e.language, e.checkpoint, items.map((i) => i.slug)) : null,
+    };
+  });
+
+  return { username: u.username, joinedAt: u.created_at, lastActiveAt: summary.lastActiveAt, tracks, exams };
 }

@@ -537,6 +537,22 @@ test('admin overview: admins see totals, everyone else gets 404', async () => {
   assert.equal((await call('/api/admin/overview?range=bogus', { cookie: admin })).json.range, '7d');
 });
 
+test('admin user summaries: list and profile for admins, 404 for others (D41)', async () => {
+  const admin = await devLogin('fake_admin');
+  const student = await devLogin('fake_student_v5');
+  assert.equal((await call('/api/admin/users', { cookie: student })).status, 404);
+  assert.equal((await call('/api/admin/users/fake_admin', { cookie: student })).status, 404);
+  const list = await call('/api/admin/users', { cookie: admin });
+  assert.equal(list.status, 200);
+  assert.ok(list.json.users.some((u: { username: string }) => u.username === 'fake_student_v5'));
+  const p = await call('/api/admin/users/fake_student_v5', { cookie: admin });
+  assert.equal(p.status, 200);
+  assert.equal(p.json.tracks.length, 4);
+  assert.ok(Array.isArray(p.json.exams));
+  assert.ok(!JSON.stringify(p.json).includes('files_json'));
+  assert.equal((await call('/api/admin/users/nobody_here', { cookie: admin })).status, 404);
+});
+
 test('admin connection is read-only: a write is refused (D39)', () => {
   assert.throws(() => readOnlyDb().prepare('DELETE FROM users').run(), /readonly/i);
   assert.ok((getDb().prepare('SELECT COUNT(*) n FROM users').get() as { n: number }).n > 0);

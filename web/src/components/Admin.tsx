@@ -1,12 +1,15 @@
 /**
  * Admin view (V5, D36-D39): the application's usage and performance, for admin
- * accounts only. Read-only; totals and charts, no student code or names. Same
- * cards, colours and spacing as the dashboard (D38).
+ * accounts only. Read-only; no student code. Names only in Online now (D40)
+ * and the user summaries (D41). Same cards, colours and spacing as the
+ * dashboard (D38).
  */
 import { useEffect, useState } from 'react';
-import { api, type AdminOverview, type AdminRange, type Language } from '../lib/api.js';
+import { api, type AdminOverview, type AdminRange, type AdminUserProfile, type AdminUserRow, type Language } from '../lib/api.js';
 import { LANGUAGE_LABEL, ago } from '../lib/format.js';
 import { logger } from '../logger.js';
+import { MarkRing, fmtPercent } from './MarkRing.js';
+import { Modal } from './Modal.js';
 import { Skeleton } from './Skeleton.js';
 
 const card: React.CSSProperties = {
@@ -204,7 +207,7 @@ function TopExercises({ rows, all }: { rows: AdminOverview['usage']['topExercise
   );
 }
 
-function OnlineNow({ rows }: { rows: AdminOverview['online'] }) {
+function OnlineNow({ rows, onOpen }: { rows: AdminOverview['online']; onOpen: (username: string) => void }) {
   if (!rows.length) return <p style={{ ...muted, margin: 0 }}>Nobody is online right now.</p>;
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
@@ -214,13 +217,222 @@ function OnlineNow({ rows }: { rows: AdminOverview['online'] }) {
           style={{ display: 'flex', alignItems: 'center', gap: '.55rem', background: 'var(--raised)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '.4rem .7rem', fontSize: '.82rem', minWidth: 0 }}
         >
           <span style={{ width: 8, height: 8, borderRadius: 8, background: 'var(--success)', boxShadow: '0 0 6px var(--success)', flex: 'none' }} />
-          <strong style={{ fontWeight: 600 }}>{o.username}</strong>
+          <button type="button" onClick={() => onOpen(o.username)} title={`Open ${o.username}`} style={{ background: 'transparent', border: 'none', color: 'var(--accent-text)', font: 'inherit', fontWeight: 600, cursor: 'pointer', padding: 0 }}>
+            {o.username}
+          </button>
           <span style={{ color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {o.inExam ? 'in a mock exam' : o.language && o.slug ? `${LANGUAGE_LABEL[o.language]} · ${o.slug}` : 'browsing'} · {ago(o.lastSeenAt)}
           </span>
         </div>
       ))}
     </div>
+  );
+}
+
+type SortKey = 'username' | 'lastActiveAt' | 'submits' | 'passRate' | 'exercisesPassed' | 'exams';
+const SORTS: { key: SortKey; label: string; numeric: boolean }[] = [
+  { key: 'username', label: 'Student', numeric: false },
+  { key: 'lastActiveAt', label: 'Last active', numeric: true },
+  { key: 'submits', label: 'Submits', numeric: true },
+  { key: 'passRate', label: 'Pass rate', numeric: true },
+  { key: 'exercisesPassed', label: 'Exercises passed', numeric: true },
+  { key: 'exams', label: 'Exams', numeric: true },
+];
+const passRate = (u: AdminUserRow) => (u.submits ? u.submitsPassed / u.submits : 0);
+const USERS_PAGE = 25;
+
+/** Every student in summary: submissions and exams (D41). */
+function Users({ onOpen }: { onOpen: (username: string) => void }) {
+  const [rows, setRows] = useState<AdminUserRow[] | null>(null);
+  const [q, setQ] = useState('');
+  const [sort, setSort] = useState<{ key: SortKey; desc: boolean }>({ key: 'lastActiveAt', desc: true });
+  const [shown, setShown] = useState(USERS_PAGE);
+  useEffect(() => {
+    api
+      .adminUsers()
+      .then((r) => setRows(r.users))
+      .catch((err) => {
+        logger.warn('admin.users_failed', { error: String(err) });
+        setRows([]);
+      });
+  }, []);
+  if (!rows) return <Skeleton height="14rem" />;
+  const value = (u: AdminUserRow, k: SortKey): string | number => (k === 'passRate' ? passRate(u) : k === 'lastActiveAt' ? (u.lastActiveAt ?? '') : u[k]);
+  const filtered = rows
+    .filter((u) => u.username.includes(q.trim().toLowerCase()))
+    .sort((a, b) => {
+      const x = value(a, sort.key);
+      const y = value(b, sort.key);
+      const c = x < y ? -1 : x > y ? 1 : 0;
+      return sort.desc ? -c : c;
+    });
+  const th: React.CSSProperties = { fontWeight: 500, color: 'var(--text-muted)', padding: '.35rem .5rem', whiteSpace: 'nowrap', textAlign: 'right' };
+  const td: React.CSSProperties = { ...num, textAlign: 'right', padding: '.45rem .5rem', borderTop: '1px solid var(--border)', whiteSpace: 'nowrap' };
+  return (
+    <>
+      <input
+        type="search"
+        placeholder="Search by username"
+        aria-label="Search by username"
+        value={q}
+        onChange={(e) => {
+          setQ(e.target.value);
+          setShown(USERS_PAGE);
+        }}
+        style={{ background: 'var(--raised)', color: 'var(--text)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)', padding: '.4rem .65rem', font: 'inherit', fontSize: '.84rem', maxWidth: 320 }}
+      />
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.84rem' }}>
+          <thead>
+            <tr>
+              {SORTS.map((c) => (
+                <th key={c.key} style={{ ...th, textAlign: c.numeric ? 'right' : 'left' }} aria-sort={sort.key === c.key ? (sort.desc ? 'descending' : 'ascending') : 'none'}>
+                  <button
+                    type="button"
+                    onClick={() => setSort((s) => ({ key: c.key, desc: s.key === c.key ? !s.desc : c.numeric }))}
+                    style={{ background: 'transparent', border: 'none', color: sort.key === c.key ? 'var(--text)' : 'inherit', font: 'inherit', cursor: 'pointer', padding: 0 }}
+                  >
+                    {c.label}
+                    {sort.key === c.key ? (sort.desc ? ' ↓' : ' ↑') : ''}
+                  </button>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.slice(0, shown).map((u) => (
+              <tr key={u.username} onClick={() => onOpen(u.username)} style={{ cursor: 'pointer' }} title={`Open ${u.username}`}>
+                <td style={{ ...td, textAlign: 'left' }}>
+                  <button type="button" onClick={(e) => (e.stopPropagation(), onOpen(u.username))} style={{ background: 'transparent', border: 'none', color: 'var(--accent-text)', font: 'inherit', cursor: 'pointer', padding: 0 }}>
+                    {u.username}
+                  </button>
+                </td>
+                <td style={{ ...td, color: 'var(--text-muted)' }}>{u.lastActiveAt ? ago(u.lastActiveAt) : '—'}</td>
+                <td style={td}>{fmtInt(u.submits)}</td>
+                <td style={td}>{u.submits ? fmtPct(passRate(u)) : '—'}</td>
+                <td style={td}>{fmtInt(u.exercisesPassed)}</td>
+                <td style={td}>{fmtInt(u.exams)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', ...muted }}>
+        <span>
+          {Math.min(shown, filtered.length)} of {filtered.length} students
+        </span>
+        {filtered.length > shown && (
+          <button type="button" onClick={() => setShown((n) => n + USERS_PAGE * 4)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-text)', font: 'inherit', fontSize: '.84rem', cursor: 'pointer', padding: 0 }}>
+            Show more →
+          </button>
+        )}
+      </div>
+    </>
+  );
+}
+
+const EXAM_STATUS: Record<string, string> = { finished: 'Finished', expired: 'Time ran out', abandoned: 'Left early', active: 'Running' };
+
+/** One student in summary: per-language results and exam results (D41). */
+function UserProfile({ username, onClose }: { username: string | null; onClose: () => void }) {
+  const [p, setP] = useState<AdminUserProfile | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    if (!username) return;
+    setP(null);
+    setFailed(false);
+    api
+      .adminUser(username)
+      .then(setP)
+      .catch(() => setFailed(true));
+  }, [username]);
+  const tracks = p?.tracks.filter((t) => t.submits || t.runs || t.passed) ?? [];
+  return (
+    <Modal open={username !== null} onClose={onClose} labelledBy="admin-user-title" width="44rem">
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div>
+          <h2 id="admin-user-title" style={{ margin: 0, fontSize: '1.15rem' }}>{username}</h2>
+          {p && (
+            <span style={muted}>
+              Joined {new Date(p.joinedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+              {p.lastActiveAt ? ` · last active ${ago(p.lastActiveAt)}` : ''}
+            </span>
+          )}
+        </div>
+        {failed && <p style={{ color: 'var(--danger)', margin: 0 }}>This profile could not load.</p>}
+        {!p && !failed && <Skeleton height="12rem" />}
+        {p && (
+          <>
+            <section aria-label="Exercises">
+              <h3 style={{ margin: '0 0 .6rem', fontSize: '.95rem' }}>Exercises</h3>
+              {tracks.length === 0 ? (
+                <p style={{ ...muted, margin: 0 }}>No submissions yet.</p>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '.7rem' }}>
+                  {tracks.map((t) => (
+                    <div key={t.language} style={{ ...card, flexDirection: 'row', alignItems: 'center', gap: '.8rem', padding: '.7rem .8rem', background: 'var(--raised)' }}>
+                      <MarkRing id={`adm-u-${t.language}`} size={64} label={fmtPercent(t.progress)} caption={`${LANGUAGE_LABEL[t.language]} progress`} rings={[{ value: t.progress, from: 'var(--accent)', to: 'var(--success)' }]} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem', fontSize: '.8rem', minWidth: 0 }}>
+                        <strong style={{ fontSize: '.9rem' }}>{LANGUAGE_LABEL[t.language]}</strong>
+                        <span style={num}>{t.passed} of {t.total} passed</span>
+                        <span style={{ ...num, color: 'var(--text-muted)' }}>
+                          {fmtInt(t.submits)} submits · {t.submits ? fmtPct(t.submitsPassed / t.submits) : '—'} passed
+                        </span>
+                        {t.lastAt && <span style={{ color: 'var(--text-dim)' }}>last {ago(t.lastAt)}</span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+            <section aria-label="Mock exams">
+              <h3 style={{ margin: '0 0 .6rem', fontSize: '.95rem' }}>Mock exams</h3>
+              {p.exams.length === 0 ? (
+                <p style={{ ...muted, margin: 0 }}>No mock exams yet.</p>
+              ) : (
+                <div style={{ overflowX: 'auto', maxHeight: '18rem', overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '.82rem' }}>
+                    <thead>
+                      <tr style={{ color: 'var(--text-muted)' }}>
+                        {['Date', 'Exam', 'Levels', 'Mark', 'Result'].map((h, i) => (
+                          <th key={h} style={{ fontWeight: 500, padding: '.3rem .5rem', textAlign: i === 0 || i === 1 ? 'left' : 'right', whiteSpace: 'nowrap' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {p.exams.map((e) => (
+                        <tr key={e.startedAt}>
+                          <td style={{ padding: '.4rem .5rem', borderTop: '1px solid var(--border)', whiteSpace: 'nowrap', color: 'var(--text-muted)' }}>
+                            {new Date(e.startedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                          </td>
+                          <td style={{ padding: '.4rem .5rem', borderTop: '1px solid var(--border)', whiteSpace: 'nowrap' }}>
+                            {LANGUAGE_LABEL[e.language]} · {e.checkpoint} <span style={{ color: 'var(--text-dim)' }}>({e.minutes} min)</span>
+                          </td>
+                          <td style={{ ...num, padding: '.4rem .5rem', borderTop: '1px solid var(--border)', textAlign: 'right' }}>
+                            {e.levelsPassed}/{e.levels}
+                          </td>
+                          <td style={{ ...num, padding: '.4rem .5rem', borderTop: '1px solid var(--border)', textAlign: 'right', fontWeight: 600 }}>
+                            {e.mark === null ? '—' : fmtPercent(e.mark)}
+                          </td>
+                          <td style={{ padding: '.4rem .5rem', borderTop: '1px solid var(--border)', textAlign: 'right', color: e.status === 'finished' ? 'var(--success)' : 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                            {EXAM_STATUS[e.status] ?? e.status}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </>
+        )}
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button type="button" onClick={onClose} style={{ background: 'transparent', color: 'var(--text)', border: '1px solid var(--border-strong)', borderRadius: 'var(--radius)', padding: '.4rem .9rem', font: 'inherit', fontSize: '.84rem', cursor: 'pointer' }}>
+            Close
+          </button>
+        </div>
+      </div>
+    </Modal>
   );
 }
 
@@ -255,6 +467,7 @@ export function Admin() {
   const [data, setData] = useState<AdminOverview | null>(null);
   const [error, setError] = useState(false);
   const [allExercises, setAllExercises] = useState(false);
+  const [profile, setProfile] = useState<string | null>(null);
 
   useEffect(() => {
     let live = true;
@@ -310,7 +523,7 @@ export function Admin() {
             <h2 style={h2}>Online now{data ? ` (${data.online.length})` : ''}</h2>
             <span style={muted}>Active in the last 5 minutes</span>
           </div>
-          {data ? <OnlineNow rows={data.online} /> : <Skeleton height="2.4rem" />}
+          {data ? <OnlineNow rows={data.online} onOpen={setProfile} /> : <Skeleton height="2.4rem" />}
         </section>
 
         <section style={card} aria-label="Runs and submits per day">
@@ -375,6 +588,12 @@ export function Admin() {
             )}
           </section>
         </div>
+        <section style={card} aria-label="Students">
+          <h2 style={h2}>Students</h2>
+          <span style={muted}>Submissions and mock exams per student, all time. Select a student to see their summary.</span>
+          <Users onOpen={setProfile} />
+        </section>
+        <UserProfile username={profile} onClose={() => setProfile(null)} />
       </div>
     </main>
   );

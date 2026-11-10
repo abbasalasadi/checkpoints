@@ -14,6 +14,8 @@ Approved by the owner 2026-11-10.
 
 Totals and charts, no student code. One list of names (D40): **Online now**, the usernames with a valid session used in the last 5 minutes, with the exercise last run in the last 30 minutes (or "in a mock exam").
 
+**Students (D41):** a searchable, sortable list of every student (last active, submits, pass rate, exercises passed, exams). Selecting one opens a summary: per language progress %, passed of total, submits and their pass rate; mock exams with date, checkpoint, levels passed, mark and result. Routes `GET /api/admin/users` and `GET /api/admin/users/:username`. No code.
+
 ## Data
 From existing tables only, no migration: `attempts` (language, slug, kind, outcome, duration_ms, created_at, exam_id), `users` (created_at, last_login_at), `sessions` (last_seen_at), `exams`. Computed on read in `services/admin.ts`; one route `GET /api/admin/overview?range=`.
 

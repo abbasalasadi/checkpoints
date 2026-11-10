@@ -9,6 +9,7 @@ No deploy until the owner has tested locally (D20).
 - D37 Totals and charts only: no student code, no per-student list.
 - D38 The admin page uses the dashboard's design.
 - D40 (owner, 2026-11-10) Admin page adds "Online now": usernames active in the last 5 minutes, with the exercise last run; this is the one list of names (amends D37). Day chart has axes; most used exercises has See all.
+- D41 (owner, 2026-11-10) Admin page adds Students: every student with submissions, pass rate, exercises passed and exams; a student's summary shows per-language progress and submissions, and mock exam results. No code.
 - D39 No database change in V5: no migration; admin reads use a read-only connection; backup before deploy.
 
 ## Steps
@@ -18,6 +19,7 @@ No deploy until the owner has tested locally (D20).
 4. [ ] Owner tests locally (D20)
 
 4b. [x] Owner-test changes (D40): chart axes, See all, Online now; lan_vm1 server 55/55, web 148/148 (1d135f4)
+4c. [ ] Students list and summary (D41); tests on lan_vm1
 
 ## Done when
 - [ ] All steps done, tests pass
