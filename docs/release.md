@@ -17,7 +17,7 @@ No deploy until the owner has tested locally (D20).
 3. [x] Tests on lan_vm1: server 55/55, web 148/148, tsc clean (2213ba5)
 4. [ ] Owner tests locally (D20)
 
-4b. [ ] Owner-test changes (D40): chart axes, See all, Online now; tests on lan_vm1
+4b. [x] Owner-test changes (D40): chart axes, See all, Online now; lan_vm1 server 55/55, web 148/148 (1d135f4)
 
 ## Done when
 - [ ] All steps done, tests pass
