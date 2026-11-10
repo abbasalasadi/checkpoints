@@ -72,6 +72,6 @@ Redirect the three old sites to the new one, after re-merging their databases (D
 1. Admins named in server config (`ADMIN_USERNAMES`, owner: abbhasan); checked on the server for every admin request; others get 404.
 2. Admin button in the title bar, shown only to admins.
 3. Admin page with usage, performance and server health; ranges today / 7 days / 30 days; same look as the dashboard.
-4. Totals and charts only: no student code, no per-student list (owner, 2026-11-10).
+4. No student code. Names only in Online now (D40) and the Students list with per-student summaries of submissions and mock exams (D41, owner, 2026-11-10).
 
 **Done when:** same pattern, tagged `v5.0`.
