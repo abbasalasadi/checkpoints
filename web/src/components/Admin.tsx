@@ -1711,11 +1711,14 @@ function readAdmin(): AdminView {
     }
     return {
       tab: "students",
-      range,
+      range: "7d",
+      serverRange: "today",
       user: user && USER.test(user) ? user : null,
     };
   }
-  return { tab: sub === "server" ? "server" : "usage", range, user: null };
+  if (sub === "server")
+    return { tab: "server", range: "7d", serverRange, user: null };
+  return { tab: "usage", range, serverRange: "today", user: null };
 }
 
 function adminPath(v: AdminView): string {
