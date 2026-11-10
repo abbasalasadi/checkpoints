@@ -64,3 +64,6 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 ## After V4
 - Merge of the three old sites' databases (owner, 2026-11-04): announced window; maintenance on for all four sites, final copies, backup, merge, check. The old sites never come back: each gets a redirect to the new application's main page (owner: no maintenance-off for them).
 Redirect the three old sites to the new one, after re-merging their databases (D21). Then the full visual redesign (owner's plan).
+
+## V5 Admin view (proposed, owner 2026-11-10)
+- Admin button in the title bar for the owner's account only (abbhasan, from server config), opening a read-only page of the application's performance and usage. Plan awaiting owner approval.
