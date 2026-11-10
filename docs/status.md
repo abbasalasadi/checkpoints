@@ -72,3 +72,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-10 V5 D45 Mock exams above the daily chart: web tsc clean, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
 - 2026-11-10 V5 D46 student summary popup redesign: web tsc clean, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
 - 2026-11-10 V5 D47 server charts two per row + response delay chart: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
+- 2026-11-10 V5 D48 server history ranges (var/metrics, 31 days): tsc clean, server 57/57, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Deploy note: var/metrics is created by the app; nothing to add to runtime.env.
