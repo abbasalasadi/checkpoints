@@ -7,7 +7,8 @@
  * (D40) and in the user summaries of submissions and exams (D41).
  */
 import Database from 'better-sqlite3';
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, statfsSync, statSync } from 'node:fs';
+import { cpus, freemem, loadavg, totalmem } from 'node:os';
 import { dirname, join } from 'node:path';
 import { config } from '../config/index.js';
 import { LANGUAGES, type Language } from '../languages.js';
@@ -56,6 +57,60 @@ export const ONLINE_MINUTES = 5;
 
 /** Outcomes that mean the system failed, not the student's answer. */
 const SYSTEM_FAILURES = ['timeout', 'error'];
+
+/** One sample of the process, taken every minute in memory (D44). */
+export interface ServerSample {
+  at: string;
+  rssMb: number;
+  heapMb: number;
+  cpuPct: number;
+  load1: number;
+}
+export const SAMPLE_MS = 60_000;
+const KEEP = 24 * 60;
+const samples: ServerSample[] = [];
+let lastCpu = process.cpuUsage();
+let lastAt = Date.now();
+
+/** Take one sample; exported for tests. Nothing is written to disk. */
+export function sampleServer(now = Date.now()): ServerSample {
+  const cpu = process.cpuUsage(lastCpu);
+  const elapsed = Math.max(1, now - lastAt) * 1000;
+  lastCpu = process.cpuUsage();
+  lastAt = now;
+  const m = process.memoryUsage();
+  const s: ServerSample = {
+    at: new Date(now).toISOString(),
+    rssMb: Math.round(m.rss / 1048576),
+    heapMb: Math.round(m.heapUsed / 1048576),
+    cpuPct: Math.round(((cpu.user + cpu.system) / elapsed) * 1000) / 10,
+    load1: Math.round(loadavg()[0]! * 100) / 100,
+  };
+  samples.push(s);
+  if (samples.length > KEEP) samples.splice(0, samples.length - KEEP);
+  return s;
+}
+setInterval(() => sampleServer(), SAMPLE_MS).unref();
+
+function backups(): { at: string; sizeBytes: number }[] {
+  const dir = join(dirname(dirname(config.dbPath)), 'backups');
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.gz') || f.endsWith('.db'))
+    .map((f) => statSync(join(dir, f)))
+    .sort((a, b) => a.mtimeMs - b.mtimeMs)
+    .slice(-14)
+    .map((st) => ({ at: new Date(st.mtimeMs).toISOString(), sizeBytes: st.size }));
+}
+
+function disk(): { freeBytes: number; totalBytes: number } | null {
+  try {
+    const st = statfsSync(dirname(config.dbPath));
+    return { freeBytes: st.bavail * st.bsize, totalBytes: st.blocks * st.bsize };
+  } catch {
+    return null;
+  }
+}
 
 function lastBackup(): string | null {
   const dir = join(dirname(dirname(config.dbPath)), 'backups');
@@ -193,6 +248,13 @@ export function overview(range: Range, db = readOnlyDb(), now = new Date()) {
       memoryMb: Math.round(process.memoryUsage().rss / 1048576),
       dbSizeBytes: dbSize,
       lastBackupAt: lastBackup(),
+      startedAt: new Date(Date.now() - process.uptime() * 1000).toISOString(),
+      node: process.version,
+      cpus: cpus().length,
+      hostMemoryMb: { total: Math.round(totalmem() / 1048576), free: Math.round(freemem() / 1048576) },
+      disk: disk(),
+      backups: backups(),
+      history: samples.length ? [...samples] : [sampleServer()],
     },
   };
 }
@@ -207,6 +269,7 @@ export interface UserRow {
   submitsPassed: number;
   exercisesPassed: number;
   exams: number;
+  languages: Language[];
 }
 
 /** Every student, one row each: submissions and exams in summary. */
@@ -220,13 +283,14 @@ export function userList(db = readOnlyDb()): UserRow[] {
               (SELECT COUNT(*) FROM attempts WHERE user_id = u.id AND kind = 'test') submits,
               (SELECT COUNT(*) FROM attempts WHERE user_id = u.id AND kind = 'test' AND outcome = 'passed') submitsPassed,
               (SELECT COUNT(*) FROM progress WHERE user_id = u.id AND status = 'passed') exercisesPassed,
-              (SELECT COUNT(*) FROM exams WHERE user_id = u.id AND status != 'active') exams
+              (SELECT COUNT(*) FROM exams WHERE user_id = u.id AND status != 'active') exams,
+              (SELECT GROUP_CONCAT(DISTINCT language) FROM attempts WHERE user_id = u.id) langs
          FROM users u ORDER BY lastActiveAt DESC`,
     )
     .all()
     .map((r) => {
-      const row = r as UserRow;
-      return { ...row, lastActiveAt: row.lastActiveAt || null };
+      const { langs, ...row } = r as UserRow & { langs: string | null };
+      return { ...row, lastActiveAt: row.lastActiveAt || null, languages: (langs ?? '').split(',').filter(Boolean) as Language[] };
     });
 }
 

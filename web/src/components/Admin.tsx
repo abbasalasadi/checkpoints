@@ -15,6 +15,7 @@ import {
 } from "../lib/api.js";
 import { LANGUAGE_LABEL, ago } from "../lib/format.js";
 import { logger } from "../logger.js";
+import { LOCATION_CHANGE } from "../lib/route.js";
 import { MarkRing, fmtPercent } from "./MarkRing.js";
 import { Modal } from "./Modal.js";
 import { Skeleton } from "./Skeleton.js";
@@ -480,66 +481,119 @@ function OnlineNow({
 }) {
   if (!rows.length)
     return <p style={{ ...muted, margin: 0 }}>Nobody is online right now.</p>;
+  const cell: React.CSSProperties = {
+    padding: ".45rem .5rem",
+    borderTop: "1px solid var(--border)",
+    whiteSpace: "nowrap",
+    verticalAlign: "middle",
+  };
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", gap: ".5rem" }}>
-      {rows.map((o) => (
-        <div
-          key={o.username}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: ".55rem",
-            background: "var(--raised)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius)",
-            padding: ".4rem .7rem",
-            fontSize: ".82rem",
-            minWidth: 0,
-          }}
-        >
-          <span
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 8,
-              background: "var(--success)",
-              boxShadow: "0 0 6px var(--success)",
-              flex: "none",
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => onOpen(o.username)}
-            title={`Open ${o.username}`}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "var(--accent-text)",
-              font: "inherit",
-              fontWeight: 600,
-              cursor: "pointer",
-              padding: 0,
-            }}
-          >
-            {o.username}
-          </button>
-          <span
-            style={{
-              color: "var(--text-dim)",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {o.inExam
-              ? "in a mock exam"
-              : o.language && o.slug
-                ? `${LANGUAGE_LABEL[o.language]} · ${o.slug}`
-                : "browsing"}{" "}
-            · {ago(o.lastSeenAt)}
-          </span>
-        </div>
-      ))}
+    <div style={{ overflowX: "auto" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          fontSize: ".84rem",
+        }}
+      >
+        <thead>
+          <tr style={{ color: "var(--text-muted)", textAlign: "left" }}>
+            {["Student", "Doing", "Seen"].map((h, i) => (
+              <th
+                key={h}
+                style={{
+                  fontWeight: 500,
+                  padding: ".3rem .5rem",
+                  textAlign: i === 2 ? "right" : "left",
+                }}
+              >
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((o) => (
+            <tr key={o.username}>
+              <td style={{ ...cell, width: "30%" }}>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: ".55rem",
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: 8,
+                      background: "var(--success)",
+                      boxShadow: "0 0 6px var(--success)",
+                      flex: "none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => onOpen(o.username)}
+                    title={`Open ${o.username}`}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      color: "var(--accent-text)",
+                      font: "inherit",
+                      fontWeight: 600,
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
+                  >
+                    {o.username}
+                  </button>
+                </span>
+              </td>
+              <td style={{ ...cell, whiteSpace: "normal" }}>
+                {o.inExam ? (
+                  <span style={{ color: "var(--warning, var(--text))" }}>
+                    In a mock exam
+                  </span>
+                ) : o.language && o.slug ? (
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: ".45rem",
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 2,
+                        background: LANG_COLOR[o.language],
+                        flex: "none",
+                      }}
+                    />
+                    <span>{LANGUAGE_LABEL[o.language]}</span>
+                    <code style={{ color: "var(--text-muted)" }}>{o.slug}</code>
+                  </span>
+                ) : (
+                  <span style={{ color: "var(--text-dim)" }}>Browsing</span>
+                )}
+              </td>
+              <td
+                style={{
+                  ...cell,
+                  textAlign: "right",
+                  color: "var(--text-muted)",
+                  ...num,
+                }}
+              >
+                {ago(o.lastSeenAt)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -564,6 +618,68 @@ const passRate = (u: AdminUserRow) =>
 const USERS_PAGE = 25;
 
 /** Every student in summary: submissions and exams (D41). */
+type Activity = "all" | "today" | "7d" | "30d" | "inactive";
+const ACTIVITY: [Activity, string][] = [
+  ["all", "Any activity"],
+  ["today", "Active today"],
+  ["7d", "Active in 7 days"],
+  ["30d", "Active in 30 days"],
+  ["inactive", "Inactive 30+ days"],
+];
+function matchesActivity(at: string | null, a: Activity): boolean {
+  if (a === "all") return true;
+  const t = at ? Date.parse(at) : 0;
+  const now = new Date();
+  const day = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+  );
+  if (a === "today") return t >= day;
+  if (a === "7d") return t >= Date.now() - 7 * 86400000;
+  if (a === "30d") return t >= Date.now() - 30 * 86400000;
+  return t < Date.now() - 30 * 86400000;
+}
+
+function Select<T extends string>({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: T;
+  onChange: (v: T) => void;
+  options: [T, string][];
+}) {
+  return (
+    <select
+      aria-label={label}
+      value={value}
+      onChange={(e) => onChange(e.target.value as T)}
+      style={{
+        background:
+          value === options[0]![0]
+            ? "var(--raised)"
+            : "var(--accent-soft, var(--raised))",
+        color: "var(--text)",
+        border: `1px solid ${value === options[0]![0] ? "var(--border-strong)" : "var(--accent)"}`,
+        borderRadius: "var(--radius)",
+        padding: ".4rem .5rem",
+        font: "inherit",
+        fontSize: ".82rem",
+        cursor: "pointer",
+      }}
+    >
+      {options.map(([v, l]) => (
+        <option key={v} value={v}>
+          {l}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 function Users({ onOpen }: { onOpen: (username: string) => void }) {
   const [rows, setRows] = useState<AdminUserRow[] | null>(null);
   const [q, setQ] = useState("");
@@ -572,6 +688,10 @@ function Users({ onOpen }: { onOpen: (username: string) => void }) {
     desc: true,
   });
   const [shown, setShown] = useState(USERS_PAGE);
+  const [lang, setLang] = useState<"all" | Language>("all");
+  const [activity, setActivity] = useState<Activity>("all");
+  const [exams, setExams] = useState<"all" | "yes" | "no">("all");
+  const [result, setResult] = useState<"all" | "passed" | "none">("all");
   useEffect(() => {
     api
       .adminUsers()
@@ -590,6 +710,16 @@ function Users({ onOpen }: { onOpen: (username: string) => void }) {
         : u[k];
   const filtered = rows
     .filter((u) => u.username.includes(q.trim().toLowerCase()))
+    .filter((u) => lang === "all" || u.languages.includes(lang))
+    .filter((u) => matchesActivity(u.lastActiveAt, activity))
+    .filter(
+      (u) => exams === "all" || (exams === "yes" ? u.exams > 0 : u.exams === 0),
+    )
+    .filter(
+      (u) =>
+        result === "all" ||
+        (result === "passed" ? u.exercisesPassed > 0 : u.exercisesPassed === 0),
+    )
     .sort((a, b) => {
       const x = value(a, sort.key);
       const y = value(b, sort.key);
@@ -610,28 +740,107 @@ function Users({ onOpen }: { onOpen: (username: string) => void }) {
     borderTop: "1px solid var(--border)",
     whiteSpace: "nowrap",
   };
+  const reset = () => setShown(USERS_PAGE);
+  const filtering =
+    lang !== "all" ||
+    activity !== "all" ||
+    exams !== "all" ||
+    result !== "all" ||
+    q !== "";
   return (
     <>
-      <input
-        type="search"
-        placeholder="Search by username"
-        aria-label="Search by username"
-        value={q}
-        onChange={(e) => {
-          setQ(e.target.value);
-          setShown(USERS_PAGE);
-        }}
+      <div
         style={{
-          background: "var(--raised)",
-          color: "var(--text)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "var(--radius)",
-          padding: ".4rem .65rem",
-          font: "inherit",
-          fontSize: ".84rem",
-          maxWidth: 320,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: ".5rem",
+          alignItems: "center",
         }}
-      />
+      >
+        <input
+          type="search"
+          placeholder="Search by username"
+          aria-label="Search by username"
+          value={q}
+          onChange={(e) => {
+            setQ(e.target.value);
+            setShown(USERS_PAGE);
+          }}
+          style={{
+            background: "var(--raised)",
+            color: "var(--text)",
+            border: "1px solid var(--border-strong)",
+            borderRadius: "var(--radius)",
+            padding: ".4rem .65rem",
+            font: "inherit",
+            fontSize: ".84rem",
+            flex: "1 1 200px",
+            maxWidth: 280,
+          }}
+        />
+        <Select
+          label="Language"
+          value={lang}
+          onChange={(v) => (setLang(v), reset())}
+          options={[
+            ["all", "All languages"],
+            ["go", "Go"],
+            ["js", "JS"],
+            ["rust", "Rust"],
+            ["java", "Java"],
+          ]}
+        />
+        <Select
+          label="Activity"
+          value={activity}
+          onChange={(v) => (setActivity(v), reset())}
+          options={ACTIVITY}
+        />
+        <Select
+          label="Exercises"
+          value={result}
+          onChange={(v) => (setResult(v), reset())}
+          options={[
+            ["all", "Any exercises"],
+            ["passed", "Passed at least one"],
+            ["none", "None passed"],
+          ]}
+        />
+        <Select
+          label="Mock exams"
+          value={exams}
+          onChange={(v) => (setExams(v), reset())}
+          options={[
+            ["all", "Any exams"],
+            ["yes", "Took an exam"],
+            ["no", "No exams"],
+          ]}
+        />
+        {filtering && (
+          <button
+            type="button"
+            onClick={() => {
+              setQ("");
+              setLang("all");
+              setActivity("all");
+              setExams("all");
+              setResult("all");
+              reset();
+            }}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "var(--accent-text)",
+              font: "inherit",
+              fontSize: ".82rem",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
       <div style={{ overflowX: "auto" }}>
         <table
           style={{
@@ -1014,6 +1223,161 @@ function UserProfile({
   );
 }
 
+type Sample = AdminOverview["server"]["history"][number];
+type SeriesKey = "rssMb" | "heapMb" | "cpuPct" | "load1";
+
+/** A small SVG line chart over time with y ticks and start/end times. */
+function LineChart({
+  points,
+  series,
+  unit,
+}: {
+  points: Sample[];
+  series: { key: SeriesKey; color: string }[];
+  unit: string;
+}) {
+  const W = 600;
+  const H = 160;
+  const L = 42;
+  const B = 20;
+  const values = points.flatMap((p) => series.map((s) => p[s.key]));
+  const max = niceMax(Math.max(1, ...values));
+  const n = points.length;
+  const x = (i: number) =>
+    L + (n <= 1 ? (W - L) / 2 : (i / (n - 1)) * (W - L - 4));
+  const y = (v: number) => 6 + (1 - v / max) * (H - B - 6);
+  const time = (iso: string) =>
+    new Date(iso).toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  const last = points.at(-1);
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      width="100%"
+      role="img"
+      aria-label={`Chart over the last ${n} minutes`}
+      style={{ display: "block" }}
+    >
+      {[0, 0.5, 1].map((f) => (
+        <g key={f}>
+          <line
+            x1={L}
+            x2={W}
+            y1={y(max * f)}
+            y2={y(max * f)}
+            stroke="var(--border)"
+            strokeDasharray={f ? "3 4" : undefined}
+          />
+          <text
+            x={L - 6}
+            y={y(max * f) + 4}
+            textAnchor="end"
+            fontSize="11"
+            fill="var(--text-dim)"
+          >
+            {Math.round(max * f * 10) / 10}
+          </text>
+        </g>
+      ))}
+      {series.map((s) =>
+        n === 1 ? (
+          <circle
+            key={s.key}
+            cx={x(0)}
+            cy={y(points[0]![s.key])}
+            r={3}
+            fill={s.color}
+          />
+        ) : (
+          <polyline
+            key={s.key}
+            fill="none"
+            stroke={s.color}
+            strokeWidth={2}
+            strokeLinejoin="round"
+            points={points.map((p, i) => `${x(i)},${y(p[s.key])}`).join(" ")}
+          />
+        ),
+      )}
+      {points[0] && (
+        <text x={L} y={H - 4} fontSize="11" fill="var(--text-dim)">
+          {time(points[0].at)}
+        </text>
+      )}
+      {last && n > 1 && (
+        <text
+          x={W}
+          y={H - 4}
+          textAnchor="end"
+          fontSize="11"
+          fill="var(--text-dim)"
+        >
+          {time(last.at)} · now{" "}
+          {series.map((s) => `${last[s.key]}${unit}`).join(" / ")}
+        </text>
+      )}
+    </svg>
+  );
+}
+
+function BackupBars({ rows }: { rows: AdminOverview["server"]["backups"] }) {
+  if (!rows.length)
+    return <p style={{ ...muted, margin: 0 }}>No backups found.</p>;
+  const max = Math.max(1, ...rows.map((r) => r.sizeBytes));
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "flex-end",
+        gap: ".35rem",
+        height: "8.5rem",
+      }}
+    >
+      {rows.map((r) => (
+        <div
+          key={r.at}
+          title={`${new Date(r.at).toLocaleString("en-GB")} · ${fmtBytes(r.sizeBytes)}`}
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: ".25rem",
+            height: "100%",
+            justifyContent: "flex-end",
+            minWidth: 0,
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 28,
+              height: `${Math.max(4, (r.sizeBytes / max) * 100)}%`,
+              background:
+                "linear-gradient(180deg, var(--accent), var(--success))",
+              borderRadius: 3,
+            }}
+          />
+          <span
+            style={{
+              fontSize: ".66rem",
+              color: "var(--text-dim)",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {new Date(r.at).toLocaleDateString("en-GB", {
+              day: "numeric",
+              month: "short",
+            })}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 type AdminTab = "usage" | "students" | "server";
 const TABS: { key: AdminTab; label: string }[] = [
   { key: "usage", label: "Usage" },
@@ -1109,14 +1473,74 @@ function RangePicker({
 
 const EX_TABS: ("all" | Language)[] = ["all", "go", "js", "rust", "java"];
 
+interface AdminView {
+  tab: AdminTab;
+  range: AdminRange;
+  user: string | null;
+}
+const RANGE_KEYS = Object.keys(RANGE_LABEL) as AdminRange[];
+const USER = /^[A-Za-z0-9._-]{1,64}$/;
+
+/** /admin[?range=], /admin/students[/name], /admin/server (D44). */
+function readAdmin(): AdminView {
+  const [, sub, name] = window.location.pathname.split("/").filter(Boolean);
+  const r = new URLSearchParams(window.location.search).get(
+    "range",
+  ) as AdminRange | null;
+  const range = r && RANGE_KEYS.includes(r) ? r : "7d";
+  if (sub === "students") {
+    let user: string | null = null;
+    try {
+      user = name ? decodeURIComponent(name) : null;
+    } catch {
+      user = null;
+    }
+    return {
+      tab: "students",
+      range,
+      user: user && USER.test(user) ? user : null,
+    };
+  }
+  return { tab: sub === "server" ? "server" : "usage", range, user: null };
+}
+
+function adminPath(v: AdminView): string {
+  if (v.tab === "students")
+    return v.user
+      ? `/admin/students/${encodeURIComponent(v.user)}`
+      : "/admin/students";
+  if (v.tab === "server") return "/admin/server";
+  return v.range === "7d" ? "/admin" : `/admin?range=${v.range}`;
+}
+
 export function Admin() {
-  const [range, setRange] = useState<AdminRange>("7d");
+  const [view, setView] = useState<AdminView>(readAdmin);
+  const { range, tab, user: profile } = view;
   const [data, setData] = useState<AdminOverview | null>(null);
   const [error, setError] = useState(false);
   const [allExercises, setAllExercises] = useState(false);
   const [exLang, setExLang] = useState<"all" | Language>("all");
-  const [profile, setProfile] = useState<string | null>(null);
-  const [tab, setTab] = useState<AdminTab>("usage");
+  useEffect(() => {
+    const sync = () => setView(readAdmin());
+    window.addEventListener("popstate", sync);
+    window.addEventListener(LOCATION_CHANGE, sync);
+    return () => {
+      window.removeEventListener("popstate", sync);
+      window.removeEventListener(LOCATION_CHANGE, sync);
+    };
+  }, []);
+  // Every tab, range and opened student is a history entry (D44).
+  const go = (change: Partial<AdminView>) => {
+    const next = { ...view, ...change };
+    const path = adminPath(next);
+    if (path !== window.location.pathname + window.location.search)
+      window.history.pushState({ page: "admin" }, "", path);
+    setView(next);
+  };
+  const setTab = (t: AdminTab) => go({ tab: t, user: null });
+  const setRange = (r: AdminRange) => go({ range: r });
+  const setProfile = (u: string | null) =>
+    go(u ? { tab: "students", user: u } : { user: null });
 
   useEffect(() => {
     let live = true;
@@ -1347,22 +1771,132 @@ export function Admin() {
         )}
 
         {tab === "server" && (
-          <section style={card} aria-label="Server">
-            <h2 style={h2}>Server</h2>
-            {s ? (
-              <div style={grid(110)}>
-                <Tile label="Uptime" value={fmtUptime(s.uptimeSeconds)} />
-                <Tile label="Memory" value={`${s.memoryMb} MB`} />
-                <Tile label="Database" value={fmtBytes(s.dbSizeBytes)} />
-                <Tile
-                  label="Last backup"
-                  value={s.lastBackupAt ? ago(s.lastBackupAt) : "none"}
-                />
-              </div>
-            ) : (
-              <Skeleton height="6rem" />
-            )}
-          </section>
+          <>
+            <section aria-label="Server" style={grid(160)}>
+              {s ? (
+                <>
+                  <Tile
+                    label="Uptime"
+                    value={fmtUptime(s.uptimeSeconds)}
+                    hint={`since ${new Date(s.startedAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}`}
+                  />
+                  <Tile
+                    label="App memory"
+                    value={`${s.memoryMb} MB`}
+                    hint={`host ${fmtInt(s.hostMemoryMb.total - s.hostMemoryMb.free)} of ${fmtInt(s.hostMemoryMb.total)} MB used`}
+                  />
+                  <Tile
+                    label="CPU now"
+                    value={`${s.history.at(-1)?.cpuPct ?? 0}%`}
+                    hint={`${s.cpus} cores · load ${s.history.at(-1)?.load1 ?? 0}`}
+                  />
+                  <Tile label="Database" value={fmtBytes(s.dbSizeBytes)} />
+                  <Tile
+                    label="Disk free"
+                    value={s.disk ? fmtBytes(s.disk.freeBytes) : "—"}
+                    hint={
+                      s.disk ? `of ${fmtBytes(s.disk.totalBytes)}` : undefined
+                    }
+                  />
+                  <Tile
+                    label="Last backup"
+                    value={s.lastBackupAt ? ago(s.lastBackupAt) : "none"}
+                    hint={s.node}
+                  />
+                </>
+              ) : (
+                !error &&
+                [0, 1, 2, 3, 4, 5].map((i) => (
+                  <Skeleton key={i} height="5.4rem" />
+                ))
+              )}
+            </section>
+            <span style={muted}>
+              History is sampled every minute and kept in memory for 24 hours;
+              it starts again when the app restarts.
+            </span>
+            <div style={grid(320)}>
+              <section style={card} aria-label="Memory history">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <h2 style={h2}>Memory (MB)</h2>
+                  <Legend
+                    items={[
+                      { color: "var(--accent)", label: "Total" },
+                      { color: "var(--success)", label: "JS heap" },
+                    ]}
+                  />
+                </div>
+                {s ? (
+                  <LineChart
+                    points={s.history}
+                    series={[
+                      { key: "rssMb", color: "var(--accent)" },
+                      { key: "heapMb", color: "var(--success)" },
+                    ]}
+                    unit=" MB"
+                  />
+                ) : (
+                  <Skeleton height="10rem" />
+                )}
+              </section>
+              <section style={card} aria-label="CPU history">
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "baseline",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <h2 style={h2}>CPU (%)</h2>
+                  <Legend
+                    items={[{ color: "var(--accent)", label: "App CPU" }]}
+                  />
+                </div>
+                {s ? (
+                  <LineChart
+                    points={s.history}
+                    series={[{ key: "cpuPct", color: "var(--accent)" }]}
+                    unit="%"
+                  />
+                ) : (
+                  <Skeleton height="10rem" />
+                )}
+              </section>
+              <section style={card} aria-label="Load history">
+                <h2 style={h2}>Host load (1 min)</h2>
+                {s ? (
+                  <LineChart
+                    points={s.history}
+                    series={[{ key: "load1", color: "var(--success)" }]}
+                    unit=""
+                  />
+                ) : (
+                  <Skeleton height="10rem" />
+                )}
+              </section>
+              <section style={card} aria-label="Backups">
+                <h2 style={h2}>Backups</h2>
+                <span style={muted}>
+                  Size of the last {s?.backups.length ?? 0} backups.
+                </span>
+                {s ? (
+                  <BackupBars rows={s.backups} />
+                ) : (
+                  <Skeleton height="10rem" />
+                )}
+              </section>
+            </div>
+          </>
         )}
 
         {tab === "students" && (

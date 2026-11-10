@@ -43,7 +43,19 @@ export interface AdminOverview {
     languages: { language: Language; runs: number; submits: number; medianMs: number | null; p95Ms: number | null; systemFailureRate: number }[];
     busiestHours: number[];
   };
-  server: { uptimeSeconds: number; memoryMb: number; dbSizeBytes: number; lastBackupAt: string | null };
+  server: {
+    uptimeSeconds: number;
+    memoryMb: number;
+    dbSizeBytes: number;
+    lastBackupAt: string | null;
+    startedAt: string;
+    node: string;
+    cpus: number;
+    hostMemoryMb: { total: number; free: number };
+    disk: { freeBytes: number; totalBytes: number } | null;
+    backups: { at: string; sizeBytes: number }[];
+    history: { at: string; rssMb: number; heapMb: number; cpuPct: number; load1: number }[];
+  };
 }
 
 export interface AdminUserRow {
@@ -54,6 +66,7 @@ export interface AdminUserRow {
   submitsPassed: number;
   exercisesPassed: number;
   exams: number;
+  languages: Language[];
 }
 export interface AdminUserProfile {
   username: string;

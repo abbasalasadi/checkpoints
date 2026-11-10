@@ -532,6 +532,8 @@ test('admin overview: admins see totals, everyone else gets 404', async () => {
   assert.ok(!JSON.stringify(r.json).includes('files_json'));
   const online = r.json.online.map((o: { username: string }) => o.username);
   assert.ok(online.includes('fake_admin') && online.includes('fake_student_v5'));
+  assert.ok(r.json.server.history.length >= 1 && typeof r.json.server.history[0].rssMb === 'number', 'server history (D44)');
+  assert.ok(Array.isArray(r.json.server.backups));
   const rest = JSON.stringify({ ...r.json, online: [] });
   assert.ok(!rest.includes('fake_student_v5'));
   assert.equal((await call('/api/admin/overview?range=bogus', { cookie: admin })).json.range, '7d');
@@ -545,6 +547,7 @@ test('admin user summaries: list and profile for admins, 404 for others (D41)', 
   const list = await call('/api/admin/users', { cookie: admin });
   assert.equal(list.status, 200);
   assert.ok(list.json.users.some((u: { username: string }) => u.username === 'fake_student_v5'));
+  assert.ok(list.json.users.every((u: { languages: unknown }) => Array.isArray(u.languages)));
   const p = await call('/api/admin/users/fake_student_v5', { cookie: admin });
   assert.equal(p.status, 200);
   assert.equal(p.json.tracks.length, 4);

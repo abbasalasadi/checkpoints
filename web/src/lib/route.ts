@@ -9,7 +9,9 @@
  *   /history             the history explorer (V2)
  *   /vault               the solutions vault (V2)
  *   /exams               mock exams: start, reports (V3)
- *   /admin               admin view, admins only (V5)
+ *   /admin               admin view, admins only (V5): Usage tab, ?range=
+ *   /admin/students      admin Students tab; /admin/students/<name> opens a summary
+ *   /admin/server        admin Server tab
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
  *   /go/hello?cp=2       the same exercise, opened from checkpoint 2 (V4):
@@ -67,7 +69,7 @@ export function parsePath(pathname: string, search = ''): Location {
   if (first === 'history' && second === undefined) return { ...home, page: 'history' };
   if (first === 'vault' && second === undefined) return { ...home, page: 'vault' };
   if (first === 'exams' && second === undefined) return { ...home, page: 'exams' };
-  if (first === 'admin' && second === undefined) return { ...home, page: 'admin' };
+  if (first === 'admin' && rest.length <= 1) return { ...home, page: 'admin' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
     return slug ? { page: null, language: 'rust', slug, checkpoint: null, legacy: true } : home;
@@ -114,7 +116,11 @@ export function navigatePage(page: Page, { replace = false } = {}): void {
   if (next === window.location.pathname) return;
   if (replace) window.history.replaceState({ page }, '', next);
   else window.history.pushState({ page }, '', next);
+  window.dispatchEvent(new Event(LOCATION_CHANGE));
 }
+
+/** Fired after navigatePage, for views that read their own sub-path (admin). */
+export const LOCATION_CHANGE = 'checkpoints:locationchange';
 
 /** Subscribe to Back and Forward. Returns an unsubscribe. */
 export function onNavigate(handler: (loc: Location) => void): () => void {
