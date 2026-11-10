@@ -9,6 +9,7 @@ No deploy until the owner has tested locally (D20).
 - D37 Totals and charts only: no student code, no per-student list.
 - D38 The admin page uses the dashboard's design.
 - D40 (owner, 2026-11-10) Admin page adds "Online now": usernames active in the last 5 minutes, with the exercise last run; this is the one list of names (amends D37). Day chart has axes; most used exercises has See all.
+- D47 (owner, 2026-11-10) Server tab: charts two per row and taller; fourth chart Response delay (event-loop delay p99 per minute, in memory); Backups full width.
 - D46 (owner, 2026-11-10) Student summary popup redesigned (with inner margin): header with initial, close button; four totals (exercises passed, submits and pass rate, mock exams, best mark); one row per language with a progress bar; one row per mock exam with mark bar and result pill.
 - D45 (owner, 2026-11-10) Usage tab: Mock exams card above Runs and submits per day.
 - D44 (owner, 2026-11-10) Admin: every tab, range and opened student is a browser history entry (/admin?range=, /admin/students[/name], /admin/server); Online now as aligned rows (student, doing, seen); Students filters (language, activity, exercises passed, mock exams, clear); Server tab with host memory, CPU, load, disk, backups and 24-hour charts sampled every minute in memory (nothing stored).

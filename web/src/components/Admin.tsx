@@ -1417,7 +1417,7 @@ function UserProfile({
 }
 
 type Sample = AdminOverview["server"]["history"][number];
-type SeriesKey = "rssMb" | "heapMb" | "cpuPct" | "load1";
+type SeriesKey = "rssMb" | "heapMb" | "cpuPct" | "load1" | "lagMs";
 
 /** A small SVG line chart over time with y ticks and start/end times. */
 function LineChart({
@@ -1430,7 +1430,7 @@ function LineChart({
   unit: string;
 }) {
   const W = 600;
-  const H = 160;
+  const H = 240;
   const L = 42;
   const B = 20;
   const values = points.flatMap((p) => series.map((s) => p[s.key]));
@@ -2008,7 +2008,14 @@ export function Admin() {
               History is sampled every minute and kept in memory for 24 hours;
               it starts again when the app restarts.
             </span>
-            <div style={grid(320)}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
+                gap: "1rem",
+              }}
+            >
               <section style={card} aria-label="Memory history">
                 <div
                   style={{
@@ -2077,7 +2084,29 @@ export function Admin() {
                   <Skeleton height="10rem" />
                 )}
               </section>
-              <section style={card} aria-label="Backups">
+              <section style={card} aria-label="Response delay history">
+                <h2 style={h2}>Response delay (ms)</h2>
+                <span style={muted}>
+                  Worst event-loop delay each minute (99th percentile): how long
+                  a request may wait before the app can answer it. Under 50 ms
+                  is healthy.
+                </span>
+                {s ? (
+                  <LineChart
+                    points={s.history}
+                    series={[
+                      { key: "lagMs", color: "var(--warning, #d4a72c)" },
+                    ]}
+                    unit=" ms"
+                  />
+                ) : (
+                  <Skeleton height="10rem" />
+                )}
+              </section>
+              <section
+                style={{ ...card, gridColumn: "1 / -1" }}
+                aria-label="Backups"
+              >
                 <h2 style={h2}>Backups</h2>
                 <span style={muted}>
                   Size of the last {s?.backups.length ?? 0} backups.

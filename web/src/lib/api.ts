@@ -54,7 +54,7 @@ export interface AdminOverview {
     hostMemoryMb: { total: number; free: number };
     disk: { freeBytes: number; totalBytes: number } | null;
     backups: { at: string; sizeBytes: number }[];
-    history: { at: string; rssMb: number; heapMb: number; cpuPct: number; load1: number }[];
+    history: { at: string; rssMb: number; heapMb: number; cpuPct: number; load1: number; lagMs: number }[];
   };
 }
 

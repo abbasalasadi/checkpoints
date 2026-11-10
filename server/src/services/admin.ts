@@ -9,6 +9,7 @@
 import Database from 'better-sqlite3';
 import { existsSync, readdirSync, statfsSync, statSync } from 'node:fs';
 import { cpus, freemem, loadavg, totalmem } from 'node:os';
+import { monitorEventLoopDelay } from 'node:perf_hooks';
 import { dirname, join } from 'node:path';
 import { config } from '../config/index.js';
 import { LANGUAGES, type Language } from '../languages.js';
@@ -65,12 +66,16 @@ export interface ServerSample {
   heapMb: number;
   cpuPct: number;
   load1: number;
+  /** Event-loop delay p99 in ms over the minute: how long a request may wait. */
+  lagMs: number;
 }
 export const SAMPLE_MS = 60_000;
 const KEEP = 24 * 60;
 const samples: ServerSample[] = [];
 let lastCpu = process.cpuUsage();
 let lastAt = Date.now();
+const lag = monitorEventLoopDelay({ resolution: 20 });
+lag.enable();
 
 /** Take one sample; exported for tests. Nothing is written to disk. */
 export function sampleServer(now = Date.now()): ServerSample {
@@ -85,7 +90,9 @@ export function sampleServer(now = Date.now()): ServerSample {
     heapMb: Math.round(m.heapUsed / 1048576),
     cpuPct: Math.round(((cpu.user + cpu.system) / elapsed) * 1000) / 10,
     load1: Math.round(loadavg()[0]! * 100) / 100,
+    lagMs: Math.round((lag.percentile(99) / 1e6) * 10) / 10 || 0,
   };
+  lag.reset();
   samples.push(s);
   if (samples.length > KEEP) samples.splice(0, samples.length - KEEP);
   return s;
