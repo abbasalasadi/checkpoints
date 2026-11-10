@@ -20,6 +20,31 @@ export class ApiFailure extends Error {
   }
 }
 
+/** V5 admin view (D36-D39). */
+export type AdminRange = 'today' | '7d' | '30d';
+export interface AdminOverview {
+  range: AdminRange;
+  since: string;
+  generatedAt: string;
+  usage: {
+    students: number;
+    activeToday: number;
+    active7d: number;
+    active30d: number;
+    newAccounts: number;
+    runs: number;
+    submits: number;
+    days: { day: string; runs: number; submits: number }[];
+    topExercises: { language: Language; slug: string; attempts: number; passes: number }[];
+    exams: { started: number; active: number; finished: number; expired: number; abandoned: number };
+  };
+  performance: {
+    languages: { language: Language; runs: number; submits: number; medianMs: number | null; p95Ms: number | null; systemFailureRate: number }[];
+    busiestHours: number[];
+  };
+  server: { uptimeSeconds: number; memoryMb: number; dbSizeBytes: number; lastBackupAt: string | null };
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
     ...init,
@@ -296,7 +321,8 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(patch),
     }),
-  me: () => request<{ identifier?: string; login?: string }>('/api/auth/me'),
+  me: () => request<{ identifier?: string; login?: string; isAdmin?: boolean }>('/api/auth/me'),
+  adminOverview: (range: AdminRange) => request<AdminOverview>(`/api/admin/overview?range=${range}`),
   login: (identifier: string, password: string) =>
     request<{ identifier?: string; login?: string }>('/api/auth/login', {
       method: 'POST',

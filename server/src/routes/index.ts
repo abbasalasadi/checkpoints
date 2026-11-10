@@ -46,6 +46,7 @@ import * as runs from '../services/runs.js';
 import { pickExamItems } from '../services/exams.js';
 import { examMark, examMaxMark, placementView, requiredWeight, trackProgress, valueOf } from '../services/marks.js';
 import type { Exam } from '../repositories/index.js';
+import { isAdmin, overview, RANGES, type Range } from '../services/admin.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
 const formatLimiter = new RateLimiter(60, 60_000);
@@ -96,6 +97,7 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (path === '/api/languages' && method === 'GET') return languages(req, res);
   if (path === '/api/preferences' && method === 'GET') return getPreferences(req, res);
   if (path === '/api/dashboard' && method === 'GET') return dashboard(req, res);
+  if (path === '/api/admin/overview' && method === 'GET') return adminOverview(req, res, url.searchParams);
   if (path === '/api/history' && method === 'GET') return history(req, res, url.searchParams);
   if (path === '/api/vault' && method === 'GET') return vault(req, res);
   if (path === '/api/history/exercises' && method === 'GET') return historyByExercise(req, res, url.searchParams);
@@ -270,7 +272,25 @@ function logout(req: IncomingMessage, res: ServerResponse): void {
 function me(req: IncomingMessage, res: ServerResponse): void {
   const caller = requireCaller(req, res);
   if (!caller) return;
-  sendJson(res, 200, { identifier: caller.user.identifier_normalized, devLogin: config.devLoginEnabled });
+  sendJson(res, 200, {
+    identifier: caller.user.identifier_normalized,
+    devLogin: config.devLoginEnabled,
+    isAdmin: isAdmin(caller.user.identifier_normalized),
+  });
+}
+
+// ── admin (V5, D36-D39) ──────────────────────────────────────────────────────
+
+/** Admins only; anyone else gets the same 404 as an unknown route (D36). */
+function adminOverview(req: IncomingMessage, res: ServerResponse, q: URLSearchParams): void {
+  const caller = resolveCaller(req);
+  if (!caller || !isAdmin(caller.user.identifier_normalized)) {
+    sendError(res, 404, 'not_found', 'Not found.');
+    return;
+  }
+  const r = q.get('range') ?? '7d';
+  const range: Range = (RANGES as string[]).includes(r) ? (r as Range) : '7d';
+  sendJson(res, 200, overview(range));
 }
 
 // ── preferences (V2, D24) ────────────────────────────────────────────────────

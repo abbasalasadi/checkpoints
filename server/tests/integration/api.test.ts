@@ -20,6 +20,8 @@ import { attempts, hashToken, progress, sessions, snapshots, users } from '../..
 import { handle } from '../../src/routes/index.ts';
 import { listExercises } from '../../src/services/exercises.ts';
 import { setRunnerModule, type SubmitInput } from '../../src/services/runs.ts';
+import { closeReadOnlyDb, readOnlyDb } from '../../src/services/admin.ts';
+import { readdirSync } from 'node:fs';
 
 let dir: string;
 let server: Server;
@@ -70,7 +72,9 @@ async function devLogin(username: string): Promise<string> {
 
 before(async () => {
   dir = mkdtempSync(join(tmpdir(), 'rc-test-'));
-  openDatabase(join(dir, 'test.db'));
+  config.dbPath = join(dir, 'test.db');
+  config.adminUsernames = ['fake_admin'];
+  openDatabase(config.dbPath);
   migrate();
   server = createServer((req, res) => void handle(req, res));
   await new Promise<void>((r) => server.listen(0, '127.0.0.1', r));
@@ -79,6 +83,7 @@ before(async () => {
 
 after(async () => {
   await new Promise<void>((r) => server.close(() => r()));
+  closeReadOnlyDb();
   closeDatabase();
   rmSync(dir, { recursive: true, force: true });
 });
@@ -506,4 +511,35 @@ test('an exercise\'s whole practice history can be deleted by its owner only', a
   assert.equal((await call(`/api/history/exercises/go/${slug}`, { method: 'DELETE', cookie: b })).status, 404);
   assert.equal((await call(`/api/history/exercises/go/${slug}`, { method: 'DELETE', cookie: a })).status, 200);
   assert.equal(attempts.listForExercise(ua.id, 'go', slug).length, 0);
+});
+
+// ── admin (V5, D36-D39) ──────────────────────────────────────────────────────
+
+test('admin overview: admins see totals, everyone else gets 404', async () => {
+  const admin = await devLogin('fake_admin');
+  const student = await devLogin('fake_student_v5');
+  assert.equal((await call('/api/me', { cookie: admin })).json.isAdmin, true);
+  assert.equal((await call('/api/me', { cookie: student })).json.isAdmin, false);
+  assert.equal((await call('/api/admin/overview')).status, 404);
+  assert.equal((await call('/api/admin/overview', { cookie: student })).status, 404);
+  const r = await call('/api/admin/overview?range=30d', { cookie: admin });
+  assert.equal(r.status, 200);
+  assert.equal(r.json.range, '30d');
+  assert.ok(r.json.usage.students >= 2);
+  assert.equal(r.json.performance.languages.length, 4);
+  assert.equal(r.json.performance.busiestHours.length, 24);
+  // Totals only (D37): no code or per-student rows anywhere in the answer.
+  const text = JSON.stringify(r.json);
+  assert.ok(!text.includes('files_json') && !text.includes('fake_student_v5'));
+  assert.equal((await call('/api/admin/overview?range=bogus', { cookie: admin })).json.range, '7d');
+});
+
+test('admin connection is read-only: a write is refused (D39)', () => {
+  assert.throws(() => readOnlyDb().prepare('DELETE FROM users').run(), /readonly/i);
+  assert.ok((getDb().prepare('SELECT COUNT(*) n FROM users').get() as { n: number }).n > 0);
+});
+
+test('V5 adds no migration (D39)', () => {
+  const files = readdirSync(new URL('../../src/db/migrations/', import.meta.url)).filter((f) => f.endsWith('.sql')).sort();
+  assert.equal(files.at(-1), '007_java.sql');
 });

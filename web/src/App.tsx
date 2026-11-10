@@ -51,6 +51,7 @@ import { History } from './components/History.js';
 import { Vault } from './components/Vault.js';
 import { Skeleton } from './components/Skeleton.js';
 import { PageHeader } from './components/PageHeader.js';
+import { Admin } from './components/Admin.js';
 
 type Screen = 'loading' | 'login' | 'app';
 
@@ -106,6 +107,8 @@ const nameOf = (r: { identifier?: string; login?: string }) => r.identifier ?? r
 export function App() {
   const [screen, setScreen] = useState<Screen>('loading');
   const [identifier, setIdentifier] = useState('');
+  /** V5 (D36): the server says whether this account is an admin. */
+  const [isAdmin, setIsAdmin] = useState(false);
   /**
    * Why the student is looking at the sign-in screen, when they did not ask to
    * be. Returning them here with no explanation reads as the app losing their
@@ -119,6 +122,7 @@ export function App() {
       .me()
       .then((r) => {
         setIdentifier(nameOf(r));
+        setIsAdmin(r.isAdmin === true);
         setScreen('app');
       })
       .catch(() => setScreen('login'));
@@ -133,17 +137,22 @@ export function App() {
           setIdentifier(id);
           setSignedOutReason(null);
           setScreen('app');
+          void api
+            .me()
+            .then((r) => setIsAdmin(r.isAdmin === true))
+            .catch(() => setIsAdmin(false));
         }}
       />
     );
   const signedOut = (reason?: string) => {
     setSignedOutReason(reason ?? null);
+    setIsAdmin(false);
     setScreen('login');
   };
   return (
     <>
       <OfflineBanner />
-      <SignedIn identifier={identifier} prefs={prefs} onPrefs={updatePrefs} onSignedOut={signedOut} />
+      <SignedIn identifier={identifier} isAdmin={isAdmin} prefs={prefs} onPrefs={updatePrefs} onSignedOut={signedOut} />
     </>
   );
 }
@@ -173,11 +182,13 @@ function OfflineBanner() {
  */
 function SignedIn({
   identifier,
+  isAdmin,
   prefs,
   onPrefs,
   onSignedOut,
 }: {
   identifier: string;
+  isAdmin: boolean;
   prefs: Preferences;
   onPrefs: (patch: Partial<Preferences>) => void;
   onSignedOut: (reason?: string) => void;
@@ -264,12 +275,15 @@ function SignedIn({
     onSignedOut();
   }
 
-  const page = loc.page ?? 'dashboard';
+  // A non-admin who types /admin just sees the dashboard (the API is 404 anyway).
+  const page = loc.page === 'admin' && !isAdmin ? 'dashboard' : (loc.page ?? 'dashboard');
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <PageHeader
         identifier={identifier}
         current={page}
+        isAdmin={isAdmin}
+        onAdmin={() => goPage('admin')}
         onDashboard={() => goPage('dashboard')}
         onHistory={() => {
           setHistoryFocus(null);
@@ -285,6 +299,8 @@ function SignedIn({
         <History key={historyFocus ? `${historyFocus.language}/${historyFocus.slug}` : 'all'} focus={historyFocus} onOpen={(l, s) => openTrack(l, s)} />
       ) : page === 'exams' ? (
         <Exams key={examFocus ?? 'exams'} focus={examFocus} onStarted={enterExam} result={examResult} onResultSeen={() => setExamResult(null)} onDashboard={() => goPage('dashboard')} />
+      ) : page === 'admin' ? (
+        <Admin />
       ) : page === 'vault' ? (
         <Vault onOpen={(l, s) => openTrack(l, s)} />
       ) : (

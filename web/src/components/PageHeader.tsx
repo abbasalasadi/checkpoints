@@ -6,7 +6,10 @@ import { Logo } from './Icon.js';
 
 interface Props {
   identifier: string;
-  current: 'dashboard' | 'history' | 'vault' | 'exams';
+  current: 'dashboard' | 'history' | 'vault' | 'exams' | 'admin';
+  /** V5 (D36): the Admin button shows only for admin accounts. */
+  isAdmin?: boolean;
+  onAdmin?: () => void;
   onDashboard: () => void;
   onHistory: () => void;
   onVault: () => void;
@@ -27,7 +30,7 @@ const link = (active: boolean): React.CSSProperties => ({
   boxShadow: active ? 'inset 0 -2px 0 var(--accent)' : 'none',
 });
 
-export function PageHeader({ identifier, current, onDashboard, onHistory, onVault, onExams, onAbout, onSignOut }: Props) {
+export function PageHeader({ identifier, current, isAdmin, onAdmin, onDashboard, onHistory, onVault, onExams, onAbout, onSignOut }: Props) {
   return (
     <header style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem 1rem', borderBottom: '1px solid var(--border)', background: 'var(--surface)', flexWrap: 'wrap' }}>
       <span style={{ color: 'var(--accent-text)', display: 'flex' }}>
@@ -48,7 +51,13 @@ export function PageHeader({ identifier, current, onDashboard, onHistory, onVaul
           Mock exam
         </button>
       </nav>
-      <button type="button" style={{ ...link(false), marginLeft: 'auto' }} onClick={onAbout}>
+      <span style={{ marginLeft: 'auto' }} />
+      {isAdmin && onAdmin && (
+        <button type="button" style={link(current === 'admin')} aria-current={current === 'admin' ? 'page' : undefined} onClick={onAdmin}>
+          Admin
+        </button>
+      )}
+      <button type="button" style={link(false)} onClick={onAbout}>
         About
       </button>
       <span style={{ color: 'var(--text-muted)', fontSize: '.82rem' }}>{identifier}</span>

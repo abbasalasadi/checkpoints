@@ -9,6 +9,7 @@
  *   /history             the history explorer (V2)
  *   /vault               the solutions vault (V2)
  *   /exams               mock exams: start, reports (V3)
+ *   /admin               admin view, admins only (V5)
  *   /go                  the Go track, no exercise
  *   /go/hello            that Go exercise
  *   /go/hello?cp=2       the same exercise, opened from checkpoint 2 (V4):
@@ -21,7 +22,7 @@ import type { Language } from './api.js';
 export const LANGUAGES: readonly Language[] = ['go', 'js', 'rust', 'java'];
 
 /** A page that is not a track: the dashboard or the history explorer. */
-export type Page = 'dashboard' | 'history' | 'vault' | 'exams';
+export type Page = 'dashboard' | 'history' | 'vault' | 'exams' | 'admin';
 
 export interface Location {
   /** Set when the path is a page rather than a track. */
@@ -66,6 +67,7 @@ export function parsePath(pathname: string, search = ''): Location {
   if (first === 'history' && second === undefined) return { ...home, page: 'history' };
   if (first === 'vault' && second === undefined) return { ...home, page: 'vault' };
   if (first === 'exams' && second === undefined) return { ...home, page: 'exams' };
+  if (first === 'admin' && second === undefined) return { ...home, page: 'admin' };
   if (first === 'e') {
     const slug = rest.length ? null : cleanSlug(second);
     return slug ? { page: null, language: 'rust', slug, checkpoint: null, legacy: true } : home;

@@ -139,6 +139,12 @@ export const config = {
     return this.devLoginOptIn && DEV_ENVS.includes(this.appEnv);
   },
 
+  /** V5 (D36): admin accounts, by username (comma list). Empty = no admins. */
+  adminUsernames: str('ADMIN_USERNAMES', '')
+    .split(',')
+    .map((u) => u.trim().toLowerCase())
+    .filter(Boolean),
+
   runner: {
     image: str('RUNNER_IMAGE', defaults.runnerImage),
     backend: str('RUNNER_BACKEND', defaults.runnerBackend),
