@@ -17,5 +17,11 @@ Totals and charts only: no student code, no per-student list.
 ## Data
 From existing tables only, no migration: `attempts` (language, slug, kind, outcome, duration_ms, created_at, exam_id), `users` (created_at, last_login_at), `sessions` (last_seen_at), `exams`. Computed on read in `services/admin.ts`; one route `GET /api/admin/overview?range=`.
 
+## Data safety (owner, 2026-11-10)
+- No migration in V5: `server/src/db/migrations/` is unchanged; a test fails the release if a new migration file appears.
+- Admin queries are SELECT only, on a separate read-only database connection (`readonly: true`), so they cannot write even by mistake.
+- No admin action changes data: the page has no buttons that edit or delete anything.
+- Deploy as always: check no active exam, `make backup` first, then deploy; the backup is kept until the owner calls V5 stable.
+
 ## Look
 Same as the dashboard: its cards, ring and bar styles, colours, spacing and light/dark theme; stat tiles across the top, then charts in cards; works at phone width.
