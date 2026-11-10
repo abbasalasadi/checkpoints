@@ -7,7 +7,7 @@
  * (D40) and in the user summaries of submissions and exams (D41).
  */
 import Database from 'better-sqlite3';
-import { existsSync, readdirSync, statfsSync, statSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, statfsSync, statSync, unlinkSync } from 'node:fs';
 import { cpus, freemem, loadavg, totalmem } from 'node:os';
 import { monitorEventLoopDelay } from 'node:perf_hooks';
 import { dirname, join } from 'node:path';
@@ -97,7 +97,75 @@ export function sampleServer(now = Date.now()): ServerSample {
   if (samples.length > KEEP) samples.splice(0, samples.length - KEEP);
   return s;
 }
-setInterval(() => sampleServer(), SAMPLE_MS).unref();
+const KEEP_DAYS = 31;
+const DAY_FILE = /^(\d{4}-\d{2}-\d{2})\.jsonl$/;
+
+/** Append one sample to today's file and drop files older than 31 days (D48). */
+export function persistSample(sample: ServerSample, dir = config.metricsDir): void {
+  try {
+    mkdirSync(dir, { recursive: true });
+    appendFileSync(join(dir, `${sample.at.slice(0, 10)}.jsonl`), JSON.stringify(sample) + '\n');
+    const oldest = new Date(Date.parse(sample.at) - KEEP_DAYS * 86400000).toISOString().slice(0, 10);
+    for (const f of readdirSync(dir)) {
+      const m = DAY_FILE.exec(f);
+      if (m && m[1]! < oldest) unlinkSync(join(dir, f));
+    }
+  } catch {
+    // Metrics are a convenience; never let them disturb the app.
+  }
+}
+setInterval(() => persistSample(sampleServer()), SAMPLE_MS).unref();
+
+export type ServerRange = 'now' | 'today' | '7d' | '30d';
+export const SERVER_RANGES: ServerRange[] = ['now', 'today', '7d', '30d'];
+/** Bucket size per range, in minutes: about 60-340 points per chart. */
+const BUCKET: Record<ServerRange, number> = { now: 1, today: 5, '7d': 30, '30d': 120 };
+
+/** Server history for a range, averaged per bucket (delay: the worst in the bucket). */
+export function serverHistory(range: ServerRange, dir = config.metricsDir, now = new Date()) {
+  const since = range === 'now' ? new Date(now.getTime() - 60 * 60000).toISOString() : rangeStart(range, now);
+  const firstDay = since.slice(0, 10);
+  const rows: ServerSample[] = [];
+  if (existsSync(dir)) {
+    for (const f of readdirSync(dir).sort()) {
+      const m = DAY_FILE.exec(f);
+      if (!m || m[1]! < firstDay) continue;
+      for (const line of readFileSync(join(dir, f), 'utf8').split('\n')) {
+        if (!line) continue;
+        try {
+          const r = JSON.parse(line) as ServerSample;
+          if (r.at >= since) rows.push(r);
+        } catch {
+          // a torn last line after a crash
+        }
+      }
+    }
+  }
+  const lastOnDisk = rows.at(-1)?.at ?? '';
+  for (const r of samples) if (r.at >= since && r.at > lastOnDisk) rows.push(r);
+  if (!rows.length) rows.push(sampleServer());
+
+  const size = BUCKET[range] * 60000;
+  const buckets = new Map<number, ServerSample[]>();
+  for (const r of rows) {
+    const k = Math.floor(Date.parse(r.at) / size) * size;
+    const b = buckets.get(k);
+    if (b) b.push(r);
+    else buckets.set(k, [r]);
+  }
+  const avg = (b: ServerSample[], k: keyof Omit<ServerSample, 'at'>) => Math.round((b.reduce((n, r) => n + (r[k] ?? 0), 0) / b.length) * 10) / 10;
+  const points = [...buckets.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([k, b]) => ({
+      at: new Date(k).toISOString(),
+      rssMb: avg(b, 'rssMb'),
+      heapMb: avg(b, 'heapMb'),
+      cpuPct: avg(b, 'cpuPct'),
+      load1: avg(b, 'load1'),
+      lagMs: Math.max(...b.map((r) => r.lagMs ?? 0)),
+    }));
+  return { range, since, bucketMinutes: BUCKET[range], points };
+}
 
 function backups(): { at: string; sizeBytes: number }[] {
   const dir = join(dirname(dirname(config.dbPath)), 'backups');

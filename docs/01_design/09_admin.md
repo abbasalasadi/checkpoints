@@ -14,6 +14,8 @@ Approved by the owner 2026-11-10.
 
 Totals and charts, no student code. One list of names (D40): **Online now**, the usernames with a valid session used in the last 5 minutes, with the exercise last run in the last 30 minutes (or "in a mock exam").
 
+**Server history (D48):** one sample a minute (memory, heap, CPU, load, event-loop delay p99) appended to `var/metrics/YYYY-MM-DD.jsonl`; 31 days kept; ranges Now / Today / 7 days / 30 days, bucketed 1 / 5 / 30 / 120 minutes. Separate from the database.
+
 **Tabs (D42):** Usage (range picker shown only here; range-bound figures only), Students (all-time counts, Online now, Students list), Server.
 
 **Students (D41):** a searchable, sortable list of every student (last active, submits, pass rate, exercises passed, exams). Selecting one opens a summary: per language progress %, passed of total, submits and their pass rate; mock exams with date, checkpoint, levels passed, mark and result. Routes `GET /api/admin/users` and `GET /api/admin/users/:username`. No code.

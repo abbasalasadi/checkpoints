@@ -46,7 +46,7 @@ import * as runs from '../services/runs.js';
 import { pickExamItems } from '../services/exams.js';
 import { examMark, examMaxMark, placementView, requiredWeight, trackProgress, valueOf } from '../services/marks.js';
 import type { Exam } from '../repositories/index.js';
-import { isAdmin, overview, RANGES, userList, userProfile, type Range } from '../services/admin.js';
+import { isAdmin, overview, RANGES, SERVER_RANGES, serverHistory, type ServerRange, userList, userProfile, type Range } from '../services/admin.js';
 
 const loginLimiter = new RateLimiter(10, 5 * 60_000);
 const formatLimiter = new RateLimiter(60, 60_000);
@@ -98,6 +98,11 @@ export async function handle(req: IncomingMessage, res: ServerResponse): Promise
   if (path === '/api/preferences' && method === 'GET') return getPreferences(req, res);
   if (path === '/api/dashboard' && method === 'GET') return dashboard(req, res);
   if (path === '/api/admin/overview' && method === 'GET') return adminOverview(req, res, url.searchParams);
+  if (path === '/api/admin/server' && method === 'GET') {
+    const r = url.searchParams.get('range') ?? 'today';
+    const range: ServerRange = (SERVER_RANGES as string[]).includes(r) ? (r as ServerRange) : 'today';
+    return admin(req, res, () => serverHistory(range));
+  }
   if (path === '/api/admin/users' && method === 'GET') return admin(req, res, () => ({ users: userList() }));
   const adminUser = /^\/api\/admin\/users\/([A-Za-z0-9._-]{1,64})$/.exec(path);
   if (adminUser?.[1] && method === 'GET') return admin(req, res, () => userProfile(adminUser[1]!));

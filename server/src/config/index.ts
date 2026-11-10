@@ -126,6 +126,8 @@ export const config = {
 
   /** Absolute — resolved against the repo root, not cwd. */
   dbPath: fromRoot(str('DB_PATH', defaults.dbPath)),
+  /** V5 (D48): per-minute server samples, one JSON-lines file per UTC day, kept 31 days. Not the database. */
+  metricsDir: fromRoot(str('METRICS_DIR', 'var/metrics')),
 
   logEnabled: bool('LOG_ENABLED', defaults.logEnabled),
   logLevel: level('LOG_LEVEL', defaults.logLevel),

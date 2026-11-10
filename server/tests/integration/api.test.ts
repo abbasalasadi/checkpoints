@@ -20,7 +20,7 @@ import { attempts, hashToken, progress, sessions, snapshots, users } from '../..
 import { handle } from '../../src/routes/index.ts';
 import { listExercises } from '../../src/services/exercises.ts';
 import { setRunnerModule, type SubmitInput } from '../../src/services/runs.ts';
-import { closeReadOnlyDb, readOnlyDb } from '../../src/services/admin.ts';
+import { closeReadOnlyDb, persistSample, readOnlyDb, serverHistory } from '../../src/services/admin.ts';
 import { readdirSync } from 'node:fs';
 
 let dir: string;
@@ -554,6 +554,29 @@ test('admin user summaries: list and profile for admins, 404 for others (D41)', 
   assert.ok(Array.isArray(p.json.exams));
   assert.ok(!JSON.stringify(p.json).includes('files_json'));
   assert.equal((await call('/api/admin/users/nobody_here', { cookie: admin })).status, 404);
+});
+
+test('server history: stored per day, bucketed per range, admins only (D48)', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'metrics-'));
+  config.metricsDir = dir;
+  const now = new Date();
+  const at = (minAgo: number) => new Date(now.getTime() - minAgo * 60000).toISOString();
+  persistSample({ at: new Date(now.getTime() - 40 * 86400000).toISOString(), rssMb: 1, heapMb: 1, cpuPct: 1, load1: 1, lagMs: 1 }, dir);
+  persistSample({ at: at(3), rssMb: 100, heapMb: 50, cpuPct: 2, load1: 0.5, lagMs: 10 }, dir);
+  persistSample({ at: at(2), rssMb: 200, heapMb: 60, cpuPct: 4, load1: 0.7, lagMs: 30 }, dir);
+  assert.equal(readdirSync(dir).length, 1, 'files older than 31 days are removed');
+  const h = serverHistory('now', dir, now);
+  assert.ok(h.points.length >= 2 && h.points.some((p) => p.rssMb === 200));
+  const m = serverHistory('30d', dir, now);
+  assert.equal(m.bucketMinutes, 120);
+  assert.ok(m.points.some((p) => p.lagMs === 30), 'delay keeps the worst in a bucket');
+  const admin = await devLogin('fake_admin');
+  const student = await devLogin('fake_student_v5');
+  assert.equal((await call('/api/admin/server?range=7d', { cookie: student })).status, 404);
+  const r = await call('/api/admin/server?range=7d', { cookie: admin });
+  assert.equal(r.status, 200);
+  assert.equal(r.json.range, '7d');
+  rmSync(dir, { recursive: true, force: true });
 });
 
 test('admin connection is read-only: a write is refused (D39)', () => {

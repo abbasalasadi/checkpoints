@@ -9,6 +9,8 @@ import {
   api,
   type AdminOverview,
   type AdminRange,
+  type AdminServerHistory,
+  type AdminServerRange,
   type AdminUserProfile,
   type AdminUserRow,
   type Language,
@@ -42,6 +44,12 @@ const LANG_COLOR: Record<Language, string> = {
   js: "#e0a33a",
   rust: "#f0736a",
   java: "#a78bfa",
+};
+const SERVER_RANGE_LABEL: Record<AdminServerRange, string> = {
+  now: "Now",
+  today: "Today",
+  "7d": "7 days",
+  "30d": "30 days",
 };
 const RANGE_LABEL: Record<AdminRange, string> = {
   today: "Today",
@@ -1439,18 +1447,23 @@ function LineChart({
   const x = (i: number) =>
     L + (n <= 1 ? (W - L) / 2 : (i / (n - 1)) * (W - L - 4));
   const y = (v: number) => 6 + (1 - v / max) * (H - B - 6);
+  const longSpan =
+    n > 1 &&
+    Date.parse(points[n - 1]!.at) - Date.parse(points[0]!.at) > 86400000;
   const time = (iso: string) =>
-    new Date(iso).toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    new Date(iso).toLocaleString(
+      "en-GB",
+      longSpan
+        ? { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }
+        : { hour: "2-digit", minute: "2-digit" },
+    );
   const last = points.at(-1);
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
       width="100%"
       role="img"
-      aria-label={`Chart over the last ${n} minutes`}
+      aria-label={`Chart of ${n} points`}
       style={{ display: "block" }}
     >
       {[0, 0.5, 1].map((f) => (
@@ -1623,12 +1636,14 @@ function AdminTabs({
   );
 }
 
-function RangePicker({
+function RangePicker<R extends string>({
   value,
   onChange,
+  labels = RANGE_LABEL as unknown as Record<R, string>,
 }: {
-  value: AdminRange;
-  onChange: (r: AdminRange) => void;
+  value: R;
+  onChange: (r: R) => void;
+  labels?: Record<R, string>;
 }) {
   return (
     <div
@@ -1641,7 +1656,7 @@ function RangePicker({
         overflow: "hidden",
       }}
     >
-      {(Object.keys(RANGE_LABEL) as AdminRange[]).map((r) => (
+      {(Object.keys(labels) as R[]).map((r) => (
         <button
           key={r}
           type="button"
@@ -1657,7 +1672,7 @@ function RangePicker({
             cursor: "pointer",
           }}
         >
-          {RANGE_LABEL[r]}
+          {labels[r]}
         </button>
       ))}
     </div>
@@ -1669,6 +1684,7 @@ const EX_TABS: ("all" | Language)[] = ["all", "go", "js", "rust", "java"];
 interface AdminView {
   tab: AdminTab;
   range: AdminRange;
+  serverRange: AdminServerRange;
   user: string | null;
 }
 const RANGE_KEYS = Object.keys(RANGE_LABEL) as AdminRange[];
@@ -1681,6 +1697,11 @@ function readAdmin(): AdminView {
     "range",
   ) as AdminRange | null;
   const range = r && RANGE_KEYS.includes(r) ? r : "7d";
+  const sr = new URLSearchParams(window.location.search).get(
+    "range",
+  ) as AdminServerRange | null;
+  const serverRange: AdminServerRange =
+    sr && sr in SERVER_RANGE_LABEL ? sr : "today";
   if (sub === "students") {
     let user: string | null = null;
     try {
@@ -1702,13 +1723,31 @@ function adminPath(v: AdminView): string {
     return v.user
       ? `/admin/students/${encodeURIComponent(v.user)}`
       : "/admin/students";
-  if (v.tab === "server") return "/admin/server";
+  if (v.tab === "server")
+    return v.serverRange === "today"
+      ? "/admin/server"
+      : `/admin/server?range=${v.serverRange}`;
   return v.range === "7d" ? "/admin" : `/admin?range=${v.range}`;
 }
 
 export function Admin() {
   const [view, setView] = useState<AdminView>(readAdmin);
-  const { range, tab, user: profile } = view;
+  const { range, tab, serverRange, user: profile } = view;
+  const [hist, setHist] = useState<AdminServerHistory | null>(null);
+  useEffect(() => {
+    if (tab !== "server") return;
+    let live = true;
+    setHist(null);
+    api
+      .adminServer(serverRange)
+      .then((h) => live && setHist(h))
+      .catch((err) =>
+        logger.warn("admin.server_failed", { error: String(err) }),
+      );
+    return () => {
+      live = false;
+    };
+  }, [tab, serverRange]);
   const [data, setData] = useState<AdminOverview | null>(null);
   const [error, setError] = useState(false);
   const [allExercises, setAllExercises] = useState(false);
@@ -1732,6 +1771,7 @@ export function Admin() {
   };
   const setTab = (t: AdminTab) => go({ tab: t, user: null });
   const setRange = (r: AdminRange) => go({ range: r });
+  const setServerRange = (r: AdminServerRange) => go({ serverRange: r });
   const setProfile = (u: string | null) =>
     go(u ? { tab: "students", user: u } : { user: null });
 
@@ -1795,6 +1835,13 @@ export function Admin() {
             </span>
           </div>
           {tab === "usage" && <RangePicker value={range} onChange={setRange} />}
+          {tab === "server" && (
+            <RangePicker
+              value={serverRange}
+              onChange={setServerRange}
+              labels={SERVER_RANGE_LABEL}
+            />
+          )}
         </div>
 
         <AdminTabs value={tab} onChange={setTab} />
@@ -2005,8 +2052,11 @@ export function Admin() {
               )}
             </section>
             <span style={muted}>
-              History is sampled every minute and kept in memory for 24 hours;
-              it starts again when the app restarts.
+              Sampled every minute and kept for 31 days
+              {hist
+                ? ` · each point is ${hist.bucketMinutes === 1 ? "1 minute" : hist.bucketMinutes < 60 ? `${hist.bucketMinutes} minutes` : `${hist.bucketMinutes / 60} hours`} (average; delay shows the worst)`
+                : ""}
+              .
             </span>
             <div
               style={{
@@ -2036,7 +2086,7 @@ export function Admin() {
                 </div>
                 {s ? (
                   <LineChart
-                    points={s.history}
+                    points={hist?.points ?? s.history}
                     series={[
                       { key: "rssMb", color: "var(--accent)" },
                       { key: "heapMb", color: "var(--success)" },
@@ -2064,7 +2114,7 @@ export function Admin() {
                 </div>
                 {s ? (
                   <LineChart
-                    points={s.history}
+                    points={hist?.points ?? s.history}
                     series={[{ key: "cpuPct", color: "var(--accent)" }]}
                     unit="%"
                   />
@@ -2076,7 +2126,7 @@ export function Admin() {
                 <h2 style={h2}>Host load (1 min)</h2>
                 {s ? (
                   <LineChart
-                    points={s.history}
+                    points={hist?.points ?? s.history}
                     series={[{ key: "load1", color: "var(--success)" }]}
                     unit=""
                   />
@@ -2093,7 +2143,7 @@ export function Admin() {
                 </span>
                 {s ? (
                   <LineChart
-                    points={s.history}
+                    points={hist?.points ?? s.history}
                     series={[
                       { key: "lagMs", color: "var(--warning, #d4a72c)" },
                     ]}

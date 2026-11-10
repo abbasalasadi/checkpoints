@@ -58,6 +58,14 @@ export interface AdminOverview {
   };
 }
 
+export type AdminServerRange = 'now' | 'today' | '7d' | '30d';
+export interface AdminServerHistory {
+  range: AdminServerRange;
+  since: string;
+  bucketMinutes: number;
+  points: AdminOverview['server']['history'];
+}
+
 export interface AdminUserRow {
   username: string;
   joinedAt: string;
@@ -355,6 +363,7 @@ export const api = {
   me: () => request<{ identifier?: string; login?: string; isAdmin?: boolean }>('/api/auth/me'),
   adminUsers: () => request<{ users: AdminUserRow[] }>('/api/admin/users'),
   adminUser: (username: string) => request<AdminUserProfile>(`/api/admin/users/${encodeURIComponent(username)}`),
+  adminServer: (range: AdminServerRange) => request<AdminServerHistory>(`/api/admin/server?range=${range}`),
   adminOverview: (range: AdminRange) => request<AdminOverview>(`/api/admin/overview?range=${range}`),
   login: (identifier: string, password: string) =>
     request<{ identifier?: string; login?: string }>('/api/auth/login', {
