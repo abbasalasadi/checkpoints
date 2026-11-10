@@ -69,3 +69,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-10 V5 D42 admin tabs (Usage / Students / Server, range only on Usage) done at 1d2069f: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Next: owner local test.
 - 2026-11-10 V5 D43 language tabs in Most used exercises: web tsc clean, web tests pass on lan_vm1, clean-task clean. Result check: passed.
 - 2026-11-10 V5 D44 admin URL history, Online now rows, student filters, server history charts done at 8973520: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Next: owner local test.
+- 2026-11-10 V5 D45 Mock exams above the daily chart: web tsc clean, web 148/148 on lan_vm1, clean-task clean. Result check: passed.
