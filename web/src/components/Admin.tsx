@@ -16,7 +16,7 @@ import {
 import { LANGUAGE_LABEL, ago } from "../lib/format.js";
 import { logger } from "../logger.js";
 import { LOCATION_CHANGE } from "../lib/route.js";
-import { MarkRing, fmtPercent } from "./MarkRing.js";
+import { fmtPercent } from "./MarkRing.js";
 import { Modal } from "./Modal.js";
 import { Skeleton } from "./Skeleton.js";
 
@@ -964,6 +964,79 @@ const EXAM_STATUS: Record<string, string> = {
 };
 
 /** One student in summary: per-language results and exam results (D41). */
+const STATUS_TONE: Record<string, string> = {
+  finished: "var(--success)",
+  expired: "var(--warning, #d4a72c)",
+  abandoned: "var(--text-dim)",
+  active: "var(--accent)",
+};
+
+function Bar({ value, color }: { value: number; color: string }) {
+  return (
+    <div
+      style={{
+        height: 6,
+        borderRadius: 6,
+        background: "var(--raised)",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          width: `${Math.min(100, Math.max(0, value))}%`,
+          height: "100%",
+          background: color,
+          borderRadius: 6,
+          transition: "width .6s ease",
+        }}
+      />
+    </div>
+  );
+}
+
+function Stat({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+}) {
+  return (
+    <div
+      style={{
+        background: "var(--raised)",
+        border: "1px solid var(--border)",
+        borderRadius: "var(--radius)",
+        padding: ".6rem .75rem",
+        display: "flex",
+        flexDirection: "column",
+        gap: ".15rem",
+        minWidth: 0,
+      }}
+    >
+      <span
+        style={{
+          fontSize: ".72rem",
+          color: "var(--text-muted)",
+          textTransform: "uppercase",
+          letterSpacing: ".04em",
+        }}
+      >
+        {label}
+      </span>
+      <strong style={{ fontSize: "1.2rem", ...num }}>{value}</strong>
+      {hint && (
+        <span style={{ fontSize: ".72rem", color: "var(--text-dim)" }}>
+          {hint}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/** One student in summary: totals, per-language results and exam results (D41, D46). */
 function UserProfile({
   username,
   onClose,
@@ -982,242 +1055,360 @@ function UserProfile({
       .then(setP)
       .catch(() => setFailed(true));
   }, [username]);
+
   const tracks = p?.tracks.filter((t) => t.submits || t.runs || t.passed) ?? [];
+  const submits = tracks.reduce((n, t) => n + t.submits, 0);
+  const passedSubmits = tracks.reduce((n, t) => n + t.submitsPassed, 0);
+  const passedEx = tracks.reduce((n, t) => n + t.passed, 0);
+  const marks = (p?.exams ?? [])
+    .map((e) => e.mark)
+    .filter((m): m is number => m !== null);
+  const best = marks.length ? Math.max(...marks) : null;
+  const date = (iso: string) =>
+    new Date(iso).toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
   return (
     <Modal
       open={username !== null}
       onClose={onClose}
       labelledBy="admin-user-title"
-      width="44rem"
+      width="min(46rem, 94vw)"
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        <div>
-          <h2 id="admin-user-title" style={{ margin: 0, fontSize: "1.15rem" }}>
-            {username}
-          </h2>
-          {p && (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.1rem",
+          maxHeight: "82vh",
+        }}
+      >
+        <header style={{ display: "flex", alignItems: "center", gap: ".9rem" }}>
+          <div
+            aria-hidden
+            style={{
+              width: 46,
+              height: 46,
+              borderRadius: "50%",
+              flex: "none",
+              display: "grid",
+              placeItems: "center",
+              fontWeight: 700,
+              fontSize: "1.15rem",
+              color: "#fff",
+              background:
+                "linear-gradient(135deg, var(--accent), var(--success))",
+            }}
+          >
+            {username?.[0]?.toUpperCase()}
+          </div>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <h2
+              id="admin-user-title"
+              style={{
+                margin: 0,
+                fontSize: "1.15rem",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {username}
+            </h2>
             <span style={muted}>
-              Joined{" "}
-              {new Date(p.joinedAt).toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-              {p.lastActiveAt ? ` · last active ${ago(p.lastActiveAt)}` : ""}
+              {p ? (
+                <>
+                  Joined {date(p.joinedAt)}
+                  {p.lastActiveAt
+                    ? ` · last active ${ago(p.lastActiveAt)}`
+                    : " · never active"}
+                </>
+              ) : (
+                "Loading…"
+              )}
             </span>
-          )}
-        </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            style={{
+              background: "transparent",
+              border: "1px solid var(--border-strong)",
+              color: "var(--text-muted)",
+              borderRadius: "50%",
+              width: 32,
+              height: 32,
+              cursor: "pointer",
+              font: "inherit",
+              fontSize: "1rem",
+              flex: "none",
+            }}
+          >
+            ×
+          </button>
+        </header>
+
         {failed && (
           <p style={{ color: "var(--danger)", margin: 0 }}>
             This profile could not load.
           </p>
         )}
-        {!p && !failed && <Skeleton height="12rem" />}
+        {!p && !failed && <Skeleton height="16rem" />}
+
         {p && (
-          <>
-            <section aria-label="Exercises">
-              <h3 style={{ margin: "0 0 .6rem", fontSize: ".95rem" }}>
-                Exercises
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.1rem",
+              overflowY: "auto",
+              paddingRight: ".2rem",
+            }}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))",
+                gap: ".6rem",
+              }}
+            >
+              <Stat
+                label="Exercises passed"
+                value={fmtInt(passedEx)}
+                hint={`in ${tracks.length} language${tracks.length === 1 ? "" : "s"}`}
+              />
+              <Stat
+                label="Submits"
+                value={fmtInt(submits)}
+                hint={
+                  submits
+                    ? `${fmtPct(passedSubmits / submits)} passed`
+                    : "none yet"
+                }
+              />
+              <Stat
+                label="Mock exams"
+                value={fmtInt(p.exams.length)}
+                hint={
+                  p.exams.filter((e) => e.status === "finished").length +
+                  " finished"
+                }
+              />
+              <Stat
+                label="Best exam mark"
+                value={best === null ? "—" : fmtPercent(best)}
+              />
+            </div>
+
+            <section
+              aria-label="Exercises"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: ".55rem",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: ".9rem" }}>
+                Exercises by language
               </h3>
               {tracks.length === 0 ? (
                 <p style={{ ...muted, margin: 0 }}>No submissions yet.</p>
               ) : (
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))",
-                    gap: ".7rem",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius)",
+                    overflow: "hidden",
                   }}
                 >
-                  {tracks.map((t) => (
+                  {tracks.map((t, i) => (
                     <div
                       key={t.language}
                       style={{
-                        ...card,
-                        flexDirection: "row",
+                        display: "grid",
+                        gridTemplateColumns: "6.5rem minmax(0, 1fr) auto",
                         alignItems: "center",
-                        gap: ".8rem",
-                        padding: ".7rem .8rem",
-                        background: "var(--raised)",
+                        gap: ".4rem 1rem",
+                        padding: ".65rem .8rem",
+                        borderTop: i ? "1px solid var(--border)" : "none",
                       }}
                     >
-                      <MarkRing
-                        id={`adm-u-${t.language}`}
-                        size={64}
-                        label={fmtPercent(t.progress)}
-                        caption={`${LANGUAGE_LABEL[t.language]} progress`}
-                        rings={[
-                          {
-                            value: t.progress,
-                            from: "var(--accent)",
-                            to: "var(--success)",
-                          },
-                        ]}
-                      />
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: ".45rem",
+                          fontWeight: 600,
+                          fontSize: ".86rem",
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: 9,
+                            height: 9,
+                            borderRadius: 2,
+                            background: LANG_COLOR[t.language],
+                          }}
+                        />
+                        {LANGUAGE_LABEL[t.language]}
+                      </span>
                       <div
                         style={{
                           display: "flex",
                           flexDirection: "column",
-                          gap: ".15rem",
-                          fontSize: ".8rem",
+                          gap: ".3rem",
                           minWidth: 0,
                         }}
                       >
-                        <strong style={{ fontSize: ".9rem" }}>
-                          {LANGUAGE_LABEL[t.language]}
-                        </strong>
-                        <span style={num}>
-                          {t.passed} of {t.total} passed
-                        </span>
-                        <span style={{ ...num, color: "var(--text-muted)" }}>
-                          {fmtInt(t.submits)} submits ·{" "}
+                        <Bar
+                          value={t.progress}
+                          color={LANG_COLOR[t.language]}
+                        />
+                        <span
+                          style={{
+                            fontSize: ".74rem",
+                            color: "var(--text-muted)",
+                            ...num,
+                          }}
+                        >
+                          {t.passed} of {t.total} exercises ·{" "}
+                          {fmtInt(t.submits)} submits
                           {t.submits
-                            ? fmtPct(t.submitsPassed / t.submits)
-                            : "—"}{" "}
-                          passed
+                            ? `, ${fmtPct(t.submitsPassed / t.submits)} passed`
+                            : ""}
+                          {t.lastAt ? ` · last ${ago(t.lastAt)}` : ""}
                         </span>
-                        {t.lastAt && (
-                          <span style={{ color: "var(--text-dim)" }}>
-                            last {ago(t.lastAt)}
-                          </span>
-                        )}
                       </div>
+                      <strong
+                        style={{
+                          ...num,
+                          fontSize: ".95rem",
+                          minWidth: "3.5rem",
+                          textAlign: "right",
+                        }}
+                      >
+                        {fmtPercent(t.progress)}
+                      </strong>
                     </div>
                   ))}
                 </div>
               )}
             </section>
-            <section aria-label="Mock exams">
-              <h3 style={{ margin: "0 0 .6rem", fontSize: ".95rem" }}>
-                Mock exams
-              </h3>
+
+            <section
+              aria-label="Mock exams"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: ".55rem",
+              }}
+            >
+              <h3 style={{ margin: 0, fontSize: ".9rem" }}>Mock exams</h3>
               {p.exams.length === 0 ? (
                 <p style={{ ...muted, margin: 0 }}>No mock exams yet.</p>
               ) : (
                 <div
                   style={{
-                    overflowX: "auto",
-                    maxHeight: "18rem",
-                    overflowY: "auto",
+                    border: "1px solid var(--border)",
+                    borderRadius: "var(--radius)",
+                    overflow: "hidden",
                   }}
                 >
-                  <table
-                    style={{
-                      width: "100%",
-                      borderCollapse: "collapse",
-                      fontSize: ".82rem",
-                    }}
-                  >
-                    <thead>
-                      <tr style={{ color: "var(--text-muted)" }}>
-                        {["Date", "Exam", "Levels", "Mark", "Result"].map(
-                          (h, i) => (
-                            <th
-                              key={h}
-                              style={{
-                                fontWeight: 500,
-                                padding: ".3rem .5rem",
-                                textAlign:
-                                  i === 0 || i === 1 ? "left" : "right",
-                                whiteSpace: "nowrap",
-                              }}
-                            >
-                              {h}
-                            </th>
-                          ),
-                        )}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {p.exams.map((e) => (
-                        <tr key={e.startedAt}>
-                          <td
+                  {p.exams.map((e, i) => (
+                    <div
+                      key={e.startedAt}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0, 1fr) 7rem auto",
+                        alignItems: "center",
+                        gap: ".3rem 1rem",
+                        padding: ".6rem .8rem",
+                        borderTop: i ? "1px solid var(--border)" : "none",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: ".1rem",
+                          minWidth: 0,
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: ".45rem",
+                            fontSize: ".86rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          <span
                             style={{
-                              padding: ".4rem .5rem",
-                              borderTop: "1px solid var(--border)",
-                              whiteSpace: "nowrap",
-                              color: "var(--text-muted)",
+                              width: 9,
+                              height: 9,
+                              borderRadius: 2,
+                              background: LANG_COLOR[e.language],
                             }}
-                          >
-                            {new Date(e.startedAt).toLocaleDateString("en-GB", {
-                              day: "numeric",
-                              month: "short",
-                            })}
-                          </td>
-                          <td
-                            style={{
-                              padding: ".4rem .5rem",
-                              borderTop: "1px solid var(--border)",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {LANGUAGE_LABEL[e.language]} · {e.checkpoint}{" "}
-                            <span style={{ color: "var(--text-dim)" }}>
-                              ({e.minutes} min)
-                            </span>
-                          </td>
-                          <td
-                            style={{
-                              ...num,
-                              padding: ".4rem .5rem",
-                              borderTop: "1px solid var(--border)",
-                              textAlign: "right",
-                            }}
-                          >
-                            {e.levelsPassed}/{e.levels}
-                          </td>
-                          <td
-                            style={{
-                              ...num,
-                              padding: ".4rem .5rem",
-                              borderTop: "1px solid var(--border)",
-                              textAlign: "right",
-                              fontWeight: 600,
-                            }}
-                          >
-                            {e.mark === null ? "—" : fmtPercent(e.mark)}
-                          </td>
-                          <td
-                            style={{
-                              padding: ".4rem .5rem",
-                              borderTop: "1px solid var(--border)",
-                              textAlign: "right",
-                              color:
-                                e.status === "finished"
-                                  ? "var(--success)"
-                                  : "var(--text-muted)",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {EXAM_STATUS[e.status] ?? e.status}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                          />
+                          {LANGUAGE_LABEL[e.language]} · Checkpoint{" "}
+                          {e.checkpoint}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: ".74rem",
+                            color: "var(--text-muted)",
+                            ...num,
+                          }}
+                        >
+                          {date(e.startedAt)} · {e.minutes} min ·{" "}
+                          {e.levelsPassed}/{e.levels} levels
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: ".3rem",
+                        }}
+                      >
+                        <strong
+                          style={{
+                            ...num,
+                            fontSize: ".95rem",
+                            textAlign: "right",
+                          }}
+                        >
+                          {e.mark === null ? "—" : fmtPercent(e.mark)}
+                        </strong>
+                        <Bar
+                          value={e.mark ?? 0}
+                          color="linear-gradient(90deg, var(--accent), var(--success))"
+                        />
+                      </div>
+                      <span
+                        style={{
+                          fontSize: ".72rem",
+                          fontWeight: 600,
+                          padding: ".2rem .55rem",
+                          borderRadius: 999,
+                          whiteSpace: "nowrap",
+                          color: STATUS_TONE[e.status] ?? "var(--text-muted)",
+                          border: `1px solid ${STATUS_TONE[e.status] ?? "var(--border-strong)"}`,
+                        }}
+                      >
+                        {EXAM_STATUS[e.status] ?? e.status}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
             </section>
-          </>
+          </div>
         )}
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{
-              background: "transparent",
-              color: "var(--text)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "var(--radius)",
-              padding: ".4rem .9rem",
-              font: "inherit",
-              fontSize: ".84rem",
-              cursor: "pointer",
-            }}
-          >
-            Close
-          </button>
-        </div>
       </div>
     </Modal>
   );
