@@ -65,5 +65,13 @@ Reference projects (read-only sources to merge): Go `/home/abbas/Documents/go-ch
 - Merge of the three old sites' databases (owner, 2026-11-04): announced window; maintenance on for all four sites, final copies, backup, merge, check. The old sites never come back: each gets a redirect to the new application's main page (owner: no maintenance-off for them).
 Redirect the three old sites to the new one, after re-merging their databases (D21). Then the full visual redesign (owner's plan).
 
-## V5 Admin view (proposed, owner 2026-11-10)
-- Admin button in the title bar for the owner's account only (abbhasan, from server config), opening a read-only page of the application's performance and usage. Plan awaiting owner approval.
+## V5 Admin view
+**Goal:** A read-only admin page, for admin accounts only, showing the application's usage and performance. Design: `docs/01_design/09_admin.md`.
+
+**Features:**
+1. Admins named in server config (`ADMIN_USERNAMES`, owner: abbhasan); checked on the server for every admin request; others get 404.
+2. Admin button in the title bar, shown only to admins.
+3. Admin page with usage, performance and server health; ranges today / 7 days / 30 days; same look as the dashboard.
+4. Totals and charts only: no student code, no per-student list (owner, 2026-11-10).
+
+**Done when:** same pattern, tagged `v5.0`.
