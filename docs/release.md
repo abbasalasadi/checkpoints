@@ -9,6 +9,7 @@ No deploy until the owner has tested locally (D20).
 - D37 Totals and charts only: no student code, no per-student list.
 - D38 The admin page uses the dashboard's design.
 - D40 (owner, 2026-11-10) Admin page adds "Online now": usernames active in the last 5 minutes, with the exercise last run; this is the one list of names (amends D37). Day chart has axes; most used exercises has See all.
+- D45 (owner, 2026-11-10) Usage tab: Mock exams card above Runs and submits per day.
 - D44 (owner, 2026-11-10) Admin: every tab, range and opened student is a browser history entry (/admin?range=, /admin/students[/name], /admin/server); Online now as aligned rows (student, doing, seen); Students filters (language, activity, exercises passed, mock exams, clear); Server tab with host memory, CPU, load, disk, backups and 24-hour charts sampled every minute in memory (nothing stored).
 - D43 (owner, 2026-11-10) Most used exercises has tabs All / Go / JS / Rust / Java.
 - D42 (owner, 2026-11-10) Admin page tabs: Usage (the only tab with the today / 7 days / 30 days range: new accounts, runs, submits, charts, performance, exercises, mock exams), Students (totals, active today/7/30 days, Online now, Students list), Server.

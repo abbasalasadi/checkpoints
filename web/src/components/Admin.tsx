@@ -1639,6 +1639,21 @@ export function Admin() {
               )}
             </section>
 
+            <section style={card} aria-label="Mock exams">
+              <h2 style={h2}>Mock exams</h2>
+              {u ? (
+                <div style={grid(110)}>
+                  <Tile label="Started" value={fmtInt(u.exams.started)} />
+                  <Tile label="Finished" value={fmtInt(u.exams.finished)} />
+                  <Tile label="Expired" value={fmtInt(u.exams.expired)} />
+                  <Tile label="Left early" value={fmtInt(u.exams.abandoned)} />
+                  <Tile label="Running now" value={fmtInt(u.exams.active)} />
+                </div>
+              ) : (
+                <Skeleton height="6rem" />
+              )}
+            </section>
+
             <section style={card} aria-label="Runs and submits per day">
               <div
                 style={{
@@ -1752,21 +1767,6 @@ export function Admin() {
                 )}
               </section>
             </div>
-
-            <section style={card} aria-label="Mock exams">
-              <h2 style={h2}>Mock exams</h2>
-              {u ? (
-                <div style={grid(110)}>
-                  <Tile label="Started" value={fmtInt(u.exams.started)} />
-                  <Tile label="Finished" value={fmtInt(u.exams.finished)} />
-                  <Tile label="Expired" value={fmtInt(u.exams.expired)} />
-                  <Tile label="Left early" value={fmtInt(u.exams.abandoned)} />
-                  <Tile label="Running now" value={fmtInt(u.exams.active)} />
-                </div>
-              ) : (
-                <Skeleton height="6rem" />
-              )}
-            </section>
           </>
         )}
 
