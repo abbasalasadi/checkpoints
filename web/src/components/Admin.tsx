@@ -1107,11 +1107,14 @@ function RangePicker({
   );
 }
 
+const EX_TABS: ("all" | Language)[] = ["all", "go", "js", "rust", "java"];
+
 export function Admin() {
   const [range, setRange] = useState<AdminRange>("7d");
   const [data, setData] = useState<AdminOverview | null>(null);
   const [error, setError] = useState(false);
   const [allExercises, setAllExercises] = useState(false);
+  const [exLang, setExLang] = useState<"all" | Language>("all");
   const [profile, setProfile] = useState<string | null>(null);
   const [tab, setTab] = useState<AdminTab>("usage");
 
@@ -1137,6 +1140,9 @@ export function Admin() {
     gap: "1rem",
   });
   const u = data?.usage;
+  const ex = (u?.topExercises ?? []).filter(
+    (r) => exLang === "all" || r.language === exLang,
+  );
   const p = data?.performance;
   const s = data?.server;
 
@@ -1258,9 +1264,9 @@ export function Admin() {
                 >
                   <h2 style={h2}>
                     Most used exercises
-                    {u && allExercises ? ` (${u.topExercises.length})` : ""}
+                    {u && allExercises ? ` (${ex.length})` : ""}
                   </h2>
-                  {u && u.topExercises.length > TOP && (
+                  {u && ex.length > TOP && (
                     <button
                       type="button"
                       onClick={() => setAllExercises((v) => !v)}
@@ -1274,14 +1280,40 @@ export function Admin() {
                         padding: 0,
                       }}
                     >
-                      {allExercises
-                        ? "Show top 10"
-                        : `See all ${u.topExercises.length} →`}
+                      {allExercises ? "Show top 10" : `See all ${ex.length} →`}
                     </button>
                   )}
                 </div>
+                <div
+                  role="tablist"
+                  aria-label="Exercise language"
+                  style={{ display: "flex", gap: ".35rem", flexWrap: "wrap" }}
+                >
+                  {EX_TABS.map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      role="tab"
+                      aria-selected={exLang === l}
+                      onClick={() => setExLang(l)}
+                      style={{
+                        background:
+                          exLang === l ? "var(--accent)" : "transparent",
+                        color: exLang === l ? "#fff" : "var(--text-muted)",
+                        border: "1px solid var(--border-strong)",
+                        borderRadius: 999,
+                        font: "inherit",
+                        fontSize: ".78rem",
+                        padding: ".2rem .7rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {l === "all" ? "All" : LANGUAGE_LABEL[l]}
+                    </button>
+                  ))}
+                </div>
                 {u ? (
-                  <TopExercises rows={u.topExercises} all={allExercises} />
+                  <TopExercises rows={ex} all={allExercises} />
                 ) : (
                   <Skeleton height="12rem" />
                 )}

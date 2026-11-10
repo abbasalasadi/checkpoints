@@ -9,6 +9,7 @@ No deploy until the owner has tested locally (D20).
 - D37 Totals and charts only: no student code, no per-student list.
 - D38 The admin page uses the dashboard's design.
 - D40 (owner, 2026-11-10) Admin page adds "Online now": usernames active in the last 5 minutes, with the exercise last run; this is the one list of names (amends D37). Day chart has axes; most used exercises has See all.
+- D43 (owner, 2026-11-10) Most used exercises has tabs All / Go / JS / Rust / Java.
 - D42 (owner, 2026-11-10) Admin page tabs: Usage (the only tab with the today / 7 days / 30 days range: new accounts, runs, submits, charts, performance, exercises, mock exams), Students (totals, active today/7/30 days, Online now, Students list), Server.
 - D41 (owner, 2026-11-10) Admin page adds Students: every student with submissions, pass rate, exercises passed and exams; a student's summary shows per-language progress and submissions, and mock exam results. No code.
 - D39 No database change in V5: no migration; admin reads use a read-only connection; backup before deploy.
