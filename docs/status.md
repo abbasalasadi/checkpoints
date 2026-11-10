@@ -66,3 +66,4 @@ As of: 2026-11-04 · Version: V3+V4 deployed; waiting for the owner's test of th
 - 2026-11-10 V5 steps 1–3 done (2213ba5): server 55/55, web 148/148, tsc clean on lan_vm1; clean-task clean. Local .env has ADMIN_USERNAMES=abbhasan. Next: owner tests locally.
 - 2026-11-10 V5 owner-test changes (D40) done at 1d135f4: tests pass on lan_vm1, clean-task clean. Spec given: D41.
 - 2026-11-10 V5 D41 Students list and per-student summary (submissions, mock exams) done at e8ce0d9: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Next: owner local test.
+- 2026-11-10 V5 D42 admin tabs (Usage / Students / Server, range only on Usage) done at 1d2069f: tsc clean, server 56/56, web 148/148 on lan_vm1, clean-task clean. Result check: passed. Next: owner local test.
